@@ -27,12 +27,14 @@ class Scrpio_File_Core {
 		exit('Can not write to cache files, please check directory '.self::path($dir));
 	}
 
-	function dirname($path, $chdir = '') {
+	function dirname($path, $chdir = '', $dirnamefunc = false) {
 		// FIXME: do something
 
 //		$path = dirname($path);
 //		if ($chdir) $path = dirname($path);
 //		return self::path($path);
+
+		if ($dirnamefunc) $path = dirname($path);
 
 		return ($chdir) ? self::path($path, $chdir) : self::path($path);
 	}
