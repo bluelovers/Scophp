@@ -1,7 +1,11 @@
-<?php
+<?
 
 /**
  *
+ * $HeadURL$
+ * $Revision$
+ * $Author$
+ * $Date$
  * $Id$
  *
  * @author bluelovers
