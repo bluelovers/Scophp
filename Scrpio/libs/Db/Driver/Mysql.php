@@ -12,23 +12,31 @@
  * @copyright 2010
  */
 
+if (0) {
+	// for IDE
+	class Scrpio_Db_Driver_Mysql extends Scrpio_Db_Driver_Mysql_Core {
+	}
+}
+
 class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 
 	const _FUNC = 'mysql_';
 
-	protected $last_query = '';
-	protected $last_runquery = '';
-
-	protected $last_result = null;
-
-	protected $connection = null;
+	// Use SET NAMES to set the character set
 	protected static $set_names;
 
 	// Quote character to use for identifiers (tables/columns/aliases)
 	protected $quote = '`';
 
+	protected function __construct(array $config) {
+		parent::__construct($config);
+
+		$this->build();
+	}
+
 	protected function _query($sql, $type = '') {
-		$func = $type == 'UNBUFFERED' && @function_exists('mysql_unbuffered_query') ? 'mysql_unbuffered_query' : 'mysql_query';
+		$func = $type == 'UNBUFFERED' && @function_exists('mysql_unbuffered_query') ?
+			'mysql_unbuffered_query' : 'mysql_query';
 
 		return $func($sql, $this->connection);
 	}
@@ -54,7 +62,8 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 
 		if ($status === false) {
 			// Unable to set charset
-			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->_error($this->connection), ':errno' => $this->_errno($this->connection)));
+			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->
+				_error($this->connection), ':errno' => $this->_errno($this->connection)));
 
 			return false;
 		}
@@ -62,14 +71,48 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		return $this;
 	}
 
-	protected function _escape($value){
+	protected function _escape($value) {
 		return mysql_real_escape_string($value, $this->connection);
 	}
 
-	protected function _func($func, $args = null){
-		return $args !== null ?
-			call_user_func_array(self::_FUNC.$func, (is_array($args) ? $args : array($args)))
-			: call_user_func(self::_FUNC.$func);
+	protected function _func($func, $args = null) {
+		return $args !== null ? call_user_func_array(self::_FUNC . $func, (is_array($args) ?
+			$args : array($args))) : call_user_func(self::_FUNC . $func);
+	}
+
+	protected function __call($func, $args = null) {
+		static $methods;
+
+		if (!$methods) {
+			$methods = array();
+
+			$methods['result'] = array_flip(array('num_rows', 'fetch_assoc'));
+
+			$methods['connection'] = array_flip(array('insert_id', 'affected_rows', 'error',
+				'errno'));
+
+			$methods['mysql'] = array_flip(array('fetch_array'));
+		}
+
+		$_func = '';
+		if (isset($methods['connection'][$func])) {
+			$_func = '_' . $func;
+			$_args = array($this->connection);
+		} elseif (isset($methods['result'][$func])) {
+			$_func = '_' . $func;
+			$_args = is_array($args) ? $args : array($this->last_result);
+		} elseif (isset($methods['mysql'][$func])) {
+			$_func = '_' . $func;
+			$_args = $args;
+		}
+
+		if (!empty($_func)) {
+			if (method_exists($this, $_func)) {
+				return call_user_func_array(array($this, $_func), $_args);
+			} else {
+				return $this->_func($func, $_args);
+			}
+		}
 	}
 
 	/**
@@ -83,7 +126,8 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		$this->connection or $this->connect();
 
 		if (($value = $this->_escape($value)) === false) {
-			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->_error($this->connection), ':errno' => $this->_errno($this->connection)));
+			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->
+				_error($this->connection), ':errno' => $this->_errno($this->connection)));
 		}
 
 		return $value;
@@ -126,7 +170,8 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		// Make sure the database is connected
 		$this->connection or $this->connect();
 
-		(($parsesql !== null) ? $parsesql : $this->config['autoparsesql']) && $sql = $this->parsesql($sql);
+		(($parsesql !== null) ? $parsesql : $this->config['autoparsesql']) && $sql = $this->
+			parsesql($sql);
 
 		$result = $this->_query($sql, $type);
 
@@ -140,7 +185,16 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		return new Scrpio_Db_Result_Mysql($result, $sql, &$this);
 	}
 
-	function connect() {
+	public function build() {
+		return $this->build or $this->build = new Scrpio_Db_Builder_Mysql(&$this);
+	}
+
+	protected function _connect($host, $port, $user, $pass, $params) {
+		return ($this->config['persistent'] === true) ? mysql_pconnect($host . $port, $user,
+			$pass, $params) : mysql_connect($host . $port, $user, $pass, true, $params);
+	}
+
+	public function connect() {
 
 		if ($this->connection)
 			return;
@@ -152,19 +206,21 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 
 		try {
 			// Connect to the database
-			$this->connection = ($this->config['persistent'] === true) ? mysql_pconnect($host . $port, $user, $pass, $params) : mysql_connect($host . $port, $user, $pass, true, $params);
+			$this->connection = $this->_connect($host, $port, $user, $pass, $params);
 		}
-		catch (Scrpio_Exception $e) {
+		catch (Scrpio_Exception_PHP $e) {
 			// No connection exists
 			$this->connection = null;
 
 			// Unable to connect to the database
-			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->_error(), ':errno' => $this->_errno()));
+			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->
+				_error(), ':errno' => $this->_errno()));
 		}
 
 		if (!$this->_select_db($database, $this->connection)) {
 			// Unable to select database
-			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->_error($this->connection), ':errno' => $this->_errno($this->connection)));
+			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->
+				_error($this->connection), ':errno' => $this->_errno($this->connection)));
 		}
 
 		if (isset($this->config['character_set'])) {
@@ -173,42 +229,8 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		}
 	}
 
-	function fetch_array($query, $result_type = MYSQL_ASSOC) {
-		return mysql_fetch_array($query, $result_type);
-	}
-
 	function fetch_first($sql) {
 		return $this->fetch_array($this->query($sql));
-	}
-
-
-	function affected_rows() {
-		return mysql_affected_rows($this->connection);
-	}
-
-	function error() {
-		return $this->_error();
-	}
-
-	function errno() {
-		return $this->_errno();
-	}
-
-	function num_rows($query) {
-		$query = mysql_num_rows($query);
-		return $query;
-	}
-
-	function num_fields($query) {
-		return mysql_num_fields($query);
-	}
-
-	function free_result($query) {
-		return mysql_free_result($query);
-	}
-
-	function insert_id() {
-		return ($id = mysql_insert_id($this->connection)) >= 0 ? $id : $this->result($this->query("SELECT last_insert_id()"), 0);
 	}
 
 	function fetch_row($query) {
@@ -226,21 +248,6 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		}
 		return $this->version;
 	}
-
-
-	function halt($message = '', $sql = '') {
-		define('CACHE_FORBIDDEN', true);
-		require_once DISCUZ_ROOT . './include/db_mysql_error.inc.php';
-	}
-
-	function table($table, $add = 1) {
-		$ret = $this->tablepre . $table;
-		if ($add)
-			$ret = '`' . $ret . '`';
-
-		return $ret;
-	}
-
 
 	function query_info($query = null) {
 		if (function_exists('mysql_info')) {
@@ -269,9 +276,12 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 
 	function parsesql($queries, $do = 1) {
 		if ($do < 0)
-			return str_replace(array(' ' . $this->tablepre, ' ' . $this->tablepre, ' `' . $this->tablepre), array(' [Table]', ' [Table]', ' `[Table]'), $queries);
+			return str_replace(array(' ' . $this->tablepre, ' ' . $this->tablepre, ' `' . $this->
+				tablepre), array(' [Table]', ' [Table]', ' `[Table]'), $queries);
 
-		return $do ? str_replace("\r", "\n", str_replace(array(' cdb_', ' {tablepre}', ' `cdb_'), array(' ' . $this->tablepre, ' ' . $this->tablepre, ' `' . $this->tablepre), $queries)) : $queries;
+		return $do ? str_replace("\r", "\n", str_replace(array(' cdb_', ' {tablepre}',
+			' `cdb_'), array(' ' . $this->tablepre, ' ' . $this->tablepre, ' `' . $this->
+			tablepre), $queries)) : $queries;
 	}
 
 	function getlastsql($br = 0) {
@@ -287,9 +297,9 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 	}
 
 
-
 	function runquery($query, $type = '') {
-		(($parsesql !== null) ? $parsesql : $this->config['autoparsesql']) && $sql = $this->parsesql($sql);
+		(($parsesql !== null) ? $parsesql : $this->config['autoparsesql']) && $sql = $this->
+			parsesql($sql);
 
 		$this->lastrunsql = $query;
 
@@ -338,7 +348,7 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 					$successed = $this->query("UPDATE {$this->tablepre}{$table} SET $sql", 'SILENT');
 				}
 
-			} elseif ($tableinfo = $this->loadtable($table)) {
+			} elseif ($tableinfo = $this->list_fields($table)) {
 
 				$fieldexist = isset($tableinfo[$field]) ? 1 : 0;
 
@@ -370,7 +380,10 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 				} elseif ($action == 'COMMENT') {
 
 					if ($fieldexist && $tableinfo['Comment'] != $sql) {
-						$query .= "CHANGE `$field` `$field` {$tableinfo['Type']} " . ($tableinfo['Collation'] ? " CHARACTER SET {$this->dbcharset} COLLATE {$tableinfo['Collation']} " : "") . ($tableinfo['Null'] ? ' NOT ' : '') . " NULL {$tableinfo['Extra']} " . ($tableinfo['Default'] != null ? " DEFAULT '{$tableinfo['Default']}' " : "") . " COMMENT '$sql' ";
+						$query .= "CHANGE `$field` `$field` {$tableinfo['Type']} " . ($tableinfo['Collation'] ?
+							" CHARACTER SET {$this->dbcharset} COLLATE {$tableinfo['Collation']} " : "") . ($tableinfo['Null'] ?
+							' NOT ' : '') . " NULL {$tableinfo['Extra']} " . ($tableinfo['Default'] != null ?
+							" DEFAULT '{$tableinfo['Default']}' " : "") . " COMMENT '$sql' ";
 
 						$successed = $this->query($query);
 					}
@@ -395,34 +408,59 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		return $successed;
 	}
 
-	function loadtable($table, $force = 0) {
+	public function list_fields($table, $force = null) {
+		static $result;
 
-		//		Field 	Type 	Collation 	Null 	Key 	Default 	Extra 	Privileges 	Comment
-		//		pmlife  	int(10) unsigned  	NULL  	NO  	   	0  	   	select,insert,update,references  	PM摮咞暑?彑?
+		if (($force !== null && $force) || !isset($result[$table])) {
+			$force = ($force !== null) ? $force : null;
+			$result[$table] = array();
 
-		if (!isset($tables[$table]) || $force) {
 			if ($this->version() > '4.1') {
-				$query = $this->query("SHOW FULL COLUMNS FROM {$this->tablepre}$table", 'SILENT');
+				$query = $this->query('SHOW FULL COLUMNS FROM ' . $this->quote_table($table), '',
+					$force);
 			} else {
-				$query = $this->query("SHOW COLUMNS FROM {$this->tablepre}$table", 'SILENT');
-				//				$query = $this->query("DESCRIBE {$this->tablepre}$table", 'SILENT');
+				$query = $this->query('SHOW COLUMNS FROM ' . $this->quote_table($table), '', $force);
 			}
-			while ($field = @$this->fetch_array($query)) {
-				$this->tables[$field['Field']] = $field;
+
+			foreach ($query as $row) {
+				$column = $this->sql_type($row['Type']);
+
+				$column['default'] = $row['Default'];
+				$column['nullable'] = $row['Null'] === 'YES';
+				$column['sequenced'] = $row['Extra'] === 'auto_increment';
+
+				if (isset($column['length']) and $column['type'] === 'float') {
+					list($column['precision'], $column['scale']) = explode(',', $column['length']);
+				}
+
+				if ($varList = array_diff_key($row, array_flip(array('Type', 'Default', 'Null',
+					'Extra')))) {
+
+					foreach ($varList as $k => $v) {
+						$k = 'sql_' . lc($k);
+
+						!isset($column[$k]) && $column[$k] = $v;
+					}
+				}
+
+				$result[$row['Field']] = $column;
 			}
 		}
-		return $this->tables;
+
+		return $result[$table];
 	}
 
 	function col_exists_chk($table, $col, $force = 0) {
-		$chk = array_key_exists($col, $this->loadtable($table, $force)) ? 1 : 0;
+		$chk = array_key_exists($col, $this->list_fields($table, $force)) ? 1 : 0;
 		return $chk;
 	}
 
 	function createtable($sql, $dbcharset) {
-		$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
+		$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU",
+			"\\2", $sql));
 		$type = in_array($type, array('MYISAM', 'HEAP')) ? $type : 'MYISAM';
-		return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql) . (mysql_get_server_info() > '4.1' ? " ENGINE=$type DEFAULT CHARSET=$dbcharset" : " TYPE=$type");
+		return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql) . (mysql_get_server_info
+			() > '4.1' ? " ENGINE=$type DEFAULT CHARSET=$dbcharset" : " TYPE=$type");
 	}
 
 	function get_charset($tablename) {
@@ -506,10 +544,6 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 
 	function query_result_all($sql, $field = 0) {
 		return $this->result_all($sql, $field);
-	}
-
-	function fetch_assoc($query = null) {
-		return mysql_fetch_assoc($query === null ? $this->lastqueryid : $query);
 	}
 }
 

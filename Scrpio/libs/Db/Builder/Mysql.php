@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Db_Exception extends Scrpio_Db_Exception_Core {}
+	class Scrpio_Db_Builder_Mysql extends Scrpio_Db_Builder_Mysql_Core {}
 }
 
-class Scrpio_Db_Exception_Core extends Scrpio_Exception {
+class Scrpio_Db_Builder_Mysql_Core extends Scrpio_Db_Builder {
 
 }
 

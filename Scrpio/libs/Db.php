@@ -12,6 +12,11 @@
  * @copyright 2010
  */
 
+if (0) {
+	// for IDE
+	class Scrpio_Db extends Scrpio_Db_Core {}
+}
+
 /**
  * @package Scrpio_Db
  */
@@ -26,8 +31,13 @@ class Scrpio_Db_Core {
 
 	protected static $instances = array();
 
+	protected $last_query = null;
+	protected $last_runquery = null;
+
+	protected $last_result = null;
+
 	// Raw server connection
-	protected $connection;
+	protected $connection = null;
 
 	// Cache (Cache object for cross-request, array for per-request)
 	protected $cache;
@@ -63,6 +73,55 @@ class Scrpio_Db_Core {
 
 	public static function config($name = 'default', $attr = null) {
 		return Scrpio_Base::config('database.' . $name, $attr);
+	}
+
+	/**
+	 * Executes the given query, returning the cached version if enabled
+	 *
+	 * @param  string  SQL query
+	 * @return Database_Result
+	 */
+	public function query($sql, $type = '', $force = null) {
+		// Start the benchmark
+		$start = microtime(true);
+
+		if (!($force !== null && $force) && is_array($this->cache)) {
+			$hash = $this->query_hash($sql);
+
+			if (isset($this->cache[$hash])) {
+				// Use cached result
+				$result = $this->cache[$hash];
+
+				// It's from cache
+				$sql .= ' [CACHE]';
+			} else {
+				// No cache, execute query and store in cache
+				$result = $this->cache[$hash] = $this->query_execute($sql, $type);
+			}
+		} else {
+			// Execute the query, cache is off
+			$result = $this->query_execute($sql, $type);
+		}
+
+		// Stop the benchmark
+		$stop = microtime(true);
+
+		if ($this->config['benchmark'] === true) {
+			// Benchmark the query
+			Scrpio_Db::$benchmarks[] = array('query' => $sql, 'time' => $stop - $start, 'rows' => count($result));
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Generates a hash for the given query
+	 *
+	 * @param   string  SQL query string
+	 * @return  string
+	 */
+	protected function query_hash($sql) {
+		return sha1(str_replace("\n", ' ', trim($sql)));
 	}
 
 	/**
@@ -164,6 +223,66 @@ class Scrpio_Db_Core {
 		return '\'' . $this->escape($value) . '\'';
 	}
 
+	/**
+	 * Get the table prefix
+	 *
+	 * @param  string  Optional new table prefix to set
+	 * @return string
+	 */
+	public function table_prefix($new_prefix = null) {
+		if ($new_prefix !== null) {
+			// Set a new prefix
+			$this->config['table_prefix'] = $new_prefix;
+		}
+
+		return $this->config['table_prefix'];
+	}
+
+	/**
+	 * Fetches SQL type information about a field, in a generic format.
+	 *
+	 * @param   string  field datatype
+	 * @return  array
+	 */
+	protected function sql_type($str) {
+		static $sql_types;
+
+		if ($sql_types === null) {
+			// Load SQL data types
+			$sql_types = Scrpio_Base::config('sql_types');
+		}
+
+		$str = trim($str);
+
+		if (($open = strpos($str, '(')) !== false) {
+			// Closing bracket
+			$close = strpos($str, ')', $open);
+
+			// Length without brackets
+			$length = substr($str, $open + 1, $close - 1 - $open);
+
+			// Type without the length
+			$type = substr($str, 0, $open) . substr($str, $close + 1);
+		} else {
+			// No length
+			$type = $str;
+		}
+
+		if (empty($sql_types[$type]))
+			throw new Scrpio_Db_Exception('Undefined field type :type', array(':type' => $str));
+
+		// Fetch the field definition
+		$field = $sql_types[$type];
+
+		$field['sql_type'] = $type;
+
+		if (isset($length)) {
+			// Add the length to the field info
+			$field['length'] = $length;
+		}
+
+		return $field;
+	}
 
 }
 

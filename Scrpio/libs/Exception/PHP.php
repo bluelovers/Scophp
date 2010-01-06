@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Db_Exception extends Scrpio_Db_Exception_Core {}
+	class Scrpio_Exception_PHP extends Scrpio_Exception_PHP_Core {}
 }
 
-class Scrpio_Db_Exception_Core extends Scrpio_Exception {
+class Scrpio_Exception_PHP_Core extends Scrpio_Exception {
 
 }
 
