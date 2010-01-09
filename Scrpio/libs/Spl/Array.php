@@ -19,7 +19,14 @@ if (0) {
 }
 
 class Scrpio_Spl_Array_Core extends Scrpio_Spl implements Iterator, ArrayAccess {
-	protected $_scrpio_ = array();
+
+	function _setup(&$base) {
+		$this->_scrpio_base_ = $base;
+
+		if (is_array($base)) {
+			$this->_scrpio_ =& $this->_scrpio_base_;
+		}
+	}
 
 	/**
 	 * implements methods of interface ArrayAccess.

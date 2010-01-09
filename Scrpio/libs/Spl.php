@@ -18,7 +18,10 @@ if (0) {
 }
 
 class Scrpio_Spl_Core {
+	protected $_scrpio_ = array();
+	protected $_scrpio_base_ = null;
 
+	protected $_scrpio_type_ = null;
 }
 
 ?>

@@ -184,7 +184,7 @@ class Scrpio_Db_Core {
 		if ($this->config['cache'] !== false) {
 			if (is_string($this->config['cache'])) {
 				// Use Cache library
-				$this->cache = new Cache($this->config['cache']);
+				$this->cache = new Scrpio_Cache($this->config['cache']);
 			} elseif ($this->config['cache'] === true) {
 				// Use array
 				$this->cache = array();

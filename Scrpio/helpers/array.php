@@ -1,4 +1,4 @@
-<?php
+<?
 
 /**
  *
@@ -14,17 +14,15 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_SYS_Base extends Scrpio_SYS_Base_Core {}
-	class Sco_Base extends Scrpio_SYS_Base {}
+	class scoarray extends Scrpio_helper_array_Core {}
 }
 
-class Scrpio_SYS_Base_Core {
-
+class Scrpio_helper_array_Core {
 	protected static $instances = null;
 
 	public static function instance($overwrite = false) {
 		if (!self::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite : 'Sco_Base');
+			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite : 'scoarray');
 			self::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
 			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite : get_class(self::$instances));
@@ -44,24 +42,33 @@ class Scrpio_SYS_Base_Core {
 		return self::$instances;
 	}
 
-	public static function Init() {
-		static $_do;
-
-		if (!$_do) {
-			$_do = true;
-
-			require_once('./libs/File.php');
-
-			$file = new Scrpio_File_Core();
-
-			$base = $file->dirname(dirname(__FILE__), '..');
-
-			foreach ($file->scandir_ext('php', $base.'syntax') as $file) {
-				include_once($base.'syntax/'.$file);
+	static function array_remove_keys($array, $haystack) {
+		if (is_array($haystack)) {
+			for ($i = 0; $i < count($haystack); $i++) {
+				unset($array[$haystack[$i]]);
 			}
+		} else {
+			unset($array[$haystack]);
 		}
 	}
 
+	/**
+	 * array_search_match($needle, $haystack)
+	 * returns all the keys of the values that match $needle in $haystack
+	 *
+	 * @return array
+	 */
+	static function array_search_all($needle, $haystack) {
+
+		foreach ($haystack as $k => $v) {
+
+			if ($haystack[$k] == $needle) {
+
+				$array[] = $k;
+			}
+		}
+		return (array )$array;
+	}
 }
 
 ?>
