@@ -78,6 +78,34 @@ class Scrpio_helper_date_Core {
 			return 0;
 		}
 	}
+
+	/**
+	 * Returns the offset (in seconds) between two time zones.
+	 * @see     http://php.net/timezones
+	 *
+	 * @param   string          timezone to find the offset of
+	 * @param   string|boolean  timezone used as the baseline
+	 * @param   string          time at which to calculate
+	 * @return  integer
+	 */
+	public static function offset($remote, $local = TRUE, $when = 'now')
+	{
+		if ($local === TRUE)
+		{
+			$local = date_default_timezone_get();
+		}
+
+		// Create timezone objects
+		$remote = new DateTimeZone($remote);
+		$local  = new DateTimeZone($local);
+
+		// Create date objects from timezones
+		$time_there = new DateTime($when, $remote);
+		$time_here  = new DateTime($when, $local);
+
+		// Find the offset
+		return $remote->getOffset($time_there) - $local->getOffset($time_here);
+	}
 }
 
 ?>

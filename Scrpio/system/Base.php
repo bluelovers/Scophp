@@ -62,6 +62,24 @@ class Scrpio_SYS_Base_Core {
 		}
 	}
 
+	function &__get($key) {
+		switch($key) {
+			case 'loader':
+				$ret = Scrpio_Loader::instance();
+				break;
+			case 'php':
+				$ret = scophp::instance();
+				break;
+			default:
+
+				trigger_error('Sco_Base: Unknown (' . $key . ')', E_USER_ERROR);
+
+				break;
+		}
+
+		return $ret;
+	}
+
 }
 
 ?>

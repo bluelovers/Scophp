@@ -21,11 +21,11 @@ if (0) {
 class Scrpio_Spl_Class_Core {
 	protected $instances = null;
 
-	function __construct($class) {
+	protected function __construct($class) {
 		$this->_scrpio_base_ = $class;
 	}
 
-	private static function _instance() {
+	protected function _instance() {
 		$ref = new ReflectionClass($this->_scrpio_base_);
 
 		if ($ref->hasMethod('instance')) {
@@ -37,10 +37,14 @@ class Scrpio_Spl_Class_Core {
 		return $this->instances;
 	}
 
-	function __call(string $method, array $args = array()) {
+	protected function __call(string $method, array $args = array()) {
 		$this->instances or $this->_instance();
 
 		return call_user_func_array(array($this->instances, $method), $args);
+	}
+
+	protected function __toString() {
+		return $this->_scrpio_base_;
 	}
 }
 
