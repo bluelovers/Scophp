@@ -83,7 +83,7 @@ class Scrpio_Loader_Core {
 		} else {
 			$_temp = split('_', $name);
 			$name = array_pop($_temp);
-			$syspath = SYSPATH.'Scrpio/libraries/'.join('/', $_temp).'/';
+			$syspath = SYSPATH.'Scrpio/libs/'.join('/', $_temp).'/';
 		}
 
 		if (!self::exists($rename_def)) {
