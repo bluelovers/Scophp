@@ -17,7 +17,7 @@ if (0) {
 	class Scrpio_Exception extends Scrpio_Exception_Core {}
 }
 
-class Scrpio_Exception_Core {
+class Scrpio_Exception_Core extends Exception {
 
 }
 
