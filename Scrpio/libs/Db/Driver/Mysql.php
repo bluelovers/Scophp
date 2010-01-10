@@ -249,6 +249,13 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		return $this->version;
 	}
 
+	function _tables_create($sql, $dbcharset) {
+		$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU", "\\2", $sql));
+		$type = in_array($type, array('MYISAM', 'HEAP', 'INNDB')) ? $type : 'MYISAM';
+		return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql).
+			($this->version() > '4.1' ? " ENGINE=$type DEFAULT CHARSET=$dbcharset" : " TYPE=$type");
+	}
+
 	function query_info($query = null) {
 		if (function_exists('mysql_info')) {
 			return $query ? mysql_info($query) : mysql_info();
@@ -274,51 +281,70 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		//		$return['changed'] = $changed[1];
 	}
 
-	function parsesql($queries, $do = 1) {
-		if ($do < 0)
-			return str_replace(array(' ' . $this->tablepre, ' ' . $this->tablepre, ' `' . $this->
-				tablepre), array(' [Table]', ' [Table]', ' `[Table]'), $queries);
+	/**
+	 * 分析修正多筆 SQL 並且移除註解
+	 *
+	 * @param string $sql
+	 * @param bool $retarray if true return a array
+	 */
+	function clear($sql, $retarray = false){
+		/*
+		http://www.php.net/manual/en/function.preg-replace.php#87816
 
-		return $do ? str_replace("\r", "\n", str_replace(array(' cdb_', ' {tablepre}',
-			' `cdb_'), array(' ' . $this->tablepre, ' ' . $this->tablepre, ' `' . $this->
-			tablepre), $queries)) : $queries;
+		$sql = preg_replace("/(?<!\\n)\\r+(?!\\n)/", "\r\n", $sql);
+		$sql = preg_replace("/(?<!\\r)\\n+(?!\\r)/", "\r\n", $sql);
+		$sql = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", "\r\n", $sql);
+		*/
+
+		$sql = preg_replace("/(?<!\\n)\\r+(?!\\n)/", LF, $sql);
+		$sql = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", LF, $sql);
+		$sql = preg_replace("/\\r\\n/", LF, $sql);
+
+		$templine = '';
+		$newsql = array();
+
+		foreach ( preg_split("/\n/", $sql) as $line_num => $line ) {
+			$temp = trim($line, TAB);
+			// Only continue if it's not a comment
+			if (substr($temp, 0, 2) != '--' && $temp != '') {
+				// Add this line to the current segment
+				$templine .= $line;
+				// If it has a semicolon at the end, it's the end of the query
+				if (substr(trim($line), -1, 1) == ';') {
+					$newsql[] = trim($templine, TAB.LF);
+					// Reset temp variable to empty
+					$templine = '';
+				} else {
+					 $templine .= LF;
+				}
+			}
+		}
+
+		// 處理如果沒有以  ; 結尾時
+		if (!count($newsql) && !empty($templine)) $newsql[] = trim($templine, TAB.LF);
+
+		return $retarray ? $newsql : join(LF, $newsql);
 	}
 
-	function getlastsql($br = 0) {
-		$ret = $this->parsesql($this->lastsql, -1);
+	function runquery($querysql, $auto_parsesql = FALSE) {
+		// 判斷是否修正 table_prefix
+		$auto_parsesql && $querysql = $this->parsesql($querysql);
 
-		return $rb ? nl2br($ret) : $ret;
-	}
+		// 儲存此次執行的原始 SQL
+		$this->last_runquery = $querysql;
 
-	function getlastrunsql($br = 0) {
-		$ret = $this->parsesql($this->lastrunsql, -1);
+		foreach($this->clear($querysql, true) as $sql) {
+			if(trim($sql) == '') continue;
 
-		return $rb ? nl2br($ret) : $ret;
-	}
-
-
-	function runquery($query, $type = '') {
-		(($parsesql !== null) ? $parsesql : $this->config['autoparsesql']) && $sql = $this->
-			parsesql($sql);
-
-		$this->lastrunsql = $query;
-
-		$expquery = explode(";\n", $query);
-
-		foreach ($expquery as $sql) {
-			$sql = trim($sql);
-			if ($sql == '' || $sql[0] == '#')
-				continue;
-
-			if (strtoupper(substr($sql, 0, 12)) == 'CREATE TABLE') {
-				$this->query($this->createtable($sql, $this->dbcharset), $type);
+			if(strtoupper(substr($sql, 0, 12)) == 'CREATE TABLE') {
+				$this->query($this->createtable($sql, $this->dbcharset));
 			} else {
-				$this->query($sql, $type);
+				$this->query($sql);
 			}
 		}
 	}
 
-	function upgradetable($updatesql) {
+	function tables_upgrade($updatesql) {
 
 		//		array('forums', 'ADD', 'allowtag', "TINYINT(1) NOT NULL DEFAULT '1'"),
 		//		array('forums', 'DROP', 'allowpaytoauthor', ""),
@@ -455,43 +481,68 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		return $chk;
 	}
 
-	function createtable($sql, $dbcharset) {
-		$type = strtoupper(preg_replace("/^\s*CREATE TABLE\s+.+\s+\(.+?\).*(ENGINE|TYPE)\s*=\s*([a-z]+?).*$/isU",
-			"\\2", $sql));
-		$type = in_array($type, array('MYISAM', 'HEAP')) ? $type : 'MYISAM';
-		return preg_replace("/^\s*(CREATE TABLE\s+.+\s+\(.+?\)).*$/isU", "\\1", $sql) . (mysql_get_server_info
-			() > '4.1' ? " ENGINE=$type DEFAULT CHARSET=$dbcharset" : " TYPE=$type");
-	}
-
 	function get_charset($tablename) {
 		$tablestruct = $this->fetch_first("show create table $tablename");
 		preg_match("/CHARSET=(\w+)/", $tablestruct['Create Table'], $m);
 		return $m[1];
 	}
 
+	/**
+	 * check table exist
+	 *
+	 * @param string $table table name without table_prefix
+	 * @param bool $nocache don't use cache
+	 */
+	function tables_exists($table, $nocache = false) {
+		// Make sure the database is connected
+		$this->connection or $thisdb->connect();
+		static $tables;
+
+		if (!$nocache && is_array($this->cache)) {
+			$tables = $tables ? $tables : $this->list_tables();
+
+			$exists = in_array($table, $tables);
+		} else {
+			if ($tables) unset($tables);
+
+			$result = $this->query("SELECT 1 FROM `".$this->table_prefix()."$table` LIMIT 0", $this->connection);
+
+			$exists = $result->result;
+		}
+
+		return ($exists) ? true : false;
+
+		/*$tables = mysql_list_tables($this->connection);
+		while ( list($temp) = mysql_fetch_array($tables) ) {
+			if ($temp == $table) {
+				return TRUE;
+			}
+		}
+		return FALSE;*/
+	}
+
 	function tables_lock($tablesarray = '', $usetablepre = 1) {
 
 		$sql = $t = $c = '';
 
-		if ($usetablepre)
-			$t = $GLOBALS['tablepre'];
+		if ($usetablepre) $t = $this->table_prefix();
 
 		foreach (array_unique($tablesarray) as $key => $value) {
 
-			$sql .= $c . $t . "{$value} WRITE";
+			$sql .= $c.$t."{$value} WRITE";
 
 			$c = ', ';
 		}
 
 		$this->query("LOCK TABLES $sql");
+
+		return $this;
 	}
 
-	function tables_unlock() {
+	function tables_unlock () {
 		$this->query("UNLOCK TABLES");
-	}
 
-	function query_first($sql) {
-		return $this->fetch_first($sql);
+		return $this;
 	}
 
 	function query_result($query_string, $index = 0, $field = 0) {
@@ -505,45 +556,6 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 
 	function result_first($sql, $field = 0) {
 		return $this->result($this->query($sql), 0, $field);
-	}
-
-	function fetch_all($sql, $id = '', $parsesql = 0) {
-		$arr = array();
-		$query = $this->query($this->parsesql($sql, $parsesql));
-		while ($data = $this->fetch_array($query)) {
-			$id ? $arr[$data[$id]] = $data : $arr[] = $data;
-		}
-
-		$this->free_result($query);
-
-		return $arr;
-	}
-
-	function result_all($sql, $field = 0) {
-		$arr = array();
-		$query = $this->query($sql);
-
-		if ($l = mysql_num_rows($query)) {
-			for ($i = 0; $i < $l; $i++) {
-				if (is_array($field)) {
-					$t = array();
-					foreach ($field as $k) {
-						$t[$k] = $this->result($query, $i, $k);
-					}
-					$arr[] = $t;
-				} else {
-					$arr[] = $this->result($query, $i, $field);
-				}
-			}
-		}
-
-		$this->free_result($query);
-
-		return $arr;
-	}
-
-	function query_result_all($sql, $field = 0) {
-		return $this->result_all($sql, $field);
 	}
 }
 

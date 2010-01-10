@@ -17,9 +17,6 @@ if (0) {
 	class Scrpio_Db_Builder extends Scrpio_Db_Builder_Core {}
 }
 
-/**
- * @package Scrpio_Db_Builder
- */
 class Scrpio_Db_Builder_Core {
 
 	// Valid ORDER BY directions

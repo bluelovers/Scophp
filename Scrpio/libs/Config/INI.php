@@ -12,7 +12,13 @@
  * @copyright 2010
  */
 
-define('LF', "\n");
-define('TAB', "\t");
+if (0) {
+	// for IDE
+	class Scrpio_Config_INI extends Scrpio_Config_INI_Core {}
+}
+
+class Scrpio_Config_INI_Core {
+
+}
 
 ?>

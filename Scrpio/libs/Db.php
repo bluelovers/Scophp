@@ -14,7 +14,8 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Db extends Scrpio_Db_Core {}
+	class Scrpio_Db extends Scrpio_Db_Core {
+	}
 }
 
 /**
@@ -28,6 +29,8 @@ class Scrpio_Db_Core {
 	const DELETE = 4;
 	const CROSS_REQUEST = 5;
 	const PER_REQUEST = 6;
+
+	const ALTER = 11;
 
 	protected static $instances = array();
 
@@ -108,7 +111,8 @@ class Scrpio_Db_Core {
 
 		if ($this->config['benchmark'] === true) {
 			// Benchmark the query
-			Scrpio_Db::$benchmarks[] = array('query' => $sql, 'time' => $stop - $start, 'rows' => count($result));
+			Scrpio_Db::$benchmarks[] = array('query' => $sql, 'time' => $stop - $start,
+				'rows' => count($result));
 		}
 
 		return $result;
@@ -131,7 +135,8 @@ class Scrpio_Db_Core {
 	 * @return array
 	 */
 	public static function parse_dsn($dsn) {
-		$db = array('type' => false, 'user' => false, 'pass' => false, 'host' => false, 'port' => false, 'socket' => false, 'database' => false);
+		$db = array('type' => false, 'user' => false, 'pass' => false, 'host' => false,
+			'port' => false, 'socket' => false, 'database' => false);
 
 		// Get the protocol and arguments
 		list($db['type'], $connection) = explode('://', $dsn, 2);
@@ -282,6 +287,59 @@ class Scrpio_Db_Core {
 		}
 
 		return $field;
+	}
+
+	function parsesql($queries, $do = 1) {
+//		if ($do < 0)
+//			return str_replace(array(' ' . $this->tablepre, ' ' . $this->quote . $this->
+//				tablepre), array(' [Table]', ' ' . $this->quote . '[Table]'), $queries);
+//
+//		return $do ? str_replace("\r", "\n", str_replace(array(' cdb_', ' {tablepre}',
+//			' ' . $this->quote . '{tablepre}', ' ' . $this->quote . 'cdb_'), array(' ' . $this->
+//			tablepre, ' ' . $this->tablepre, ' ' . $this->quote . $this->tablepre, ' ' . $this->
+//			quote . $this->tablepre), $queries)) : $queries;
+
+		if ($do < 0) {
+			return preg_replace('/(?<=\bFROM|\bUPDATE|\bINSERT INTO|\bDELETE FROM|\bJOIN|\bTABLE|\bTABLES|\b,)\s+(('.preg_quote($this->quote, '/').')?('.preg_quote($this->tablepre, '/').')([_a-z0-9]+))\\2([\s\b])/i', ' '.$this->quote.'[Table]'.'\\4'.$this->quote.'\\5', $queries);
+		} elseif ($do) {
+			return preg_replace('/(?<=\bFROM|\bUPDATE|\bINSERT INTO|\bDELETE FROM|\bJOIN|\bTABLE|\bTABLES|\b,)\s+(('.preg_quote($this->quote, '/').')?(cdb_|\{tablepre\})([_a-z0-9]+))\\2([\s\b])/i', ' '.$this->quote.$this->tablepre.'\\4'.$this->quote.'\\5', $queries);
+		} else {
+			return $queries;
+		}
+/*
+$queries = <<<EOM
+UPDATE cdb_post
+INSERT INTO `cdb_post`
+from cdb_post
+DELETE FROM `cdb_post `
+
+
+EOM
+;
+
+//UPDATE `[TABLE]post`
+//INSERT INTO `[TABLE]post`
+//from `[TABLE]post`
+//DELETE FROM `cdb_post `
+*/
+	}
+
+	/**
+	 * Returns the last executed query for this database
+	 *
+	 * @return string
+	 */
+	public function last_query() {
+		return $this->parsesql($this->last_query, -1);
+	}
+
+	/**
+	 * Returns the last executed runquery for this database
+	 *
+	 * @return string
+	 */
+	public function last_runquery() {
+		return $this->parsesql($this->last_runquery, -1);
 	}
 
 }
