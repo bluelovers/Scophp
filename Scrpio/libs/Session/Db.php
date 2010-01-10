@@ -14,10 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Exception extends Scrpio_Exception_Core {}
+	class Scrpio_Session_Db extends Scrpio_Session_Db_Core {
+	}
 }
 
-class Scrpio_Exception_Core extends Exception {
+class Scrpio_Session_Db_Core extends Scrpio_Session {
 
 }
 

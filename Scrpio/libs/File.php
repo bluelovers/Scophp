@@ -17,14 +17,14 @@ class Scrpio_File_Core {
 	static $temp;
 
 	function open($filename, $mode, $use_include_path = false, $context = null) {
-		self::mkdir(self::dirname($filename));
+		self::mkdir(self::dirname($filename, '', 1));
 
 		if (@$fp = fopen($filename, $mode)) {
 			return $fp;
 		}
-		$dir = self::dirname($filename, '..');
+		$dir = self::dirname($filename, '', 1);
 //		$dir = preg_replace('/^'.preg_quote(self::dirname($filename), '/.\\+*?[^]$(){}=!<>|:-').'/', '', $filename);
-		exit('Can not write to cache files, please check directory '.self::path($dir));
+		exit('Can not write to cache files, please check directory '.$dir);
 	}
 
 	function dirname($path, $chdir = '', $dirnamefunc = false) {

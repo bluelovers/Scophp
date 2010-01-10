@@ -33,7 +33,7 @@ class Scrpio_helper_php_Core {
 		return self::$instances;
 	}
 
- 	function __construct(){
+ 	protected function __construct(){
  		if (self::$instances === null) {
  			self::$instances = $this;
 
@@ -66,25 +66,25 @@ class Scrpio_helper_php_Core {
 		return self::$instances;
  	}
 
- 	function __get($var){
+ 	protected static function __get($var){
  		return self::get($var);
  	}
 
- 	function __set($var, $val){
+ 	protected static function __set($var, $val){
  		return self::set($var, $val);
  	}
 
- 	function set_include_path($path) {
+ 	public static function set_include_path($path) {
  		!empty($path) && set_include_path($path . PATH_SEPARATOR . get_include_path());
  	}
 
- 	function get($var){
+ 	public static function get($var){
  		self::$instances OR self::instance();
 
  		return isset(self::$_['GLOBALS'][$var]) ? self::$_['GLOBALS'][$var] : null;
  	}
 
- 	function set($var, $val){
+ 	public static function set($var, $val){
  		self::$instances OR self::instance();
 
  		self::_setglobals($var, $val);
@@ -93,7 +93,7 @@ class Scrpio_helper_php_Core {
  		return self::$instances;
  	}
 
- 	private static function _setglobals(&$var, &$val) {
+ 	protected static function _setglobals(&$var, &$val) {
  		if ($var == 'timestamp') {
  			$mtime = explode('.', $val);
 
@@ -124,7 +124,7 @@ class Scrpio_helper_php_Core {
  	 * fix -0 => 0
  	 * @param $n
  	 */
- 	function fixzero($n) {
+ 	public static function fixzero($n) {
  		return $n ? $n : 0;
  	}
 
@@ -163,7 +163,7 @@ class Scrpio_helper_php_Core {
  		return self::$_['_INI'][$var];
  	}
 
- 	private static function _ini_get($var) {
+ 	protected static function _ini_get($var) {
  		// XXX:
 
  		$val = ini_get($var);
@@ -197,7 +197,7 @@ class Scrpio_helper_php_Core {
  	 * @param $var
  	 * @param $force
  	 */
- 	private static function _getenv($var, $force = true) {
+ 	protected static function _getenv($var, $force = true) {
  		($force || !isset(self::$_['_ENV_DEF'][$var])) && self::$_['_ENV_DEF'][$var] = getenv($var);
 
  		return self::$_['_ENV_DEF'][$var];
@@ -220,7 +220,7 @@ class Scrpio_helper_php_Core {
  	 * @param $var
  	 * @param $val
  	 */
- 	private static function _setenv(&$var, &$val) {
+ 	protected static function _setenv(&$var, &$val) {
  		// XXX:
 
  		if (uc($var) == 'TZ') {
@@ -277,13 +277,32 @@ class Scrpio_helper_php_Core {
  	}
 
  	/**
+ 	 * @param $filename
+ 	 * @param bool - return runtime_defined_vars
+ 	 *
+ 	 * @return array
+ 	 */
+ 	public static function include_file() {
+ 		if (is_file(func_get_arg(0))) {
+ 			include func_get_arg(0);
+ 			if (true === func_get_arg(1)) {
+	 			return get_runtime_defined_vars(get_defined_vars());
+	 		}
+ 		} else {
+ 			throw new Scrpio_Exception_PHP('error');
+ 		}
+
+ 		return array();
+ 	}
+
+ 	/**
  	 *
  	 * @param $varList
  	 * @param $excludeList
  	 * @example get_runtime_defined_vars(get_defined_vars(), array('b'));
  	 * @example get_runtime_defined_vars(get_defined_vars());
  	 */
-	function get_runtime_defined_vars(array $varList, $excludeList = array()) {
+	public static function get_runtime_defined_vars(array $varList, $excludeList = array()) {
 	/** @example
 $a = 1;
 
@@ -326,8 +345,25 @@ Array
 	 *
 	 * @return bool
 	 */
-	public function func_exists($object, $method_name = null) {
+	public static function func_exists($object, $method_name = null) {
 		return $method_name === null ? function_exists($object) : method_exists($object, $method_name);
+	}
+
+	public static function func_callback($func, $callback) {
+		//todo: need a new name
+
+		$newcallback = is_array($callback) ? "array('$callback[0]', '$callback[1]')" : "'$callback'";
+
+		$newfunc = <<<EOM
+		function $func() {
+			\$args = func_get_args();
+			return call_user_func_array($newcallback, $args);
+		}
+EOM
+;
+		eval($newfunc);
+
+		return $func;
 	}
 }
 

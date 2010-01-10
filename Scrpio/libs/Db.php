@@ -342,6 +342,10 @@ EOM
 		return $this->parsesql($this->last_runquery, -1);
 	}
 
+	protected function _result($result, $sql) {
+		return new Scrpio_Db_Result($result, $sql, &$this);
+	}
+
 }
 
 ?>

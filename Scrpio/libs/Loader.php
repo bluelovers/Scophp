@@ -20,14 +20,23 @@ if (0) {
 
 class Scrpio_Loader_Core {
 
+	const OBJ_UNDEF = 0;
+	const OBJ_HELPER = 1;
+	const OBJ_LIB = 2;
+	const OBJ_CORE = 3;
+
+	const OBJ_ZEND = 101;
+
 	protected static $instances = null;
 
 	public static function instance($overwrite = false) {
 		if (!self::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite : 'Scrpio_Loader');
+			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
+				$overwrite : 'Scrpio_Loader');
 			self::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite : get_class(self::$instances));
+			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
+				get_class(self::$instances));
 			self::$instances = $ref->newInstance();
 		}
 
@@ -44,22 +53,33 @@ class Scrpio_Loader_Core {
 		return self::$instances;
 	}
 
+	static function class_parse($class) {
+		$ret = $matchs = array();
+		if (preg_match('/^sco(?<name>[a-zA-Z][_\w\d]+)$/', $matchs) || preg_match('/^Scrpio_helper_(?<name>[a-zA-Z][_\w\d]+)$/',
+			$matchs)) {
+			$ret = array(self::OBJ_HELPER, $class, $matchs['name']);
+		} elseif (preg_match('/^Sco_(?<name>[a-zA-Z][_\w\d]+)$/', $matchs) || preg_match
+		('/^Scrpio_SYS_(?<name>[a-zA-Z][_\w\d]+)$/', $matchs)) {
+			$ret = array(self::OBJ_CORE, $class, $matchs['name']);
+		} elseif (preg_match('/^Scrpio_(?<name>[A-Z][_\w\d]+)$/', $matchs)) {
+			$ret = array(self::OBJ_LIB, $class, $matchs['name']);
+		} elseif (preg_match('/^Zend_(?<name>[A-Z][_\w\d]+)$/', $matchs)) {
+			$ret = array(self::OBJ_ZEND, $class, $matchs['name']);
+		} else {
+			$ret = array(self::OBJ_UNDEF, $class, $class);
+		}
+
+		return $ret;
+	}
+
 	static function helper($name, $rename = null, $path = null) {
 		$core = '_Core';
 		$class = 'Scrpio_helper_' . $name;
 		$rename_def = 'sco' . $name;
 		$rename_new = $rename ? $rename : $rename_def;
 
-		return self::_load('helpers', array(
-			$core,
-			$class,
-			$rename_def,
-			$rename_new,
-
-			$rename,
-			$name,
-			$path,
-		));
+		return self::_load('helpers', array($core, $class, $rename_def, $rename_new, $rename,
+			$name, $path, ));
 	}
 
 	static function core($name, $rename = null, $path = null) {
@@ -68,16 +88,8 @@ class Scrpio_Loader_Core {
 		$rename_def = 'Sco_' . $name;
 		$rename_new = $rename ? $rename : $rename_def;
 
-		return self::_load('core', array(
-			$core,
-			$class,
-			$rename_def,
-			$rename_new,
-
-			$rename,
-			$name,
-			$path,
-		));
+		return self::_load('core', array($core, $class, $rename_def, $rename_new, $rename,
+			$name, $path, ));
 	}
 
 	static function lib($name, $rename = null, $path = null) {
@@ -86,29 +98,21 @@ class Scrpio_Loader_Core {
 		$rename_def = $class;
 		$rename_new = $rename ? $rename : $rename_def;
 
-		return self::_load('libraries', array(
-			$core,
-			$class,
-			$rename_def,
-			$rename_new,
-
-			$rename,
-			$name,
-			$path,
-		));
+		return self::_load('libraries', array($core, $class, $rename_def, $rename_new, $rename,
+			$name, $path, ));
 	}
 
 	private function _load(string $type, array $args) {
 		extract($args, EXTR_OVERWRITE);
 
 		if ($type == 'helpers') {
-			$syspath = SYSPATH.'Scrpio/'.$type.'/';
+			$syspath = SYSPATH . 'Scrpio/' . $type . '/';
 		} elseif ($type == 'core') {
-			$syspath = SYSPATH.'Scrpio/system/';
+			$syspath = SYSPATH . 'Scrpio/system/';
 		} else {
 			$_temp = split('_', $name);
 			$name = array_pop($_temp);
-			$syspath = SYSPATH.'Scrpio/libs/'.join('/', $_temp).'/';
+			$syspath = SYSPATH . 'Scrpio/libs/' . join('/', $_temp) . '/';
 		}
 
 		if (!self::exists($rename_def)) {
@@ -139,7 +143,8 @@ class Scrpio_Loader_Core {
 
 		//todo: do something
 
-		return new Scrpio_Spl_Class($rename_new == $rename_def ? $rename_new : self::class_create($rename_new, $rename_def));
+		return new Scrpio_Spl_Class($rename_new == $rename_def ? $rename_new : self::
+			class_create($rename_new, $rename_def));
 	}
 
 	static function class_create($class, $extends, $final = false, $abstract = false) {
