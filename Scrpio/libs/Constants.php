@@ -13,5 +13,6 @@
  */
 
 define('LF', "\n");
+define('TAB', "\t");
 
 ?>
