@@ -365,6 +365,46 @@ EOM
 
 		return $func;
 	}
+
+	public static function addcslashes($string, $delimiter, $strip = FALSE) {
+
+		if(is_array($string)) {
+			foreach($string as $key => $val) {
+				$string[$key] = call_user_func_array(__METHOD__, array($val, &$delimiter, &$strip));
+			}
+		} else {
+			$string = addcslashes($strip ? stripcslashes($string) : $string, $delimiter);
+		}
+
+		return $string;
+	}
+
+	public static function addslashes($string, $strip = FALSE) {
+
+		if(is_array($string)) {
+			foreach($string as $key => $val) {
+				$string[$key] = call_user_func_array(__METHOD__, array($val, &$strip));
+			}
+		} else {
+			$string = addslashes($strip ? stripslashes($string) : $string);
+		}
+
+		return $string;
+	}
+
+	public static function get_static_value($class, $name, $val = null) {
+		$ref = new Scrpio_Spl_Ref($class);
+
+		return $ref->getStaticPropertyValue($name, $val);
+	}
+
+	public static function set_static_value($class, $name, $val) {
+		$ref = new Scrpio_Spl_Ref($class);
+
+		$ref->setStaticPropertyValue($name, $val);
+
+		return $ref;
+	}
 }
 
 ?>

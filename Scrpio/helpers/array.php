@@ -69,6 +69,10 @@ class Scrpio_helper_array_Core {
 		}
 		return (array )$array;
 	}
+
+	function in_array_default ($needle, $haystack, $default = null, $strict = false) {
+		return in_array($needle, $haystack, $strict) ? $needle : ($default === null ? $haystack[0] : $default);
+	}
 }
 
 ?>

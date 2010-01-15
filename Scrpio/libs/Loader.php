@@ -78,7 +78,7 @@ class Scrpio_Loader_Core {
 		$rename_def = 'sco' . $name;
 		$rename_new = $rename ? $rename : $rename_def;
 
-		return self::_load('helpers', array($core, $class, $rename_def, $rename_new, $rename,
+		return self::_load(self::OBJ_HELPER, array($core, $class, $rename_def, $rename_new, $rename,
 			$name, $path, ));
 	}
 
@@ -88,7 +88,7 @@ class Scrpio_Loader_Core {
 		$rename_def = 'Sco_' . $name;
 		$rename_new = $rename ? $rename : $rename_def;
 
-		return self::_load('core', array($core, $class, $rename_def, $rename_new, $rename,
+		return self::_load(self::OBJ_CORE, array($core, $class, $rename_def, $rename_new, $rename,
 			$name, $path, ));
 	}
 
@@ -98,16 +98,16 @@ class Scrpio_Loader_Core {
 		$rename_def = $class;
 		$rename_new = $rename ? $rename : $rename_def;
 
-		return self::_load('libraries', array($core, $class, $rename_def, $rename_new, $rename,
+		return self::_load(self::OBJ_LIB, array($core, $class, $rename_def, $rename_new, $rename,
 			$name, $path, ));
 	}
 
 	private function _load(string $type, array $args) {
 		extract($args, EXTR_OVERWRITE);
 
-		if ($type == 'helpers') {
-			$syspath = SYSPATH . 'Scrpio/' . $type . '/';
-		} elseif ($type == 'core') {
+		if ($type == self::OBJ_HELPER) {
+			$syspath = SYSPATH . 'Scrpio/helpers/';
+		} elseif ($type == self::OBJ_CORE) {
 			$syspath = SYSPATH . 'Scrpio/system/';
 		} else {
 			$_temp = split('_', $name);
