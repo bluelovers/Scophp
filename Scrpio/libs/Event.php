@@ -55,7 +55,7 @@ class Scrpio_Event_Core {
 		return self::$instances;
 	}
 
-	function run($event, $args = array()) {
+	public static function run($event, $args = array()) {
 		self::$_has_run[] &= $event;
 
 		isset(self::$_last_event[self::$_deep]) or self::$_last_event[self::$_deep] = array();
@@ -69,13 +69,13 @@ class Scrpio_Event_Core {
 		return self::instance();
 	}
 
-	function val() {
+	public static function val() {
 		$ret = self::$_last_endevent;
 
 		return $ret;
 	}
 
-	function hook() {
+	public static function hook() {
 		self::$_events[$event][] = new Scrpio_Hook($event);
 
 		return self::instance();

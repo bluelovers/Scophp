@@ -16,7 +16,7 @@ class Scrpio_File_Core {
 
 	static $temp;
 
-	function open($filename, $mode, $use_include_path = false, $context = null) {
+	public static function open($filename, $mode, $use_include_path = false, $context = null) {
 		self::mkdir(self::dirname($filename, '', 1));
 
 		if (@$fp = fopen($filename, $mode)) {
@@ -27,7 +27,7 @@ class Scrpio_File_Core {
 		exit('Can not write to cache files, please check directory '.$dir);
 	}
 
-	function dirname($path, $chdir = '', $dirnamefunc = false) {
+	public static function dirname($path, $chdir = '', $dirnamefunc = false) {
 		// FIXME: do something
 
 //		$path = dirname($path);
@@ -43,7 +43,7 @@ class Scrpio_File_Core {
 	 * function write
 	 * @todo make it do something
 	*/
-	function write($filename, $context, $dogz = false, $exdata = array()) {
+	public static function write($filename, $context, $dogz = false, $exdata = array()) {
 		if ($dogz) $context = self::gzencode($context);
 
 		$fp = self::open($filename, 'w');
@@ -51,7 +51,7 @@ class Scrpio_File_Core {
 		fclose($fp);
 	}
 
-	function load() {
+	public static function load() {
 		$filename = self::file(func_get_args());
 		$fp = self::open($filename, 'r');
 		$context = self::remove_bom(@fread($fp, filesize($filename)));
@@ -60,7 +60,7 @@ class Scrpio_File_Core {
 		return $context;
 	}
 
-	function remove_bom ($str, $mode = 0){
+	public static function remove_bom ($str, $mode = 0){
 		switch ($mode) {
 			case 1:
 				$str = str_replace("\xef\xbb\xbf", '', $str);
@@ -74,11 +74,11 @@ class Scrpio_File_Core {
 		return $str;
 	}
 
-	function gzencode($context) {
+	public static function gzencode($context) {
 		return gzencode($context, 9, FORCE_GZIP);
 	}
 
-	function mkdir($pathname, $mode = 0777, $recursive = false, $context = '', $noindex = 0) {
+	public static function mkdir($pathname, $mode = 0777, $recursive = false, $context = '', $noindex = 0) {
 		$pathname = self::path($pathname);
 
 		is_dir(dirname($pathname)) || self::mkdir(dirname($pathname), $mode, $recursive, $context, $noindex);
@@ -93,7 +93,7 @@ class Scrpio_File_Core {
 		return $ret;
 	}
 
-	function scandir($dir = '.', $sort = 0, $no_dots = false) {
+	public static function scandir($dir = '.', $sort = 0, $no_dots = false) {
 		$files = array();
 		$dh = @ opendir(self::path($dir));
 
@@ -112,11 +112,11 @@ class Scrpio_File_Core {
 		return $files;
 	}
 
-	function _filter_ext($var) {
+	static function _filter_ext($var) {
 		return is_array(self::$temp['args']) ? in_array(self::fileext($var), self::$temp['args']) : (self::fileext($var) == self::$temp['args']);
 	}
 
-	function scandir_ext($ext, $dir = '.') {
+	public static function scandir_ext($ext, $dir = '.') {
 		$files = self::scandir($dir, 0, 1);
 
 		self::$temp['args'] = $ext;
@@ -124,11 +124,11 @@ class Scrpio_File_Core {
 		return array_filter($files, array('self', '_filter_ext'));
 	}
 
-	function unlink($filename) {
+	public static function unlink($filename) {
 		return unlink($filename);
 	}
 
-	function fix($url) {
+	public static function fix($url) {
 		// FIXME - fix url::fix regex
 
 		return preg_replace(array(
@@ -137,26 +137,28 @@ class Scrpio_File_Core {
 			'/\/+[^\.\/:]+\/+([^\.\/:]+\/\s*\.\.\s*\/+)?\s*\.\.\s*\/+/i',
 			'/(^|\/+)[^\.\/:]+\/+\s*\.\.\s*\/+/i',
 			'/^\.\/+/i',
-		), array('/', '/', '$1', ''), trim($url));
+			'/(^|\/+)[^\.\/:]+\/+\s*\.\.\s*$/i',
+		), array('/', '/', '$1', '', '$1'), trim($url));
 	}
 
-	function path() {
+	public static function path() {
 		$paths = func_get_args();
 //		return trim(preg_replace(array("/(\\\\|\\|\/\.\/)+/", "/\/{2,}/"), '/', join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/').'/';
 
-		return ltrim(self::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/').'/';
-	}
-	function file() {
-		$paths = func_get_args();
-//		return trim(preg_replace(array("/(\\\\|\\|\/\.\/)+/", "/\/{2,}/"), '/', join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/');
-		return ltrim(self::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/');
+		return rtrim(self::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/').'/';
 	}
 
-	function fileext($filename) {
+	public static function file() {
+		$paths = func_get_args();
+//		return trim(preg_replace(array("/(\\\\|\\|\/\.\/)+/", "/\/{2,}/"), '/', join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/');
+		return rtrim(self::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/');
+	}
+
+	public static function fileext($filename) {
 		return trim(substr(strrchr($filename, '.'), 1, 10));
 	}
 
-	function preg_files($path, $filter) {
+	public static function preg_files($path, $filter) {
 		$path = self::path($path);
 		$files = self::scandir(self::path($path), 0, 1);
 
@@ -174,7 +176,7 @@ class Scrpio_File_Core {
 		return $retfiles;
 	}
 
-	function preg_delete($path, $dels, $skip = '') {
+	public static function preg_delete($path, $dels, $skip = '') {
 
 		$path = self::path($path);
 		$files = self::scandir(self::path($path), 0, 1);
@@ -201,7 +203,7 @@ class Scrpio_File_Core {
 		return $retfiles;
 	}
 
-	function file_list($d, $x){
+	public static function file_list($d, $x){
 	       foreach(array_diff(scandir($d),array('.','..')) as $f)if(is_file($d.'/'.$f)&&(($x)?ereg($x.'$',$f):1))$l[]=$f;
 	       return $l;
 	}

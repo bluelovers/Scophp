@@ -136,7 +136,7 @@ class Scrpio_Loader_Core {
 //		return self::_load($type, array($core, $class, $class, $class, true, $name));
 	}
 
-	private function _load($type, array $args) {
+	private static function _load($type, array $args) {
 		//extract($args, EXTR_OVERWRITE);
 
 		list($core, $class, $rename_def, $rename_new, $rename, $name, $path) = $args;
