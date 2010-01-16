@@ -55,9 +55,12 @@ class Scrpio_Event_Core {
 		return self::$instances;
 	}
 
-	function execute() {
+	function run($event, $args = array()) {
 		self::$_has_run[] &= $event;
-		self::$_last_event[self::$_deep][] &= $event;
+
+		isset(self::$_last_event[self::$_deep]) or self::$_last_event[self::$_deep] = array();
+
+		array_push(self::$_last_event[self::$_deep], &$event);
 
 		// do event hooks
 

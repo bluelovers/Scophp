@@ -14,7 +14,8 @@
 
 if (0) {
 	// for IDE
-	class scodate extends Scrpio_helper_date_Core {}
+	class scodate extends Scrpio_helper_date_Core {
+	}
 }
 
 class Scrpio_helper_date_Core {
@@ -22,10 +23,12 @@ class Scrpio_helper_date_Core {
 
 	public static function instance($overwrite = false) {
 		if (!self::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite : 'scodate');
+			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
+				$overwrite : 'scodate');
 			self::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite : get_class(self::$instances));
+			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
+				get_class(self::$instances));
 			self::$instances = $ref->newInstance();
 		}
 
@@ -56,20 +59,22 @@ class Scrpio_helper_date_Core {
 	public static function gmdate($format, $timestamp = null) {
 		$timestamp = null === $timestamp ? scophp::get('timestamp') : $timestamp;
 		$timestamp += self::offsetfix() + scophp::instance()->offset;
-		$format = preg_replace('`(?<!\\\\)u`', sprintf("%06d",($timestamp - (int)$timestamp) * 1000000), $format);
+		$format = preg_replace('`(?<!\\\\)u`', sprintf("%06d", ($timestamp - (int)$timestamp) *
+			1000000), $format);
 
 		return gmdate($format, $timestamp);
 	}
 
-	public static function _date($format, $timestamp = null) {
+	public static function date($format, $timestamp = null) {
 		$timestamp = null === $timestamp ? scophp::get('timestamp') : $timestamp;
-//		$timestamp += (self::offsetfix() - php::instance()->offset);
-		$format = preg_replace('`(?<!\\\\)u`', sprintf("%06d",($timestamp - (int)$timestamp) * 1000000), $format);
+		//		$timestamp += (self::offsetfix() - php::instance()->offset);
+		$format = preg_replace('`(?<!\\\\)u`', sprintf("%06d", ($timestamp - (int)$timestamp) *
+			1000000), $format);
 
 		return date($format, $timestamp);
 	}
 
-	public static function strtotime ($str, $now=0) {
+	public static function strtotime($str, $now = 0) {
 		$now = $now ? $now : scophp::get('timestamp');
 
 		if (@$d = strtotime($str, $now)) {
@@ -88,20 +93,18 @@ class Scrpio_helper_date_Core {
 	 * @param   string          time at which to calculate
 	 * @return  integer
 	 */
-	public static function offset($remote, $local = TRUE, $when = 'now')
-	{
-		if ($local === TRUE)
-		{
+	public static function offset($remote, $local = true, $when = 'now') {
+		if ($local === true) {
 			$local = date_default_timezone_get();
 		}
 
 		// Create timezone objects
 		$remote = new DateTimeZone($remote);
-		$local  = new DateTimeZone($local);
+		$local = new DateTimeZone($local);
 
 		// Create date objects from timezones
 		$time_there = new DateTime($when, $remote);
-		$time_here  = new DateTime($when, $local);
+		$time_here = new DateTime($when, $local);
 
 		// Find the offset
 		return $remote->getOffset($time_there) - $local->getOffset($time_here);

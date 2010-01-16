@@ -21,7 +21,7 @@ if (0) {
 class Scrpio_Spl_Class_Core {
 	protected $instances = null;
 
-	protected function __construct($class) {
+	function __construct($class) {
 		$this->_scrpio_base_ = $class;
 	}
 
@@ -37,13 +37,13 @@ class Scrpio_Spl_Class_Core {
 		return $this->instances;
 	}
 
-	protected function __call(string $method, array $args = array()) {
+	function __call(string $method, array $args = array()) {
 		$this->instances or $this->_instance();
 
 		return call_user_func_array(array($this->instances, $method), $args);
 	}
 
-	protected function __toString() {
+	function __toString() {
 		return $this->_scrpio_base_;
 	}
 }

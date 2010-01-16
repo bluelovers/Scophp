@@ -33,7 +33,7 @@ class Scrpio_helper_php_Core {
 		return self::$instances;
 	}
 
- 	protected function __construct(){
+ 	function __construct(){
  		if (self::$instances === null) {
  			self::$instances = $this;
 
@@ -66,11 +66,11 @@ class Scrpio_helper_php_Core {
 		return self::$instances;
  	}
 
- 	protected static function __get($var){
+ 	function __get($var){
  		return self::get($var);
  	}
 
- 	protected static function __set($var, $val){
+ 	function __set($var, $val){
  		return self::set($var, $val);
  	}
 
@@ -103,12 +103,12 @@ class Scrpio_helper_php_Core {
 // 				'time' => date::gmdate("$dateformat $timeformat", $mtime[0]),
 //				'today' => gmdate("$dateformat", $mtime[0]),
 				'offset' => self::fixzero(self::$instances->offset),
-				'year' => scodate::_date('Y', $mtime[0]),
-				'month' => scodate::_date('n', $mtime[0]),
-				'date' => scodate::_date('j', $mtime[0]),
- 				'hour' => scodate::_date('h', $mtime[0]),
- 				'minute' => scodate::_date('i', $mtime[0]),
- 				'second' => scodate::_date('s', $mtime[0]),
+				'year' => scodate::date('Y', $mtime[0]),
+				'month' => scodate::date('n', $mtime[0]),
+				'date' => scodate::date('j', $mtime[0]),
+ 				'hour' => scodate::date('h', $mtime[0]),
+ 				'minute' => scodate::date('i', $mtime[0]),
+ 				'second' => scodate::date('s', $mtime[0]),
  				'microsecond' => sprintf("%0.9f",$val - $mtime[0]),
 // 				'mtime' => (int)$mtime[0]+sprintf("%10.7f",$val - $mtime[0]),
  				'mtime' => $val,
