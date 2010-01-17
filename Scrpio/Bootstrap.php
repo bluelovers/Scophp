@@ -12,9 +12,11 @@
  * @copyright 2010
  */
 
-require 'libs/File.php';
+if (!defined('SYSPATH')) {
+	require dirname(__FILE__).'/libs/File.php';
 
-defined('SYSPATH') or define('SYSPATH', Scrpio_File_Core::dirname(__FILE__, '..', 1));
+	define('SYSPATH', Scrpio_File_Core::dirname(__FILE__, '..', 1));
+}
 
 require_once(SYSPATH . 'Scrpio/system/Base.php');
 require_once(SYSPATH . 'Scrpio/libs/Constants.php');

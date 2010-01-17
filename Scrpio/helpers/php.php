@@ -14,328 +14,351 @@
 
 if (0) {
 	// for IDE
-	class scophp extends Scrpio_helper_php_Core {}
+	class scophp extends Scrpio_helper_php_Core {
+	}
 }
 
-class Scrpio_helper_php_Core {
- 	protected static $_ = array();
- 	protected static $instances = null;
+class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
+	protected static $_ = array();
+	protected static $instances = null;
 
-	public static function instance($overwrite = false) {
+	public static function &instance($overwrite = false) {
 		if (!self::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite : 'scophp');
+			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
+				$overwrite : 'scophp');
 			self::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite : get_class(self::$instances));
+			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
+				get_class(self::$instances));
 			self::$instances = $ref->newInstance();
 		}
 
 		return self::$instances;
 	}
 
- 	function __construct(){
- 		if (self::$instances === null) {
- 			self::$instances = $this;
+	function __construct() {
+		if (self::$instances === null) {
+			self::$instances = $this;
 
- 			global $_ENV;
+			global $_ENV;
 
-// 			date_default_timezone_set('America/Los_Angeles');
+			// 			date_default_timezone_set('America/Los_Angeles');
 
-	 		self::$_['_ENV']				= &$_ENV;
-	 		self::$_['_ENV_DEF']			= array();
-	 		self::$_['_INI']				= array();
-	 		self::$_['_TMP']				= array();
-	 		self::$_['GLOBALS']				= array();
+			self::$_['_ENV'] = &$_ENV;
+			self::$_['_ENV_DEF'] = array();
+			self::$_['_INI'] = array();
+			self::$_['_TMP'] = array();
+			self::$_['GLOBALS'] = array();
 
-	 		self::$_['_INI']['safe_mode']	= self::_ini_bool(self::_ini_get('safe_mode'));
+			self::$_['_INI']['safe_mode'] = self::_ini_bool(self::_ini_get('safe_mode'));
 
-	 		$functions = explode( ',', self::_ini_get( 'disable_functions' ) );
-			$functions = array_map( 'trim', $functions );
-			$functions = array_map( 'strtolower', $functions );
+			$functions = explode(',', self::_ini_get('disable_functions'));
+			$functions = array_map('trim', $functions);
+			$functions = array_map('strtolower', $functions);
 
-			self::$_['_INI']['disable_functions'] = (array)$functions;
+			self::$_['_INI']['disable_functions'] = (array )$functions;
 
 			self::set('timestamp', microtime(true));
- 		}
+		}
 
- 		// make sure self::$instances is newer
+		// make sure self::$instances is newer
 		if (!self::$instances || !in_array(get_class($this), class_parents(self::$instances))) {
 			self::$instances = $this;
 		}
 
+		$this->_scrpio_ &= self::$instances->_scrpio_ = array(
+			'GLOBALS' => &self::$_['GLOBALS'],
+			'_TMP' => &self::$_['_TMP'],
+			'_ENV' => &self::$_['_ENV'],
+		);
+
 		return self::$instances;
- 	}
+	}
 
- 	function __get($var){
- 		return self::get($var);
- 	}
+	function __get($var) {
+		return self::get($var);
+	}
 
- 	function __set($var, $val){
- 		return self::set($var, $val);
- 	}
+	function __set($var, $val) {
+		return self::set($var, $val);
+	}
 
- 	public static function set_include_path($path) {
- 		!empty($path) && set_include_path($path . PATH_SEPARATOR . get_include_path());
- 	}
+	public static function set_include_path($path) {
+		!empty($path) && set_include_path($path . PATH_SEPARATOR . get_include_path());
 
- 	public static function get($var){
- 		self::$instances OR self::instance();
+		return self::instance();
+	}
 
- 		return isset(self::$_['GLOBALS'][$var]) ? self::$_['GLOBALS'][$var] : null;
- 	}
+	public static function get($var) {
+		self::$instances or self::instance();
 
- 	public static function set($var, $val){
- 		self::$instances OR self::instance();
+		return isset(self::$_['GLOBALS'][$var]) ? self::$_['GLOBALS'][$var] : null;
+	}
 
- 		self::_setglobals($var, $val);
+	public static function set($var, $val) {
+		self::$instances or self::instance();
 
- 		self::$_['GLOBALS'][$var] = $val;
- 		return self::$instances;
- 	}
+		self::_setglobals($var, $val);
 
- 	protected static function _setglobals(&$var, &$val) {
- 		if ($var == 'timestamp') {
- 			$mtime = explode('.', $val);
+		self::$_['GLOBALS'][$var] = $val;
+		return self::$instances;
+	}
 
- 			scodate::offsetfix();
+	public static function gettmp($var) {
+		//self::$instances OR self::instance();
 
- 			self::$instances->timenow = array(
-// 				'time' => date::gmdate("$dateformat $timeformat", $mtime[0]),
-//				'today' => gmdate("$dateformat", $mtime[0]),
-				'offset' => self::fixzero(self::$instances->offset),
-				'year' => scodate::date('Y', $mtime[0]),
-				'month' => scodate::date('n', $mtime[0]),
-				'date' => scodate::date('j', $mtime[0]),
- 				'hour' => scodate::date('h', $mtime[0]),
- 				'minute' => scodate::date('i', $mtime[0]),
- 				'second' => scodate::date('s', $mtime[0]),
- 				'microsecond' => sprintf("%0.9f",$val - $mtime[0]),
-// 				'mtime' => (int)$mtime[0]+sprintf("%10.7f",$val - $mtime[0]),
- 				'mtime' => $val,
- 			);
+		return isset(self::$_['_TMP'][$var]) ? self::$_['_TMP'][$var] : null;
+	}
 
-// 			$val = (int)$val;
- 		} elseif ($var == 'offset') {
- 			$val = self::fixzero($val);
- 		}
- 	}
+	public static function settmp($var, $val) {
+		self::$instances or self::instance();
 
- 	/**
- 	 * fix -0 => 0
- 	 * @param $n
- 	 */
- 	public static function fixzero($n) {
- 		return $n ? $n : 0;
- 	}
+		self::_setglobals($var, $val);
 
- 	/**
- 	 * @see http://php.net/setlocale
- 	 */
- 	public static function setlocale() {
- 		// TODO: php::setlocale
- 	}
+		self::$_['_TMP'][$var] = $val;
+		return self::$instances;
+	}
 
- 	/**
- 	 * @see http://php.net/timezones
- 	 */
- 	public static function settimezone($tz) {
- 		// TODO: php::settimezone
- 		self::$instances OR self::instance();
+	protected static function _setglobals(&$var, &$val) {
+		if ($var == 'timestamp') {
+			$mtime = explode('.', $val);
 
- 		self::setenv('TZ', $tz);
- 	}
+			scodate::offsetfix();
 
- 	public static function date_default_timezone_set($tz) {
- 		self::settimezone($tz);
- 	}
+			self::$instances->timenow = array( // 				'time' => date::gmdate("$dateformat $timeformat", $mtime[0]),
+				//				'today' => gmdate("$dateformat", $mtime[0]),
+			'offset' => self::fixzero(self::$instances->offset), 'year' => scodate::date('Y',
+				$mtime[0]), 'month' => scodate::date('n', $mtime[0]), 'date' => scodate::date('j',
+				$mtime[0]), 'hour' => scodate::date('h', $mtime[0]), 'minute' => scodate::date('i',
+				$mtime[0]), 'second' => scodate::date('s', $mtime[0]), 'microsecond' => sprintf
+				("%0.9f", bcsub($val, $mtime[0], 9)),
+				// 				'mtime' => (int)$mtime[0]+sprintf("%10.7f",$val - $mtime[0]),
+				'mtime' => $val, );
 
- 	public static function phpinfo($key = null, $ob = false) {
- 		echo '<pre>';
- 		phpinfo($key);
- 		echo '</pre>';
- 	}
+			// 			$val = (int)$val;
+		} elseif ($var == 'offset') {
+			$val = self::fixzero($val);
+		}
+	}
 
- 	public static function getini($var) {
- 		self::$instances OR self::instance();
+	/**
+	 * fix -0 => 0
+	 * @param $n
+	 */
+	public static function fixzero($n) {
+		return $n ? $n : 0;
+	}
 
- 		!isset(self::$_['_INI'][$var]) && self::$_['_INI'][$var] = self::_ini_get($var);
+	/**
+	 * @see http://php.net/setlocale
+	 */
+	public static function setlocale() {
+		// TODO: php::setlocale
+	}
 
- 		return self::$_['_INI'][$var];
- 	}
+	/**
+	 * @see http://php.net/timezones
+	 */
+	public static function settimezone($tz) {
+		// TODO: php::settimezone
+		self::$instances or self::instance();
 
- 	protected static function _ini_get($var) {
- 		// XXX:
+		self::setenv('TZ', $tz);
+	}
 
- 		$val = ini_get($var);
+	public static function date_default_timezone_set($tz) {
+		self::settimezone($tz);
+	}
 
- 		return $val;
- 	}
+	public static function phpinfo($key = null, $ob = false) {
+		echo '<pre>';
+		phpinfo($key);
+		echo '</pre>';
+	}
 
- 	public static function _ini_bool($val) {
- 		$val_lc = trim(strtolower($val));
+	public static function getini($var) {
+		self::$instances or self::instance();
 
- 		return $val_lc == 'on'
-			|| $val_lc == 'true'
-			|| $val_lc == 'yes'
-			|| preg_match( "/^\s*[+-]?0*[1-9]/", $val);
- 	}
+		!isset(self::$_['_INI'][$var]) && self::$_['_INI'][$var] = self::_ini_get($var);
 
- 	/**
- 	 *
- 	 * @param $var
- 	 * @return bool
- 	 */
- 	public static function chkenv($var) {
- 		self::$instances OR self::instance();
+		return self::$_['_INI'][$var];
+	}
 
- 		return self::getenv($var) == getenv($var);
- 	}
+	protected static function _ini_get($var) {
+		// XXX:
 
- 	/**
- 	 * get default $_ENV value
- 	 *
- 	 * @param $var
- 	 * @param $force
- 	 */
- 	protected static function _getenv($var, $force = true) {
- 		($force || !isset(self::$_['_ENV_DEF'][$var])) && self::$_['_ENV_DEF'][$var] = getenv($var);
+		$val = ini_get($var);
 
- 		return self::$_['_ENV_DEF'][$var];
- 	}
+		return $val;
+	}
 
- 	/**
- 	 * get $_ENV
- 	 * @param $var
- 	 */
- 	public static function getenv($var) {
- 		self::$instances OR self::instance();
+	public static function _ini_bool($val) {
+		$val_lc = trim(strtolower($val));
 
- 		!isset(self::$_['_ENV'][$var]) && self::$_['_ENV'][$var] = self::_getenv($var);
+		return $val_lc == 'on' || $val_lc == 'true' || $val_lc == 'yes' || preg_match("/^\s*[+-]?0*[1-9]/",
+			$val);
+	}
 
- 		return self::$_['_ENV'][$var];
- 	}
+	/**
+	 *
+	 * @param $var
+	 * @return bool
+	 */
+	public static function chkenv($var) {
+		self::$instances or self::instance();
 
- 	/**
- 	 * hook set $_ENV
- 	 * @param $var
- 	 * @param $val
- 	 */
- 	protected static function _setenv(&$var, &$val) {
- 		// XXX:
+		return self::getenv($var) == getenv($var);
+	}
 
- 		if (uc($var) == 'TZ') {
- 			$var = uc($var);
- 			@date_default_timezone_set($val);
- 			@ini_set('date.timezone', $val);
- 		}
- 	}
+	/**
+	 * get default $_ENV value
+	 *
+	 * @param $var
+	 * @param $force
+	 */
+	protected static function _getenv($var, $force = true) {
+		($force || !isset(self::$_['_ENV_DEF'][$var])) && self::$_['_ENV_DEF'][$var] =
+			getenv($var);
 
- 	/**
- 	 * set $_ENV
- 	 * @param $var
- 	 * @param $val
- 	 */
- 	public static function setenv($var, $val) {
- 		self::$instances OR self::instance();
+		return self::$_['_ENV_DEF'][$var];
+	}
 
- 		self::_getenv($var);
- 		self::_setenv($var, $val);
+	/**
+	 * get $_ENV
+	 * @param $var
+	 */
+	public static function getenv($var) {
+		self::$instances or self::instance();
 
-// 		@putenv($var.'='.$val);
- 		self::$_['_ENV'][$var] = $val;
+		!isset(self::$_['_ENV'][$var]) && self::$_['_ENV'][$var] = self::_getenv($var);
 
- 		return self::$instances;
- 	}
+		return self::$_['_ENV'][$var];
+	}
 
- 	/**
- 	 * set $_ENV
- 	 * @param $string key=value
- 	 */
- 	public static function putenv($string) {
- 		self::$instances OR self::instance();
+	/**
+	 * hook set $_ENV
+	 * @param $var
+	 * @param $val
+	 */
+	protected static function _setenv(&$var, &$val) {
+		// XXX:
 
- 		list($var, $val) = split('=', $string, 2);
+		if (uc($var) == 'TZ') {
+			$var = uc($var);
+			@date_default_timezone_set($val);
+			@ini_set('date.timezone', $val);
+		}
+	}
 
- 		self::_getenv($var);
- 		self::_setenv($var, $val);
+	/**
+	 * set $_ENV
+	 * @param $var
+	 * @param $val
+	 */
+	public static function setenv($var, $val) {
+		self::$instances or self::instance();
 
- 		@putenv($var.'='.$val);
- 		self::$_['_ENV'][$var] = $val;
+		self::_getenv($var);
+		self::_setenv($var, $val);
 
- 		return self::$instances;
- 	}
+		// 		@putenv($var.'='.$val);
+		self::$_['_ENV'][$var] = $val;
 
- 	/**
- 	 *
- 	 * @param $string
- 	 * @param $replace
- 	 * @param $http_response_code
- 	 */
- 	public static function header($string , $replace = true, $http_response_code = null) {
- 		Event::run('php.header', array(&$string , &$replace, &$http_response_code));
- 		header($string , $replace, $http_response_code);
- 	}
+		return self::$instances;
+	}
 
- 	/**
- 	 * @param $filename
- 	 * @param bool - return runtime_defined_vars
- 	 *
- 	 * @return array
- 	 */
- 	public static function include_file() {
- 		if (is_file(func_get_arg(0))) {
- 			include func_get_arg(0);
- 			if (true === func_get_arg(1)) {
-	 			return get_runtime_defined_vars(get_defined_vars());
-	 		}
- 		} else {
- 			throw new Scrpio_Exception_PHP('error');
- 		}
+	/**
+	 * set $_ENV
+	 * @param $string key=value
+	 */
+	public static function putenv($string) {
+		self::$instances or self::instance();
 
- 		return array();
- 	}
+		list($var, $val) = split('=', $string, 2);
 
- 	/**
- 	 *
- 	 * @param $varList
- 	 * @param $excludeList
- 	 * @example get_runtime_defined_vars(get_defined_vars(), array('b'));
- 	 * @example get_runtime_defined_vars(get_defined_vars());
- 	 */
-	public static function get_runtime_defined_vars(array $varList, $excludeList = array()) {
-	/** @example
-$a = 1;
+		self::_getenv($var);
+		self::_setenv($var, $val);
 
-function abc($c = 2) {
-	global $a;
-	$b = 3;
+		@putenv($var . '=' . $val);
+		self::$_['_ENV'][$var] = $val;
 
-	$a = 4;
-	$GLOBALS['s'] = 5;
+		return self::$instances;
+	}
 
-	get_runtime_defined_vars(get_defined_vars(), array('b'));
-}
-abc();
-get_runtime_defined_vars(get_defined_vars(), array('b'));
+	/**
+	 *
+	 * @param $string
+	 * @param $replace
+	 * @param $http_response_code
+	 */
+	public static function header($string, $replace = true, $http_response_code = null) {
+		Event::run('php.header', array(&$string, &$replace, &$http_response_code));
+		header($string, $replace, $http_response_code);
+	}
 
-Array
-(
-    [c] => 2
-    [a] => 4
-)
-Array
-(
-    [a] => 4
-    [s] => 5
-)
-**/
-
-		if ($varList) {
-			$excludeList = array_merge((array)$excludeList, array('GLOBALS', '_FILES', '_COOKIE', '_POST', '_GET', '_SERVER'));
-			$varList = array_diff_key((array)$varList, array_flip($excludeList));
+	/**
+	 * @param $filename
+	 * @param bool - return runtime_defined_vars
+	 *
+	 * @return array
+	 */
+	public static function include_file() {
+		if (is_file(func_get_arg(0))) {
+			include func_get_arg(0);
+			if (true === func_get_arg(1)) {
+				return get_runtime_defined_vars(get_defined_vars());
+			}
+		} else {
+			throw new Scrpio_Exception_PHP('error');
 		}
 
-//		print_r($varList);
+		return array();
+	}
+
+	/**
+	 *
+	 * @param $varList
+	 * @param $excludeList
+	 * @example get_runtime_defined_vars(get_defined_vars(), array('b'));
+	 * @example get_runtime_defined_vars(get_defined_vars());
+	 */
+	public static function get_runtime_defined_vars(array $varList, $excludeList =
+		array()) {
+		/**
+
+		 * $a = 1;
+
+		 * function abc($c = 2) {
+		 * global $a;
+		 * $b = 3;
+
+		 * $a = 4;
+		 * $GLOBALS['s'] = 5;
+
+		 * get_runtime_defined_vars(get_defined_vars(), array('b'));
+		 * }
+		 * abc();
+		 * get_runtime_defined_vars(get_defined_vars(), array('b'));
+
+		 * Array
+		 * (
+		 * [c] => 2
+		 * [a] => 4
+		 * )
+		 * Array
+		 * (
+		 * [a] => 4
+		 * [s] => 5
+		 * )
+		 **/
+
+		if ($varList) {
+			$excludeList = array_merge((array )$excludeList, array('GLOBALS', '_FILES',
+				'_COOKIE', '_POST', '_GET', '_SERVER'));
+			$varList = array_diff_key((array )$varList, array_flip($excludeList));
+		}
+
+		//		print_r($varList);
 
 		return $varList;
 	}
@@ -346,31 +369,33 @@ Array
 	 * @return bool
 	 */
 	public static function func_exists($object, $method_name = null) {
-		return $method_name === null ? function_exists($object) : method_exists($object, $method_name);
+		return $method_name === null ? function_exists($object) : method_exists($object,
+			$method_name);
 	}
 
 	public static function func_callback($func, $callback) {
 		//todo: need a new name
 
-		$newcallback = is_array($callback) ? "array('$callback[0]', '$callback[1]')" : "'$callback'";
+		$newcallback = is_array($callback) ? "array('$callback[0]', '$callback[1]')" :
+			"'$callback'";
 
-		$newfunc = <<<EOM
+		$newfunc = <<< EOM
 		function $func() {
 			\$args = func_get_args();
 			return call_user_func_array($newcallback, $args);
 		}
 EOM
-;
+		;
 		eval($newfunc);
 
 		return $func;
 	}
 
-	public static function addcslashes($string, $delimiter, $strip = FALSE) {
+	public static function addcslashes($string, $delimiter, $strip = false) {
 
-		if(is_array($string)) {
-			foreach($string as $key => $val) {
-				$string[$key] = call_user_func_array(__METHOD__, array($val, &$delimiter, &$strip));
+		if (is_array($string)) {
+			foreach ($string as $key => $val) {
+				$string[$key] = call_user_func_array(__method__, array($val, &$delimiter, &$strip));
 			}
 		} else {
 			$string = addcslashes($strip ? stripcslashes($string) : $string, $delimiter);
@@ -379,11 +404,11 @@ EOM
 		return $string;
 	}
 
-	public static function addslashes($string, $strip = FALSE) {
+	public static function addslashes($string, $strip = false) {
 
-		if(is_array($string)) {
-			foreach($string as $key => $val) {
-				$string[$key] = call_user_func_array(__METHOD__, array($val, &$strip));
+		if (is_array($string)) {
+			foreach ($string as $key => $val) {
+				$string[$key] = call_user_func_array(__method__, array($val, &$strip));
 			}
 		} else {
 			$string = addslashes($strip ? stripslashes($string) : $string);

@@ -96,7 +96,7 @@ class Scrpio_SYS_Base_Core {
 	}
 
 	public static function Start() {
-
+		scophp::instance(true);
 	}
 
 	public static function shutdown() {
