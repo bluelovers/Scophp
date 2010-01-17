@@ -59,14 +59,18 @@ class Scrpio_Loader_Core {
 			$ret = array(self::OBJ_HELPER, $class, $matchs['name'], null);
 		} elseif (preg_match('/^Scrpio_helper_(?<name>[a-zA-Z][_\w\d]+)$/', $class, $matchs)) {
 			$ret = array(self::OBJ_HELPER, $class, $matchs['name'], false);
+
 		} elseif (preg_match('/^Sco_(?<name>[a-zA-Z][_\w\d]+)$/', $class, $matchs)) {
 			$ret = array(self::OBJ_CORE, $class, $matchs['name'], null);
 		} elseif (preg_match('/^Scrpio_SYS_(?<name>[a-zA-Z][_\w\d]+)$/', $class, $matchs)) {
 			$ret = array(self::OBJ_CORE, $class, $matchs['name'], false);
+
 		} elseif (preg_match('/^Scrpio_(?<name>[A-Z][_\w\d]+)$/', $class, $matchs)) {
 			$ret = array(self::OBJ_LIB, $class, $matchs['name'], false);
+
 		} elseif (preg_match('/^Zend_(?<name>[A-Z][_\w\d]+)$/', $class, $matchs)) {
 			$ret = array(self::OBJ_ZEND, $class, $matchs['name'], false);
+
 		} else {
 			$ret = array(self::OBJ_UNDEF, $class, $class, false);
 		}
