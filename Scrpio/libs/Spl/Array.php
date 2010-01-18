@@ -24,7 +24,7 @@ class Scrpio_Spl_Array_Core extends Scrpio_Spl implements Iterator, ArrayAccess 
 		$this->_scrpio_base_ = $base;
 
 		if (is_array($base)) {
-			$this->_scrpio_ =& $this->_scrpio_base_;
+			$this->_scrpio_ = &$this->_scrpio_base_;
 		}
 	}
 

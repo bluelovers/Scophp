@@ -78,7 +78,7 @@ class Scrpio_Math_AxmHeLuoLiShu_Core {
 			$xia = $xia % 10;
 		}
 		if ($xia == 5) {
-			$xia = JiGong($sex, $yuan, $yinyang);
+			$xia = $this->JiGong($sex, $yuan, $yinyang);
 		}
 		$xtg->ShangGua($shang);
 		$xtg->XiaGua($xia);

@@ -105,7 +105,7 @@ class Scrpio_helper_text_Core {
 
 			$matchs_len = count($matchs['fultext']);
 
-			echo "length: $matchs_len\n";
+			//echo "length: $matchs_len\n";
 
 			for ($i = 0; $i < $matchs_len; $i++) {
 
@@ -155,6 +155,8 @@ class Scrpio_helper_text_Core {
 
 						//$replace = sprintf($search, $_args[$varname]);
 						$replace = self::sprintf_hack($search, $_args[$varname]);
+					} elseif ($varname == 'LF') {
+						$replace = self::sprintf_hack($search, LF);
 					} else {
 						//echo 'undef: ' . $varname . ":";
 						$replace = sprintf($search, null);
@@ -193,8 +195,8 @@ class Scrpio_helper_text_Core {
 			$format = self::sprintf_quote($format, 1);
 			//echo $format."\n";
 			//
-			var_dump($matchs);
-			echo "\n";
+			//var_dump($matchs);
+			//echo "\n";
 			//			var_dump($args);
 		}
 
@@ -227,7 +229,7 @@ class Scrpio_helper_text_Core {
 				$string, $parse['size'], $pad, $parse['sign'] == '-' ? STR_PAD_RIGHT :
 				STR_PAD_LEFT);
 
-			echo "hack[1]: $format = $ret\n";
+			//echo "hack[1]: $format = $ret\n";
 
 			//if ($format == '%020s') {
 			//				//var_dump($parse);
@@ -238,7 +240,7 @@ class Scrpio_helper_text_Core {
 
 		} else {
 			$ret = sprintf($format, $string);
-			echo "hack[0]: $format = $ret\n";
+			//echo "hack[0]: $format = $ret\n";
 		}
 
 		//if ($string == 'ěščřžýáíé') exit("----\n[".$string."]\n[".$ret."]\n------\n");
