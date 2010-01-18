@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Config_INI extends Scrpio_Config_INI_Core {}
+	class Scrpio_Config_Driver_File extends Scrpio_Config_Driver_File_Core {}
 }
 
-class Scrpio_Config_INI_Core {
+class Scrpio_Config_Driver_File_Core extends Scrpio_Config_Driver {
 
 }
 
