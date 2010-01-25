@@ -18,13 +18,13 @@ define('LF', "\n");
 define('TAB', "\t");
 
 // Define Kohana error constant
-define('E_SCRPIO', 25042);
+define('E_SCRPIO', 200042);
 
 // Define 404 error constant
-!defined('E_PAGE_NOT_FOUND') and define('E_PAGE_NOT_FOUND', 25043);
+!defined('E_PAGE_NOT_FOUND') and define('E_PAGE_NOT_FOUND', 200043);
 
 // Define database error constant
-!defined('E_DATABASE_ERROR') and define('E_DATABASE_ERROR', 25044);
+!defined('E_DATABASE_ERROR') and define('E_DATABASE_ERROR', 200044);
 
 // Test of PHP is running in Windows
 define('OS_IS_WIN', (strpos($_SERVER['OS'], 'Windows_') === 0 or DIRECTORY_SEPARATOR === '\\'));

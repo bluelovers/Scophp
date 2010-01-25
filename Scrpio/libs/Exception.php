@@ -36,7 +36,7 @@ class Scrpio_Exception_Core extends Exception {
 	public function __construct($message, $variables = null, $code = 0) {
 		$this->instance_identifier = uniqid();
 
-		$variables && $message = scotext::sprintf($message, $variables);
+		$variables !== null && $message = scotext::sprintf($message, $variables);
 
 		// Sets $this->message the proper way
 		parent::__construct($message, $code);

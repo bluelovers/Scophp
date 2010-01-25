@@ -24,10 +24,12 @@ class Scrpio_helper_text_Core {
 
 	public static function instance($overwrite = false) {
 		if (!self::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite : 'scotext');
+			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
+				$overwrite : 'scotext');
 			self::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite : get_class(self::$instances));
+			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
+				get_class(self::$instances));
 			self::$instances = $ref->newInstance();
 		}
 
@@ -151,7 +153,8 @@ class Scrpio_helper_text_Core {
 
 						//echo 'unset: ' . $varname.':';
 
-						scoarray::array_remove_keys(&$matchs['fultext'], scoarray::array_search_all($fultext, $matchs['fultext']));
+						scoarray::array_remove_keys(&$matchs['fultext'], scoarray::array_search_all($fultext,
+							$matchs['fultext']));
 
 						//$replace = sprintf($search, $_args[$varname]);
 						$replace = self::sprintf_hack($search, $_args[$varname]);
@@ -249,6 +252,41 @@ class Scrpio_helper_text_Core {
 	}
 
 	/**
+	 * Returns human readable sizes.
+	 * @see  Based on original functions written by:
+	 * @see  Aidan Lister: http://aidanlister.com/repos/v/function.size_readable.php
+	 * @see  Quentin Zervaas: http://www.phpriot.com/d/code/strings/filesize-format/
+	 *
+	 * @param   integer  size in bytes
+	 * @param   string   a definitive unit
+	 * @param   string   the return string format
+	 * @param   boolean  whether to use SI prefixes or IEC
+	 * @return  string
+	 */
+	public static function bytes($bytes, $force_unit = null, $format = null, $si = true) {
+		// Format string
+		$format = ($format === null) ? '%01.2f %s' : (string )$format;
+
+		// IEC prefixes (binary)
+		if ($si == false or strpos($force_unit, 'i') !== false) {
+			$units = array(__('B'), __('KiB'), __('MiB'), __('GiB'), __('TiB'), __('PiB'));
+			$mod = 1024;
+		}
+		// SI prefixes (decimal)
+		else {
+			$units = array(__('B'), __('kB'), __('MB'), __('GB'), __('TB'), __('PB'));
+			$mod = 1000;
+		}
+
+		// Determine unit to use
+		if (($power = array_search((string )$force_unit, $units)) === false) {
+			$power = ($bytes > 0) ? floor(log($bytes, $mod)) : 0;
+		}
+
+		return sprintf($format, $bytes / pow($mod, $power), $units[$power]);
+	}
+
+	/**
 	 * Tests whether a string contains only 7bit ASCII bytes. This is used to
 	 * determine when to use native functions or UTF-8 functions.
 	 *
@@ -264,16 +302,149 @@ class Scrpio_helper_text_Core {
 		return is_string($str) and !preg_match('/[^\x00-\x7F]/S', $str);
 	}
 
+	/**
+	 * Strips out device control codes in the ASCII range.
+	 *
+	 * @see http://sourceforge.net/projects/phputf8/
+	 * @copyright  (c) 2007-2009 Kohana Team
+	 * @copyright  (c) 2005 Harry Fuecks
+	 * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+	 *
+	 * @param   string  string to clean
+	 * @return  string
+	 */
+	public static function strip_ascii_ctrl($str) {
+		return preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/S', '', $str);
+	}
+
+	/**
+	 * Strips out all non-7bit ASCII bytes.
+	 *
+	 * @see http://sourceforge.net/projects/phputf8/
+	 * @copyright  (c) 2007-2009 Kohana Team
+	 * @copyright  (c) 2005 Harry Fuecks
+	 * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+	 *
+	 * @param   string  string to clean
+	 * @return  string
+	 */
+	public static function strip_non_ascii($str) {
+		return preg_replace('/[^\x00-\x7F]+/S', '', $str);
+	}
+
+	/**
+	 * Replaces special/accented UTF-8 characters by ASCII-7 'equivalents'.
+	 *
+	 * @author  Andreas Gohr <andi@splitbrain.org>
+	 * @see http://sourceforge.net/projects/phputf8/
+	 * @copyright  (c) 2007-2009 Kohana Team
+	 * @copyright  (c) 2005 Harry Fuecks
+	 * @license    http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+	 *
+	 * @param   string   string to transliterate
+	 * @param   integer  -1 lowercase only, +1 uppercase only, 0 both cases
+	 * @return  string
+	 */
+	public static function transliterate_to_ascii($str, $case = 0) {
+		static $UTF8_LOWER_ACCENTS = null;
+		static $UTF8_UPPER_ACCENTS = null;
+
+		if ($case <= 0) {
+			if ($UTF8_LOWER_ACCENTS === null) {
+				$UTF8_LOWER_ACCENTS = array('à' => 'a', 'ô' => 'o', 'ď' => 'd', 'ḟ' => 'f', 'ë' =>
+					'e', 'š' => 's', 'ơ' => 'o', 'ß' => 'ss', 'ă' => 'a', 'ř' => 'r', 'ț' => 't',
+					'ň' => 'n', 'ā' => 'a', 'ķ' => 'k', 'ŝ' => 's', 'ỳ' => 'y', 'ņ' => 'n', 'ĺ' =>
+					'l', 'ħ' => 'h', 'ṗ' => 'p', 'ó' => 'o', 'ú' => 'u', 'ě' => 'e', 'é' => 'e', 'ç' =>
+					'c', 'ẁ' => 'w', 'ċ' => 'c', 'õ' => 'o', 'ṡ' => 's', 'ø' => 'o', 'ģ' => 'g', 'ŧ' =>
+					't', 'ș' => 's', 'ė' => 'e', 'ĉ' => 'c', 'ś' => 's', 'î' => 'i', 'ű' => 'u', 'ć' =>
+					'c', 'ę' => 'e', 'ŵ' => 'w', 'ṫ' => 't', 'ū' => 'u', 'č' => 'c', 'ö' => 'o', 'è' =>
+					'e', 'ŷ' => 'y', 'ą' => 'a', 'ł' => 'l', 'ų' => 'u', 'ů' => 'u', 'ş' => 's', 'ğ' =>
+					'g', 'ļ' => 'l', 'ƒ' => 'f', 'ž' => 'z', 'ẃ' => 'w', 'ḃ' => 'b', 'å' => 'a', 'ì' =>
+					'i', 'ï' => 'i', 'ḋ' => 'd', 'ť' => 't', 'ŗ' => 'r', 'ä' => 'a', 'í' => 'i', 'ŕ' =>
+					'r', 'ê' => 'e', 'ü' => 'u', 'ò' => 'o', 'ē' => 'e', 'ñ' => 'n', 'ń' => 'n', 'ĥ' =>
+					'h', 'ĝ' => 'g', 'đ' => 'd', 'ĵ' => 'j', 'ÿ' => 'y', 'ũ' => 'u', 'ŭ' => 'u', 'ư' =>
+					'u', 'ţ' => 't', 'ý' => 'y', 'ő' => 'o', 'â' => 'a', 'ľ' => 'l', 'ẅ' => 'w', 'ż' =>
+					'z', 'ī' => 'i', 'ã' => 'a', 'ġ' => 'g', 'ṁ' => 'm', 'ō' => 'o', 'ĩ' => 'i', 'ù' =>
+					'u', 'į' => 'i', 'ź' => 'z', 'á' => 'a', 'û' => 'u', 'þ' => 'th', 'ð' => 'dh',
+					'æ' => 'ae', 'µ' => 'u', 'ĕ' => 'e', 'ı' => 'i', );
+			}
+
+			$str = str_replace(array_keys($UTF8_LOWER_ACCENTS), array_values($UTF8_LOWER_ACCENTS),
+				$str);
+		}
+
+		if ($case >= 0) {
+			if ($UTF8_UPPER_ACCENTS === null) {
+				$UTF8_UPPER_ACCENTS = array('À' => 'A', 'Ô' => 'O', 'Ď' => 'D', 'Ḟ' => 'F', 'Ë' =>
+					'E', 'Š' => 'S', 'Ơ' => 'O', 'Ă' => 'A', 'Ř' => 'R', 'Ț' => 'T', 'Ň' => 'N', 'Ā' =>
+					'A', 'Ķ' => 'K', 'Ĕ' => 'E', 'Ŝ' => 'S', 'Ỳ' => 'Y', 'Ņ' => 'N', 'Ĺ' => 'L', 'Ħ' =>
+					'H', 'Ṗ' => 'P', 'Ó' => 'O', 'Ú' => 'U', 'Ě' => 'E', 'É' => 'E', 'Ç' => 'C', 'Ẁ' =>
+					'W', 'Ċ' => 'C', 'Õ' => 'O', 'Ṡ' => 'S', 'Ø' => 'O', 'Ģ' => 'G', 'Ŧ' => 'T', 'Ș' =>
+					'S', 'Ė' => 'E', 'Ĉ' => 'C', 'Ś' => 'S', 'Î' => 'I', 'Ű' => 'U', 'Ć' => 'C', 'Ę' =>
+					'E', 'Ŵ' => 'W', 'Ṫ' => 'T', 'Ū' => 'U', 'Č' => 'C', 'Ö' => 'O', 'È' => 'E', 'Ŷ' =>
+					'Y', 'Ą' => 'A', 'Ł' => 'L', 'Ų' => 'U', 'Ů' => 'U', 'Ş' => 'S', 'Ğ' => 'G', 'Ļ' =>
+					'L', 'Ƒ' => 'F', 'Ž' => 'Z', 'Ẃ' => 'W', 'Ḃ' => 'B', 'Å' => 'A', 'Ì' => 'I', 'Ï' =>
+					'I', 'Ḋ' => 'D', 'Ť' => 'T', 'Ŗ' => 'R', 'Ä' => 'A', 'Í' => 'I', 'Ŕ' => 'R', 'Ê' =>
+					'E', 'Ü' => 'U', 'Ò' => 'O', 'Ē' => 'E', 'Ñ' => 'N', 'Ń' => 'N', 'Ĥ' => 'H', 'Ĝ' =>
+					'G', 'Đ' => 'D', 'Ĵ' => 'J', 'Ÿ' => 'Y', 'Ũ' => 'U', 'Ŭ' => 'U', 'Ư' => 'U', 'Ţ' =>
+					'T', 'Ý' => 'Y', 'Ő' => 'O', 'Â' => 'A', 'Ľ' => 'L', 'Ẅ' => 'W', 'Ż' => 'Z', 'Ī' =>
+					'I', 'Ã' => 'A', 'Ġ' => 'G', 'Ṁ' => 'M', 'Ō' => 'O', 'Ĩ' => 'I', 'Ù' => 'U', 'Į' =>
+					'I', 'Ź' => 'Z', 'Á' => 'A', 'Û' => 'U', 'Þ' => 'Th', 'Ð' => 'Dh', 'Æ' => 'Ae',
+					'İ' => 'I', );
+			}
+
+			$str = str_replace(array_keys($UTF8_UPPER_ACCENTS), array_values($UTF8_UPPER_ACCENTS),
+				$str);
+		}
+
+		return $str;
+	}
+
+	/**
+	 * @see http://www.php.net/manual/en/function.preg-replace.php#87816
+	 */
+	public static function lf($str) {
+		/*
+		http://www.php.net/manual/en/function.preg-replace.php#87816
+
+		$sql = preg_replace("/(?<!\\n)\\r+(?!\\n)/", "\r\n", $sql);
+		$sql = preg_replace("/(?<!\\r)\\n+(?!\\r)/", "\r\n", $sql);
+		$sql = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", "\r\n", $sql);
+		*/
+
+		if (strpos($str, "\r") !== false) {
+			$str = preg_replace("/(?<!\\n)\\r+(?!\\n)/", "\r\n", $str);
+			$str = preg_replace("/(?<!\\r)\\n+(?!\\r)/", "\r\n", $str);
+			$str = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", "\r\n", $str);
+
+			$str = preg_replace("/\\r\\n/", LF, $str);
+		}
+
+		return $str;
+	}
+
+	public static function ip($ip_address) {
+		if ($comma = strrpos($ip_address, ',') !== false) {
+			$ip_address = substr($ip_address, $comma + 1);
+		}
+
+		if (!scovalid::ip($ip_address)) {
+			// Use an empty IP
+			$ip_address = '0.0.0.0';
+		}
+
+		return $ip_address;
+	}
 }
 
 /*
 echo '<pre>';
 
 echo vsprintf('[%-20s] [%20s] %.3f %(num).3f %%s %%%s %%%s%% Hello, %(place)s, how is it hanning at %(place)s? %s works just as well %(name)s: %(value)d %s %d%% %.3f',
-	array('place' => 'world333', 'sprintf', 'not used', 'num' => 'world666',
-	'sprintf', 'not used', 'name' => 'world999', 'sprintf', 'not used', 'value' =>
-	'world', 'sprintf', 'not used', 'sprintf', 'not used', 'sprintf', 'not used',
-	'sprintf', 'not used', ));
+array('place' => 'world333', 'sprintf', 'not used', 'num' => 'world666',
+'sprintf', 'not used', 'name' => 'world999', 'sprintf', 'not used', 'value' =>
+'world', 'sprintf', 'not used', 'sprintf', 'not used', 'sprintf', 'not used',
+'sprintf', 'not used', ));
 echo "\n";
 echo scotext::sprintf("[%(test1)-20s] [%(test1)20s] [%(test1)020s] [%(test1)'#20s] [%(test1)20.20s]
 [%(test2)-20s] [%(test2)20s] [%(test2)020s] [%(test2)'#20s] [%(test2)20.20s]
@@ -282,9 +453,10 @@ echo scotext::sprintf("[%(test1)-20s] [%(test1)20s] [%(test1)020s] [%(test1)'#20
 [%(test3)20.3s] [%(test3)20.1s] [%(test3)20.5s]
 
 \n%.3f %(num).3f %%s %%(value)s %(value)s %%%s %%%s%%  %%%%%s%%%% Hello, %(place)s, how is it hanning at %(place)s? %s works just as well %(name)s: %(value)d %s %d%% %.3f",
-	array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫とボイン',
-	'place' => 'world', 'sprintf', 'not used', 'name' => 9999, 'num' =>
-	645321.123456));
+array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫とボイン',
+'place' => 'world', 'sprintf', 'not used', 'name' => 9999, 'num' =>
+645321.123456));
 
 */
+
 ?>

@@ -296,14 +296,16 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		$sql = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", "\r\n", $sql);
 		*/
 
-		$sql = preg_replace("/(?<!\\n)\\r+(?!\\n)/", LF, $sql);
-		$sql = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", LF, $sql);
-		$sql = preg_replace("/\\r\\n/", LF, $sql);
+//		$sql = preg_replace("/(?<!\\n)\\r+(?!\\n)/", LF, $sql);
+//		$sql = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", LF, $sql);
+//		$sql = preg_replace("/\\r\\n/", LF, $sql);
+
+		$sql = scotext::lf($sql);
 
 		$templine = '';
 		$newsql = array();
 
-		foreach ( preg_split("/\n/", $sql) as $line_num => $line ) {
+		foreach ( split(LF, $sql) as $line_num => $line ) {
 			$temp = trim($line, TAB);
 			// Only continue if it's not a comment
 			if (substr($temp, 0, 2) != '--' && $temp != '') {
