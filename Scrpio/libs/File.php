@@ -12,6 +12,11 @@
  * @copyright 2010
  */
 
+if (0) {
+	// for IDE
+	class Scrpio_File extends Scrpio_File_Core {}
+}
+
 class Scrpio_File_Core {
 
 	static $temp;
