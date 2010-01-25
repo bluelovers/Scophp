@@ -22,6 +22,8 @@ class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
 	protected static $_ = array();
 	protected static $instances = null;
 
+	protected static $_scrpio_self_classname_ = 'scophp';
+
 	public static function &instance($overwrite = false) {
 		if (!self::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
@@ -73,6 +75,16 @@ class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
 		);
 
 		return self::$instances;
+	}
+
+	protected static function _self($name = null, $val = null) {
+		$self = self::$instances ? get_class(self::$instances) : self::$_scrpio_self_classname_;
+
+		if ($name) {
+			return $val !== null ? scophp::set_static_value($self, $name, $val) : scophp::get_static_value($self, $name);
+		} else {
+			return $self;
+		}
 	}
 
 	function __get($var) {
@@ -309,7 +321,7 @@ class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
 				return get_runtime_defined_vars(get_defined_vars());
 			}
 		} else {
-			throw new Scrpio_Exception_PHP('error');
+			throw new Scrpio_Exception_PHP('PHP Warning: scophp::include_file(): Filename cannot be empty or not exists!!');
 		}
 
 		return array();
