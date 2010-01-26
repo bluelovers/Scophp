@@ -19,7 +19,7 @@ if (0) {
 }
 
 class Scrpio_Math_WanNianLi_Core {
-	var $startYear = 1901;
+	static $startYear = 1901;
 	static $jieQiDb = array('96', 'B4', '96', 'A6', '97', '97', '78', '79', '79', '69',
 		'78', '77', //1901
 		'96', 'A4', '96', '96', '97', '87', '79', '79', '79', '69', '78', '78', //1902
@@ -174,11 +174,11 @@ class Scrpio_Math_WanNianLi_Core {
 	// 某年第N個節氣的交氣日期
 	// 從1起小寒
 
-	function JiaoQiDay($yr, $n) {
+	static function JiaoQiDay($yr, $n) {
 		$flag = '';
 		if ($n % 2 == 0) //雙數
 			{
-			$weizhi = ($yr - $this->startYear) * 12 + $n / 2 - 1;
+			$weizhi = ($yr - Scrpio_Math_WanNianLi::$startYear) * 12 + $n / 2 - 1;
 			$flag = Scrpio_Math_WanNianLi::$jieQiDb[$weizhi];
 			$flag = substr($flag, 1, 1);
 			$flag = str_replace('A', '10', $flag);
@@ -187,7 +187,7 @@ class Scrpio_Math_WanNianLi_Core {
 			return 15 + (int)$flag;
 		}
 		//單數
-		$weizhi = ($yr - $this->startYear) * 12 + ($n + 1) / 2 - 1;
+		$weizhi = ($yr - Scrpio_Math_WanNianLi::$startYear) * 12 + ($n + 1) / 2 - 1;
 		$flag = Scrpio_Math_WanNianLi::$jieQiDb[$weizhi];
 		$flag = substr($flag, 0, 1);
 		$flag = str_replace('A', '10', $flag);
@@ -197,10 +197,10 @@ class Scrpio_Math_WanNianLi_Core {
 	}
 
 	/// 某年第N個節氣的交氣日期
-	function JiaoQiDate($year, $n) {
+	static function JiaoQiDate($year, $n) {
 		$month = 1;
 		$month = round((($n + 1) / 2), 0);
-		return strval($year) . '-' . strval($month) . '-' . strval($this->JiaoQiDay($year,
+		return strval($year) . '-' . strval($month) . '-' . strval(Scrpio_Math_WanNianLi::JiaoQiDay($year,
 			$n));
 	}
 }

@@ -85,6 +85,8 @@ class Scrpio_SYS_Base_Core {
 
 		Sco_Base::$buffer_level = ob_get_level();
 
+		Scrpio_Kenal_Core::$config = array('Sco_Base', 'config');
+
 		// Set autoloader
 		spl_autoload_unregister(array('Scrpio_Loader', 'load'));
 		spl_autoload_register(array('Sco_Base', 'auto_load'));
@@ -152,9 +154,9 @@ class Scrpio_SYS_Base_Core {
 	public static function render($output) {
 	}
 
-	public static function config($name) {
+	public static function config($key, $slash = false, $required = false) {
 
-		if ($name == 'locale.timezone')
+		if ($key == 'locale.timezone')
 			return 'Asia/Taipei';
 
 		return array();
@@ -170,7 +172,10 @@ class Scrpio_SYS_Base_Core {
 				break;
 			default:
 
-				trigger_error('Sco_Base: Unknown (' . $key . ')', E_USER_ERROR);
+				//trigger_error('Sco_Base: Unknown (' . $key . ')', E_USER_ERROR);
+
+				throw new Scrpio_Exception('The %(property)s property does not exist in the %(class)s class.',
+					array('property' => $key, 'class' => 'Sco_Base'));
 
 				break;
 		}

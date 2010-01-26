@@ -50,7 +50,7 @@ class Scrpio_helper_date_Core {
 	}
 
 	public static function offsetfix() {
-		scophp::set('offsetfix', self::offset(Sco_Base::config('locale.timezone')));
+		scophp::set('offsetfix', scodate::offset(Scrpio_Kenal::config('locale.timezone')));
 		scophp::set('offset', 0 - scodate::offset('GMT'));
 
 		return scophp::instance()->offsetfix;
@@ -59,8 +59,11 @@ class Scrpio_helper_date_Core {
 	public static function gmdate($format, $timestamp = null) {
 		$timestamp = null === $timestamp ? scophp::get('timestamp') : $timestamp;
 		$timestamp += self::offsetfix() + scophp::instance()->offset;
-		$format = preg_replace('`(?<!\\\\)u`', sprintf("%06d", ($timestamp - (int)$timestamp) *
-			1000000), $format);
+
+		if (strpos($format, 'u') !== false) {
+			$format = preg_replace('`(?<!\\\\)u`', sprintf('%06d', ($timestamp - (int)$timestamp) *
+				1000000), $format);
+		}
 
 		return gmdate($format, $timestamp);
 	}
@@ -68,8 +71,11 @@ class Scrpio_helper_date_Core {
 	public static function date($format, $timestamp = null) {
 		$timestamp = null === $timestamp ? scophp::get('timestamp') : $timestamp;
 		//		$timestamp += (self::offsetfix() - php::instance()->offset);
-		$format = preg_replace('`(?<!\\\\)u`', sprintf("%06d", ($timestamp - (int)$timestamp) *
-			1000000), $format);
+
+		if (strpos($format, 'u') !== false) {
+			$format = preg_replace('`(?<!\\\\)u`', sprintf('%06d', ($timestamp - (int)$timestamp) *
+				1000000), $format);
+		}
 
 		return date($format, $timestamp);
 	}

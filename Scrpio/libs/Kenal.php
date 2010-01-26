@@ -65,8 +65,6 @@ class Scrpio_Kenal_Core {
 	}
 
 	public static function config($key, $slash = false, $required = false) {
-		$variables !== null && $message = scotext::sprintf($message, $variables);
-
 		if (Scrpio_Kenal::_method('config')) {
 			return call_user_func(Scrpio_Kenal::$config, $key, $slash, $required);
 		} else {
