@@ -25,6 +25,7 @@ class Scrpio_Math_AxmHeLuoLiShu_Core {
 		$rt = array(0, 6, 2, 8, 7, 1, 9, 3, 4, 6, 2);
 		return $rt[$gan];
 	}
+
 	//地支取數
 	function DiZhiQuShu($zhi) {
 		//子1，6 丑5，10，寅3，8，卯3，8
@@ -35,6 +36,7 @@ class Scrpio_Math_AxmHeLuoLiShu_Core {
 			array(5, 10), array(1, 6), );
 		return $rt[$zhi];
 	}
+
 	//求天地數
 	function TianDiShu($siZhu) {
 		$tianShu = 0;
@@ -59,6 +61,7 @@ class Scrpio_Math_AxmHeLuoLiShu_Core {
 		}
 		return array(0, $tianShu, $diShu);
 	}
+
 	//求先天卦(天地數，性別，元運，陰陽)
 	function XianTianGua($tiandiShu, $sex, $yuan, $yinyang) {
 		$xtg = new MdLiuYao();
@@ -84,6 +87,7 @@ class Scrpio_Math_AxmHeLuoLiShu_Core {
 		$xtg->XiaGua($xia);
 		return $xtg;
 	}
+
 	function JiGong($sex, $yuan, $yinyang) {
 		switch ($yuan) {
 			case 1: //男艮女坤
