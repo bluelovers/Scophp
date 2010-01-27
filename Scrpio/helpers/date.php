@@ -45,27 +45,44 @@ class Scrpio_helper_date_Core {
 		return self::$instances;
 	}
 
-	public static function timestamp() {
-		return scophp::get('timestamp');
+	public static function timestamp($update = 0) {
+		return $update ? scophp::set('timestamp', microtime(true))->get('timestamp') : scophp::get('timestamp');
 	}
 
 	public static function offsetfix() {
 		scophp::set('offsetfix', scodate::offset(Scrpio_Kenal::config('locale.timezone')));
 		scophp::set('offset', 0 - scodate::offset('GMT'));
 
-		return scophp::instance()->offsetfix;
+		return scophp::get('offsetfix');
 	}
 
 	public static function gmdate($format, $timestamp = null) {
 		$timestamp = null === $timestamp ? scophp::get('timestamp') : $timestamp;
-		$timestamp += self::offsetfix() + scophp::instance()->offset;
+		$timestamp += self::offsetfix() + scophp::get('offset');
+
+		$args = array();
 
 		if (strpos($format, 'u') !== false) {
 			$format = preg_replace('`(?<!\\\\)u`', sprintf('%06d', ($timestamp - (int)$timestamp) *
 				1000000), $format);
 		}
 
-		return gmdate($format, $timestamp);
+		if (strpos($format, 'T') !== false) {
+			$i = count($args);
+
+			$format = preg_replace('`(?<!\\\\)T`', '[:'.$i.':]', $format);
+			$args[$i] = 'GMT+'.((int)scophp::get('offset')/3600);
+		}
+
+		$ret = gmdate($format, $timestamp);
+
+		if ($args) {
+			for($i = 0; $i<count($args); $i++) {
+				$ret = str_replace('[:'.$i.':]', $args[$i], $ret);
+			}
+		}
+
+		return $ret;
 	}
 
 	public static function date($format, $timestamp = null) {
@@ -80,14 +97,121 @@ class Scrpio_helper_date_Core {
 		return date($format, $timestamp);
 	}
 
-	public static function strtotime($str, $now = 0) {
+	public static function strtotime($str, $now = 0, $skip = 0) {
 		$now = $now ? $now : scophp::get('timestamp');
 
 		if (@$d = strtotime($str, $now)) {
-			return $d - scophp::instance()->offsetfix;
+			if ($skip > 0) {
+				return $d;
+			} elseif (preg_match('/(GMT(\+\d))/i', $str, $match)) {
+
+				//print_r($match);
+
+				return $d - (int)$match[2]*3600;
+   			} elseif ($skip == 0 && preg_match('/(UTC|CST|MDT)/i', $str, $match)) {
+
+   				$dd = $match[0] == 'CST' ? 14 : 0;
+
+				return $d - $dd*3600;
+			} else {
+
+				if ($skip == 0 && preg_match('/(?:\d(T)\d.*)?(\+[0-9]{2}\:?[0-9]{2})/i', $str, $match)) {
+
+					//print_r($match);
+
+					$match[2] = (int)$match[2];
+
+					if ($match[1] == 'T') {
+						$d += scodate::offset('UTC');
+						if ($match[2]) $d += $match[2]*3600;
+					}
+
+					if ($match[1] == '' && !$match[2]) {
+						$d += -scophp::get('offsetfix') - scophp::get('offset');
+					}
+				}
+
+				return $d - scophp::get('offsetfix');
+			}
 		} else {
 			return 0;
 		}
+
+/*
+
+echo '<br>date_default_timezone_get: '.date_default_timezone_get();
+echo '<br>offsetfix: '.scophp::instance()->offsetfix/3600;
+echo '<br>offset: '.scophp::instance()->offset/3600;
+echo '<br>UTC offset: '.scodate::offset('UTC')/3600;
+
+foreach(array(scoexpires::$format, 'c', 'D, d M Y H:i:s', 'e', 'r') as $_) {
+	echo '<br>==============================';
+	echo '<br>'.$_;
+	echo '<br>==========';
+	echo '<br>'.scodate::gmdate($_);
+	echo '<br>'.scodate::gmdate($_, scodate::strtotime(scodate::gmdate($_)));
+	echo '<br>----------';
+	echo '<br>'.scodate::date($_);
+	echo '<br>'.scodate::date($_, scodate::strtotime(scodate::date($_)));
+}
+
+Output:
+
+date_default_timezone_get: Asia/Taipei
+offsetfix: 16
+offset: -8
+UTC offset: -8
+==============================
+D, d M Y H:i:s T
+==========
+Wed, 27 Jan 2010 11:11:22 GMT+8
+Wed, 27 Jan 2010 11:11:22 GMT+8
+----------
+Wed, 27 Jan 2010 11:11:22 CST
+Wed, 27 Jan 2010 11:11:22 CST
+==============================
+c
+==========
+2010-01-27T11:11:22+00:00
+2010-01-27T11:11:22+00:00
+----------
+2010-01-27T11:11:22+08:00
+2010-01-27T11:11:22+08:00
+==============================
+D, d M Y H:i:s
+==========
+Wed, 27 Jan 2010 11:11:22
+Wed, 27 Jan 2010 11:11:22
+----------
+Wed, 27 Jan 2010 11:11:22
+Wed, 27 Jan 2010 11:11:22
+==============================
+e
+==========
+UTC
+UTC
+----------
+Asia/Taipei
+Asia/Taipei
+==============================
+r
+==========
+Wed, 27 Jan 2010 11:11:22 +0000
+Wed, 27 Jan 2010 11:11:22 +0000
+----------
+Wed, 27 Jan 2010 11:11:22 +0800
+Wed, 27 Jan 2010 11:11:22 +0800
+==============================
+H:i:s
+==========
+11:20:20
+11:20:20
+----------
+11:20:20
+11:20:20
+
+*/
+
 	}
 
 	/**

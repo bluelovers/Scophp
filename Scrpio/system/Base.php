@@ -95,6 +95,7 @@ class Scrpio_SYS_Base_Core {
 		register_shutdown_function(array('Sco_Base', 'shutdown'));
 
 		scophp::date_default_timezone_set(Sco_Base::config('locale.timezone'));
+		scophp::set('timestamp', microtime(true));
 	}
 
 	public static function Start() {

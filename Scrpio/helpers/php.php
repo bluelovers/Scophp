@@ -257,8 +257,8 @@ class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
 
 		if (uc($var) == 'TZ') {
 			$var = uc($var);
-			@date_default_timezone_set($val);
-			@ini_set('date.timezone', $val);
+		//	@date_default_timezone_set($val);
+//			@ini_set('date.timezone', $val);
 		}
 	}
 
@@ -304,8 +304,10 @@ class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
 	 * @param $http_response_code
 	 */
 	public static function header($string, $replace = true, $http_response_code = null) {
-		Event::run('php.header', array(&$string, &$replace, &$http_response_code));
+		Scrpio_Event::run('php.header', array(&$string, &$replace, &$http_response_code));
 		header($string, $replace, $http_response_code);
+
+		//echo $string."<br>";
 	}
 
 	/**

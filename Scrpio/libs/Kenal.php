@@ -28,6 +28,9 @@ class Scrpio_Kenal_Core {
 	public static $log = null;
 	public static $config = null;
 	public static $find_file = null;
+	public static $lang = null;
+
+	public static $local_lang = 'en_US';
 
 	protected static $instances = null;
 
@@ -97,6 +100,16 @@ class Scrpio_Kenal_Core {
 
 	protected static function _find_file($directory, $filename, $required = false, $ext = false) {
 		return;
+	}
+
+	public static function lang() {
+		$args = func_get_args();
+
+		if (Scrpio_Kenal::_method('lang')) {
+			return call_user_func_array(Scrpio_Kenal::$lang, $args);
+		} else {
+			return array_shift($args);
+		}
 	}
 
 	public static function reset() {

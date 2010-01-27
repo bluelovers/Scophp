@@ -41,37 +41,37 @@ class Scrpio_Log_Core {
 		$variables !== null && $message = scotext::sprintf($message, $variables);
 
 		// Make sure the drivers and config are loaded
-		if ( ! is_array(Kohana_Log::$config))
+		if ( ! is_array(Scrpio_Log::$config))
 		{
-			Kohana_Log::$config = Kohana::config('log');
+			Scrpio_Log::$config = Scrpio_Kenal::config('log');
 		}
 
-		if ( ! is_array(Kohana_Log::$drivers))
+		if ( ! is_array(Scrpio_Log::$drivers))
 		{
-			foreach ( (array) Kohana::config('log.drivers') as $driver_name)
+			foreach ( (array) Scrpio_Kenal::config('log.drivers') as $driver_name)
 			{
 				// Set driver name
 				$driver = 'Log_'.ucfirst($driver_name).'_Driver';
 
 				// Load the driver
-				if ( ! Kohana::auto_load($driver))
-					throw new Kohana_Exception('Log Driver Not Found: %driver%', array('%driver%' => $driver));
+				if ( ! Scrpio_Kenal::auto_load($driver))
+					throw new Scrpio_Exception('Log Driver Not Found: %(driver)s', array('driver' => $driver));
 
 				// Initialize the driver
-				$driver = new $driver(array_merge(Kohana::config('log'), Kohana::config('log_'.$driver_name)));
+				$driver = new $driver(array_merge(Scrpio_Kenal::config('log'), Scrpio_Kenal::config('log_'.$driver_name)));
 
 				// Validate the driver
 				if ( ! ($driver instanceof Log_Driver))
-					throw new Kohana_Exception('%driver% does not implement the Log_Driver interface', array('%driver%' => $driver));
+					throw new Scrpio_Exception('%(driver)s does not implement the Log_Driver interface', array('driver' => $driver));
 
-				Kohana_Log::$drivers[] = $driver;
+				Scrpio_Log::$drivers[] = $driver;
 			}
 
 			// Always save logs on shutdown
-			Event::add('system.shutdown', array('Kohana_Log', 'save'));
+			Event::add('system.shutdown', array('Scrpio_Log', 'save'));
 		}
 
-		Kohana_Log::$messages[] = array('date' => time(), 'type' => $type, 'message' => $message);
+		Scrpio_Log::$messages[] = array('date' => time(), 'type' => $type, 'message' => $message);
 	}
 
 	/**
@@ -81,22 +81,22 @@ class Scrpio_Log_Core {
 	 */
 	public static function save()
 	{
-		if (empty(Kohana_Log::$messages))
+		if (empty(Scrpio_Log::$messages))
 			return;
 
-		foreach (Kohana_Log::$drivers as $driver)
+		foreach (Scrpio_Log::$drivers as $driver)
 		{
 			// We can't throw exceptions here or else we will get a
 			// Exception thrown without a stack frame error
 			try
 			{
-				$driver->save(Kohana_Log::$messages);
+				$driver->save(Scrpio_Log::$messages);
 			}
 			catch(Exception $e){}
 		}
 
 		// Reset the messages
-		Kohana_Log::$messages = array();
+		Scrpio_Log::$messages = array();
 	}
 }
 

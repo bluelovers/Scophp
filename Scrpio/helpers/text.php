@@ -63,7 +63,8 @@ class Scrpio_helper_text_Core {
 
 		$_notvar = false;
 
-		if (!empty($format) && is_array($args) && count($args)) {
+		if (!empty($format) && strpos($format, '%') !== false && is_array($args) &&
+			count($args)) {
 			if (count($args) == 1) {
 				$args = is_array($args[0]) ? $args[0] : array($args[0]);
 			} else {
@@ -72,7 +73,6 @@ class Scrpio_helper_text_Core {
 		} else {
 			return $format;
 		}
-
 
 		if ($_notvar) {
 			return vprintf($format, $args);
@@ -153,7 +153,7 @@ class Scrpio_helper_text_Core {
 
 						//echo 'unset: ' . $varname.':';
 
-						scoarray::array_remove_keys(&$matchs['fultext'], scoarray::array_search_all($fultext,
+						scoarray::remove_keys(&$matchs['fultext'], scoarray::search_all($fultext,
 							$matchs['fultext']));
 
 						//$replace = sprintf($search, $_args[$varname]);
@@ -267,19 +267,23 @@ class Scrpio_helper_text_Core {
 		// Format string
 		$format = ($format === null) ? '%01.2f %s' : (string )$format;
 
+		static $units = array();
+
 		// IEC prefixes (binary)
 		if ($si == false or strpos($force_unit, 'i') !== false) {
-			$units = array(__('B'), __('KiB'), __('MiB'), __('GiB'), __('TiB'), __('PiB'));
+			!$units[0] && $units[0] = array(__('B'), __('KiB'), __('MiB'), __('GiB'), __('TiB'),
+				__('PiB'));
 			$mod = 1024;
 		}
 		// SI prefixes (decimal)
 		else {
-			$units = array(__('B'), __('kB'), __('MB'), __('GB'), __('TB'), __('PB'));
+			!$units[1] && $units[1] = array(__('B'), __('kB'), __('MB'), __('GB'), __('TB'),
+				__('PB'));
 			$mod = 1000;
 		}
 
 		// Determine unit to use
-		if (($power = array_search((string )$force_unit, $units)) === false) {
+		if (($power = array_search((string )$force_unit, $units[$mod == 1000])) === false) {
 			$power = ($bytes > 0) ? floor(log($bytes, $mod)) : 0;
 		}
 

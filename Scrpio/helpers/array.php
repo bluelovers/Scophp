@@ -42,14 +42,20 @@ class Scrpio_helper_array_Core {
 		return self::$instances;
 	}
 
-	static function array_remove_keys($array, $haystack) {
-		if (is_array($haystack)) {
-			for ($i = 0; $i < count($haystack); $i++) {
-				unset($array[$haystack[$i]]);
+	static function remove_keys($haystack, $needle) {
+		if (is_array($needle)) {
+			$array = array();
+
+			for ($i = 0; $i < count($needle); $i++) {
+				$array[] = $haystack[$needle[$i]];
+				unset($haystack[$needle[$i]]);
 			}
 		} else {
-			unset($array[$haystack]);
+			$array = $haystack[$needle];
+			unset($haystack[$needle]);
 		}
+
+		return $array;
 	}
 
 	/**
@@ -58,16 +64,18 @@ class Scrpio_helper_array_Core {
 	 *
 	 * @return array
 	 */
-	static function array_search_all($needle, $haystack) {
+	static function search_all($needle, array $haystack, $strict = false) {
+		$array = array();
 
 		foreach ($haystack as $k => $v) {
-
-			if ($haystack[$k] == $needle) {
-
+			if (!$strict && $haystack[$k] == $needle) {
+				$array[] = $k;
+			} elseif ($strict && $haystack[$k] === $needle) {
 				$array[] = $k;
 			}
 		}
-		return (array )$array;
+
+		return $array;
 	}
 
 	function in_array_default ($needle, $haystack, $default = null, $strict = false) {

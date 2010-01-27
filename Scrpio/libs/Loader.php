@@ -110,7 +110,7 @@ class Scrpio_Loader_Core {
 
 	static function load($class) {
 
-//		echo '[['.$class.']]';
+		//echo '[['.$class.']]';
 //		exit();
 
 		list($type, $class, $name, $rename) = self::instance(true)->class_parse($class);
@@ -133,7 +133,12 @@ class Scrpio_Loader_Core {
 			} elseif ($type == self::OBJ_LIB) {
 				return self::instance()->lib($name, $rename);
 			}
+		} elseif ($issco && $suffix == 'Core') {
+			$core = $issco ? (($suffix == 'Core') ? '' : '_Core') : '';
+			return self::_load($type, array($core, $class, $class, $class, true, $name, null));
 		}
+
+		//echo '[['.$class.']]';
 
 		//$core = $issco ? (($suffix == 'Core') ? '' : '_Core') : '';
 //
@@ -152,6 +157,11 @@ class Scrpio_Loader_Core {
 		} else {
 			$_temp = split('_', $name);
 			$name = array_pop($_temp);
+
+			if (!$core) {
+				$name = array_pop($_temp);
+			}
+
 			$syspath = SYSPATH . 'Scrpio/libs/' . join('/', $_temp) . '/';
 		}
 

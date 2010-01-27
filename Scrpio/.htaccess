@@ -9,3 +9,9 @@
 # 	@copyright 2010
 #
 
+Options All -Indexes
+
+RewriteEngine On
+#RewriteBase /
+
+RewriteRule (.*) index.htm [G]
