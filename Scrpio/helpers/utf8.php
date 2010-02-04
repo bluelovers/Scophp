@@ -14,7 +14,8 @@
 
 if (0) {
 	// for IDE
-	class scoutf8 extends Scrpio_helper_utf8_Core {}
+	class scoutf8 extends Scrpio_helper_utf8_Core {
+	}
 }
 
 class Scrpio_helper_utf8_Core {
@@ -26,10 +27,12 @@ class Scrpio_helper_utf8_Core {
 
 	public static function instance($overwrite = false) {
 		if (!self::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite : 'scoutf8');
+			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
+				$overwrite : 'scoutf8');
 			self::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite : get_class(self::$instances));
+			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
+				get_class(self::$instances));
 			self::$instances = $ref->newInstance();
 		}
 
@@ -114,6 +117,13 @@ class Scrpio_helper_utf8_Core {
 
 		trigger_error('utf8::str_pad: Unknown padding type (' . $pad_type . ')',
 			E_USER_ERROR);
+	}
+
+	function mb_unserialize($serial_str) {
+		$serial_str = preg_replace('!s:(\d+):"(.*?)";!se', "'s:'.strlen('$2').':\"$2\";'",
+			$serial_str);
+		$serial_str = str_replace("\r", "", $serial_str);
+		return unserialize($serial_str);
 	}
 }
 

@@ -58,6 +58,7 @@ class Scrpio_helper_date_Core {
 
 	public static function gmdate($format, $timestamp = null) {
 		$timestamp = null === $timestamp ? scophp::get('timestamp') : $timestamp;
+		//$timestamp += self::offsetfix() + scophp::get('offset');
 		$timestamp += self::offsetfix() + scophp::get('offset');
 
 		$args = array();
@@ -71,7 +72,7 @@ class Scrpio_helper_date_Core {
 			$i = count($args);
 
 			$format = preg_replace('`(?<!\\\\)T`', '[:'.$i.':]', $format);
-			$args[$i] = 'GMT+'.((int)scophp::get('offset')/3600);
+			$args[$i] = 'GMT+'.((scophp::get('offset')+scophp::get('offsetfix'))/3600);
 		}
 
 		$ret = gmdate($format, $timestamp);
@@ -98,21 +99,23 @@ class Scrpio_helper_date_Core {
 	}
 
 	public static function strtotime($str, $now = 0, $skip = 0) {
+		//BUG:need fix in safemode
+
 		$now = $now ? $now : scophp::get('timestamp');
 
 		if (@$d = strtotime($str, $now)) {
 			if ($skip > 0) {
 				return $d;
-			} elseif (preg_match('/(GMT(\+\d))/i', $str, $match)) {
+			} elseif (preg_match('/(?<!ETC\/)(GMT([\+\-]\d))/i', $str, $match)) {
 
 				//print_r($match);
 
-				return $d - (int)$match[2]*3600;
-   			} elseif ($skip == 0 && preg_match('/(UTC|CST|MDT)/i', $str, $match)) {
+				return $d - (int)$match[2]*3600 - scophp::get('offsetfix');
+   			} elseif ($skip == 0 && preg_match('/(ETC\/GMT[\+\-]\d|UTC|CST|MDT|EAT)/i', $str, $match)) {
 
-   				$dd = $match[0] == 'CST' ? 14 : 0;
+   				$dd = scodate::offset($match[0]);
 
-				return $d - $dd*3600;
+				return $d + $dd;
 			} else {
 
 				if ($skip == 0 && preg_match('/(?:\d(T)\d.*)?(\+[0-9]{2}\:?[0-9]{2})/i', $str, $match)) {
@@ -122,7 +125,7 @@ class Scrpio_helper_date_Core {
 					$match[2] = (int)$match[2];
 
 					if ($match[1] == 'T') {
-						$d += scodate::offset('UTC');
+						$d += scodate::offset('GMT');
 						if ($match[2]) $d += $match[2]*3600;
 					}
 

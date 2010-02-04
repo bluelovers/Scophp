@@ -257,8 +257,8 @@ class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
 
 		if (uc($var) == 'TZ') {
 			$var = uc($var);
-		//	@date_default_timezone_set($val);
-//			@ini_set('date.timezone', $val);
+			@date_default_timezone_set($val);
+			@ini_set('date.timezone', $val);
 		}
 	}
 
