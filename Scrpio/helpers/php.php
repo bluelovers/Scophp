@@ -444,6 +444,19 @@ EOM
 
 		return $ref;
 	}
+
+	public static function error_reporting($level = null) {
+		if ($level === null) {
+			return error_reporting();
+		} else {
+
+			if (defined('E_DEPRECATED')) {
+				$level = $level ^ E_DEPRECATED;
+			}
+
+			return error_reporting($level);
+		}
+	}
 }
 
 ?>
