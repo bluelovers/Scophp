@@ -445,13 +445,17 @@ EOM
 		return $ref;
 	}
 
-	public static function error_reporting($level = null) {
+	public static function error_reporting($level = null, $add = null) {
 		if ($level === null) {
 			return error_reporting();
 		} else {
 
 			if (defined('E_DEPRECATED')) {
 				$level = $level ^ E_DEPRECATED;
+			}
+
+			if ($add !== null) {
+				$level = $level & $add;
 			}
 
 			return error_reporting($level);
