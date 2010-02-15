@@ -456,7 +456,7 @@ EOM
 
 			if ($add !== null) {
 				$level = $level & $add;
-			}.
+			}
 
 			return error_reporting($level);
 		}
