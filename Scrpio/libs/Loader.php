@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Loader extends Scrpio_Loader_Core {
+	class Scorpio_Loader extends Scorpio_Loader_Core {
 	}
 }
 
-class Scrpio_Loader_Core {
+class Scorpio_Loader_Core {
 
 	const OBJ_UNDEF = 0;
 	const OBJ_HELPER = 1;
@@ -32,7 +32,7 @@ class Scrpio_Loader_Core {
 	public static function instance($overwrite = false) {
 		if (!self::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
-				$overwrite : 'Scrpio_Loader');
+				$overwrite : 'Scorpio_Loader');
 			self::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
 			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
@@ -57,15 +57,15 @@ class Scrpio_Loader_Core {
 		$ret = $matchs = array();
 		if (preg_match('/^sco(?<name>[a-zA-Z][_\w\d]+)$/', $class, $matchs)) {
 			$ret = array(self::OBJ_HELPER, $class, $matchs['name'], null);
-		} elseif (preg_match('/^Scrpio_helper_(?<name>[a-zA-Z][_\w\d]+)$/', $class, $matchs)) {
+		} elseif (preg_match('/^Scorpio_helper_(?<name>[a-zA-Z][_\w\d]+)$/', $class, $matchs)) {
 			$ret = array(self::OBJ_HELPER, $class, $matchs['name'], false);
 
 		} elseif (preg_match('/^Sco_(?<name>[a-zA-Z][_\w\d]+)$/', $class, $matchs)) {
 			$ret = array(self::OBJ_CORE, $class, $matchs['name'], null);
-		} elseif (preg_match('/^Scrpio_SYS_(?<name>[a-zA-Z][_\w\d]+)$/', $class, $matchs)) {
+		} elseif (preg_match('/^Scorpio_SYS_(?<name>[a-zA-Z][_\w\d]+)$/', $class, $matchs)) {
 			$ret = array(self::OBJ_CORE, $class, $matchs['name'], false);
 
-		} elseif (preg_match('/^Scrpio_(?<name>[A-Z][_\w\d]+)$/', $class, $matchs)) {
+		} elseif (preg_match('/^Scorpio_(?<name>[A-Z][_\w\d]+)$/', $class, $matchs)) {
 			$ret = array(self::OBJ_LIB, $class, $matchs['name'], false);
 
 		} elseif (preg_match('/^Zend_(?<name>[A-Z][_\w\d]+)$/', $class, $matchs)) {
@@ -80,7 +80,7 @@ class Scrpio_Loader_Core {
 
 	static function helper($name, $rename = null, $path = null) {
 		$core = '_Core';
-		$class = 'Scrpio_helper_' . $name;
+		$class = 'Scorpio_helper_' . $name;
 		$rename_def = 'sco' . $name;
 		$rename_new = $rename ? $rename : $rename_def;
 
@@ -90,7 +90,7 @@ class Scrpio_Loader_Core {
 
 	static function core($name, $rename = null, $path = null) {
 		$core = '_Core';
-		$class = 'Scrpio_SYS_' . $name;
+		$class = 'Scorpio_SYS_' . $name;
 		$rename_def = 'Sco_' . $name;
 		$rename_new = $rename ? $rename : $rename_def;
 
@@ -100,7 +100,7 @@ class Scrpio_Loader_Core {
 
 	static function lib($name, $rename = null, $path = null) {
 		$core = '_Core';
-		$class = 'Scrpio_' . $name;
+		$class = 'Scorpio_' . $name;
 		$rename_def = $class;
 		$rename_new = $rename ? $rename : $rename_def;
 
@@ -151,9 +151,9 @@ class Scrpio_Loader_Core {
 		list($core, $class, $rename_def, $rename_new, $rename, $name, $path) = $args;
 
 		if ($type == self::OBJ_HELPER) {
-			$syspath = SYSPATH . 'Scrpio/helpers/';
+			$syspath = SYSPATH . 'Scorpio/helpers/';
 		} elseif ($type == self::OBJ_CORE) {
-			$syspath = SYSPATH . 'Scrpio/system/';
+			$syspath = SYSPATH . 'Scorpio/system/';
 		} else {
 			$_temp = split('_', $name);
 			$name = array_pop($_temp);
@@ -162,7 +162,7 @@ class Scrpio_Loader_Core {
 				$name = array_pop($_temp);
 			}
 
-			$syspath = SYSPATH . 'Scrpio/libs/' . join('/', $_temp) . '/';
+			$syspath = SYSPATH . 'Scorpio/libs/' . join('/', $_temp) . '/';
 		}
 
 		if (!self::exists($rename_def)) {
@@ -186,7 +186,7 @@ class Scrpio_Loader_Core {
 			//todo: do something
 
 			if ($rename === false) {
-				return new Scrpio_Spl_Class($class);
+				return new Scorpio_Spl_Class($class);
 			} elseif ($class != $rename_def) {
 				self::class_create($rename_def, $class, $type == self::OBJ_CORE);
 			}
@@ -194,7 +194,7 @@ class Scrpio_Loader_Core {
 
 		//todo: do something
 
-		return new Scrpio_Spl_Class($rename_new == $rename_def ? $rename_new : self::
+		return new Scorpio_Spl_Class($rename_new == $rename_def ? $rename_new : self::
 			class_create($rename_new, $rename_def));
 	}
 

@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class scoarray extends Scrpio_helper_array_Core {}
+	class scoarray extends Scorpio_helper_array_Core {}
 }
 
-class Scrpio_helper_array_Core {
+class Scorpio_helper_array_Core {
 	protected static $instances = null;
 
 	public static function instance($overwrite = false) {

@@ -14,14 +14,14 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Exception extends Scrpio_Exception_Core {
+	class Scorpio_Exception extends Scorpio_Exception_Core {
 	}
 }
 
-class Scrpio_Exception_Core extends Exception {
+class Scorpio_Exception_Core extends Exception {
 
 	public static $enabled = false;
-	protected static $_scrpio_self_classname_ = 'Scrpio_Exception';
+	protected static $_scorpio_self_classname_ = 'Scorpio_Exception';
 
 	// To hold unique identifier to distinguish error output
 	protected $instance_identifier;
@@ -44,9 +44,9 @@ class Scrpio_Exception_Core extends Exception {
 
 	protected static function _self($name = null, $val = null) {
 		if ($name) {
-			return $val !== null ? scophp::set_static_value(self::$_scrpio_self_classname_, $name, $val) : scophp::get_static_value(self::$_scrpio_self_classname_, $name);
+			return $val !== null ? scophp::set_static_value(self::$_scorpio_self_classname_, $name, $val) : scophp::get_static_value(self::$_scorpio_self_classname_, $name);
 		} else {
-			return self::$_scrpio_self_classname_;
+			return self::$_scorpio_self_classname_;
 		}
 	}
 
@@ -77,7 +77,7 @@ class Scrpio_Exception_Core extends Exception {
 	public static function text($e)
 	{
 		return sprintf('%s [ %s ]: %s ~ %s [ %d ]',
-			get_class($e), $e->getCode(), strip_tags($e->getMessage()), Scrpio_Exception::debug_path($e->getFile()), $e->getLine());
+			get_class($e), $e->getCode(), strip_tags($e->getMessage()), Scorpio_Exception::debug_path($e->getFile()), $e->getLine());
 	}
 
 	/**
@@ -99,15 +99,15 @@ class Scrpio_Exception_Core extends Exception {
 			$message = $e->getMessage();
 
 			// Create a text version of the exception
-			$error = Scrpio_Exception::text($e);
+			$error = Scorpio_Exception::text($e);
 
 			// Add this exception to the log
-			Scrpio_Log::add('error', $error);
+			Scorpio_Log::add('error', $error);
 
 			// Manually save logs after exceptions
-			Scrpio_Log::save();
+			Scorpio_Log::save();
 
-			if (Scrpio_Kenal::config('kohana/core.display_errors') === FALSE)
+			if (Scorpio_Kenal::config('kohana/core.display_errors') === FALSE)
 			{
 				// Do not show the details
 				$file = $line = NULL;
@@ -124,7 +124,7 @@ class Scrpio_Exception_Core extends Exception {
 				$template = '';
 			}
 
-			if ($e instanceof Scrpio_Exception)
+			if ($e instanceof Scorpio_Exception)
 			{
 				$template = $e->getTemplate().$template;
 
@@ -134,11 +134,11 @@ class Scrpio_Exception_Core extends Exception {
 				}
 
 				// Use the human-readable error name
-				$code = Scrpio_Kenal::message('kohana/core.errors.'.$code);
+				$code = Scorpio_Kenal::message('kohana/core.errors.'.$code);
 			}
 			else
 			{
-				$template = Scrpio_Exception::$template.$template;
+				$template = Scorpio_Exception::$template.$template;
 
 				if ( ! headers_sent())
 				{
@@ -148,7 +148,7 @@ class Scrpio_Exception_Core extends Exception {
 				if ($e instanceof ErrorException)
 				{
 					// Use the human-readable error name
-					$code = Scrpio_Kenal::message('kohana/core.errors.'.$e->getSeverity());
+					$code = Scorpio_Kenal::message('kohana/core.errors.'.$e->getSeverity());
 
 					if (version_compare(PHP_VERSION, '5.3', '<'))
 					{
@@ -177,10 +177,10 @@ class Scrpio_Exception_Core extends Exception {
 			ob_get_level() and ob_clean();
 
 			// Display the exception text
-			echo Scrpio_Exception::text($e), LF;
+			echo Scorpio_Exception::text($e), LF;
 		}
 
-		if (Scrpio_Kenal::$server_api === 'cli')
+		if (Scorpio_Kenal::$server_api === 'cli')
 		{
 			// Exit with an error status
 			exit(1);
@@ -210,7 +210,7 @@ class Scrpio_Exception_Core extends Exception {
 	 */
 	public static function dump($value, $length = 128, $max_level = 5)
 	{
-		return Scrpio_Exception::_dump($value, $length, $max_level);
+		return Scorpio_Exception::_dump($value, $length, $max_level);
 	}
 
 	/**
@@ -251,11 +251,11 @@ class Scrpio_Exception_Core extends Exception {
 						// Only exists on PHP >= 5.2.4
 						if (stream_is_local($file))
 						{
-							$file = Scrpio_Exception::debug_path($file);
+							$file = Scorpio_Exception::debug_path($file);
 						}
 					}
 
-					return '<small>resource</small><span>('.$type.')</span> '.htmlspecialchars($file, ENT_NOQUOTES, Scrpio_Kenal::CHARSET);
+					return '<small>resource</small><span>('.$type.')</span> '.htmlspecialchars($file, ENT_NOQUOTES, Scorpio_Kenal::CHARSET);
 				}
 			}
 			else
@@ -268,12 +268,12 @@ class Scrpio_Exception_Core extends Exception {
 			if (strlen($var) > $length)
 			{
 				// Encode the truncated string
-				$str = htmlspecialchars(substr($var, 0, $length), ENT_NOQUOTES, Scrpio_Kenal::CHARSET).'&nbsp;&hellip;';
+				$str = htmlspecialchars(substr($var, 0, $length), ENT_NOQUOTES, Scorpio_Kenal::CHARSET).'&nbsp;&hellip;';
 			}
 			else
 			{
 				// Encode the string
-				$str = htmlspecialchars($var, ENT_NOQUOTES, Scrpio_Kenal::CHARSET);
+				$str = htmlspecialchars($var, ENT_NOQUOTES, Scorpio_Kenal::CHARSET);
 			}
 
 			return '<small>string</small><span>('.strlen($var).')</span> "'.$str.'"';
@@ -314,7 +314,7 @@ class Scrpio_Exception_Core extends Exception {
 						$key = '"'.$key.'"';
 					}
 
-					$output[] = "$space$s$key => ".Scrpio_Exception::_dump($val, $length, $max_level, $level + 1);
+					$output[] = "$space$s$key => ".Scorpio_Exception::_dump($val, $length, $max_level, $level + 1);
 				}
 				unset($var[$marker]);
 
@@ -371,7 +371,7 @@ class Scrpio_Exception_Core extends Exception {
 						$access = '<small>public</small>';
 					}
 
-					$output[] = "$space$s$access $key => ".Scrpio_Exception::_dump($val, $length, $max_level, $level + 1);
+					$output[] = "$space$s$access $key => ".Scorpio_Exception::_dump($val, $length, $max_level, $level + 1);
 				}
 				unset($objects[$hash]);
 
@@ -497,7 +497,7 @@ class Scrpio_Exception_Core extends Exception {
 			if (isset($step['file']) AND isset($step['line']))
 			{
 				// Include the source of this step
-				$source = Scrpio_Exception::debug_source($step['file'], $step['line']);
+				$source = Scorpio_Exception::debug_source($step['file'], $step['line']);
 			}
 
 			if (isset($step['file']))

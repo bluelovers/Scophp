@@ -14,17 +14,17 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Spl_Array extends Scrpio_Spl_Array_Core {
+	class Scorpio_Spl_Array extends Scorpio_Spl_Array_Core {
 	}
 }
 
-class Scrpio_Spl_Array_Core extends Scrpio_Spl implements Iterator, ArrayAccess {
+class Scorpio_Spl_Array_Core extends Scorpio_Spl implements Iterator, ArrayAccess {
 
 	function _setup(&$base) {
-		$this->_scrpio_base_ = $base;
+		$this->_scorpio_base_ = $base;
 
 		if (is_array($base)) {
-			$this->_scrpio_ = &$this->_scrpio_base_;
+			$this->_scorpio_ = &$this->_scorpio_base_;
 		}
 	}
 
@@ -32,22 +32,22 @@ class Scrpio_Spl_Array_Core extends Scrpio_Spl implements Iterator, ArrayAccess 
 	 * implements methods of interface ArrayAccess.
 	 */
 	public function offsetSet($index, $val) {
-		$this->_scrpio_[$index] = $val;
+		$this->_scorpio_[$index] = $val;
 	}
 
 	public function offsetGet($index) {
-		return $this->_scrpio_[$index];
+		return $this->_scorpio_[$index];
 	}
 
 	public function offsetExists($index) {
-		return ($this->_scrpio_[$index] != null);
+		return ($this->_scorpio_[$index] != null);
 	}
 
 	/**
 	 * It means: unset($array[$index])
 	 */
 	public function offsetUnset($index) {
-		$this->_scrpio_[$index] = null;
+		$this->_scorpio_[$index] = null;
 		return $this;
 	}
 
@@ -55,23 +55,23 @@ class Scrpio_Spl_Array_Core extends Scrpio_Spl implements Iterator, ArrayAccess 
 	 * PHP SPL Iterator function.
 	 */
 	public function rewind() {
-		reset($this->_scrpio__);
+		reset($this->_scorpio__);
 	}
 
 	public function valid() {
-		return current($this->_scrpio_) ? true : false;
+		return current($this->_scorpio_) ? true : false;
 	}
 
 	public function current() {
-		return current($this->_scrpio_);
+		return current($this->_scorpio_);
 	}
 
 	public function key() {
-		return key($this->_scrpio_);
+		return key($this->_scorpio_);
 	}
 
 	public function next() {
-		next($this->_scrpio_);
+		next($this->_scorpio_);
 	}
 }
 

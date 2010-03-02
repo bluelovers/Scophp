@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Config_Exception extends Scrpio_Config_Exception_Core {}
+	class Scorpio_Config_Exception extends Scorpio_Config_Exception_Core {}
 }
 
-class Scrpio_Config_Exception_Core extends Scrpio_Exception {
+class Scorpio_Config_Exception_Core extends Scorpio_Exception {
 
 }
 

@@ -14,15 +14,15 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Db_Builder extends Scrpio_Db_Builder_Core {}
+	class Scorpio_Db_Builder extends Scorpio_Db_Builder_Core {}
 }
 
-class Scrpio_Db_Builder_Core {
+class Scorpio_Db_Builder_Core {
 
 	// Valid ORDER BY directions
 	protected $order_directions = array('ASC', 'DESC', 'RAND()');
 
-	// Scrpio_Db object
+	// Scorpio_Db object
 	protected $db;
 
 	// Builder members
@@ -77,10 +77,10 @@ class Scrpio_Db_Builder_Core {
 	protected function compile() {
 		if (!is_object($this->db)) {
 			// Use default database for compiling to string if none is given
-			$this->db = Scrpio_Db::instance($this->db);
+			$this->db = Scorpio_Db::instance($this->db);
 		}
 
-		if ($this->type === Scrpio_Db::SELECT) {
+		if ($this->type === Scorpio_Db::SELECT) {
 			// SELECT columns FROM table
 			$sql = $this->distinct ? 'SELECT DISTINCT ' : 'SELECT ';
 			$sql .= $this->compile_select();
@@ -88,11 +88,11 @@ class Scrpio_Db_Builder_Core {
 			if (!empty($this->from)) {
 				$sql .= "\nFROM " . $this->compile_from();
 			}
-		} elseif ($this->type === Scrpio_Db::UPDATE) {
+		} elseif ($this->type === Scorpio_Db::UPDATE) {
 			$sql = 'UPDATE ' . $this->compile_from() . "\n" . 'SET ' . $this->compile_set();
-		} elseif ($this->type === Scrpio_Db::INSERT) {
+		} elseif ($this->type === Scorpio_Db::INSERT) {
 			$sql = 'INSERT INTO ' . $this->compile_from() . "\n" . $this->compile_columns() . "\nVALUES " . $this->compile_values();
-		} elseif ($this->type === Scrpio_Db::DELETE) {
+		} elseif ($this->type === Scorpio_Db::DELETE) {
 			$sql = 'DELETE FROM ' . $this->compile_from();
 		}
 
@@ -136,7 +136,7 @@ class Scrpio_Db_Builder_Core {
 		$vals = array();
 
 		foreach ($this->select as $alias => $name) {
-			if ($name instanceof Scrpio_Db_Builder) {
+			if ($name instanceof Scorpio_Db_Builder) {
 				// Using a subquery
 				$name->db = $this->db;
 				$vals[] = '(' . (string )$name . ') AS ' . $this->db->quote_column($alias);
@@ -189,7 +189,7 @@ class Scrpio_Db_Builder_Core {
 			$sql .= ' JOIN ' . $this->db->quote_table($table);
 
 			$condition = '';
-			if ($keys instanceof Scrpio_Db_Exception) {
+			if ($keys instanceof Scorpio_Db_Exception) {
 				$condition = (string )$keys;
 			} elseif (is_array($keys)) {
 				// ON condition is an array of matches
@@ -270,10 +270,10 @@ class Scrpio_Db_Builder_Core {
 	 * Join tables to the builder
 	 *
 	 * @param  mixed   Table name
-	 * @param  mixed   Key, or an array of key => value pair, for join condition (can be a Scrpio_Db_Exception)
-	 * @param  mixed   Value if $keys is not an array or Scrpio_Db_Exception
+	 * @param  mixed   Key, or an array of key => value pair, for join condition (can be a Scorpio_Db_Exception)
+	 * @param  mixed   Value if $keys is not an array or Scorpio_Db_Exception
 	 * @param  string  Join type (LEFT, RIGHT, INNER, etc.)
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function join($table, $keys, $value = null, $type = null) {
 		if (is_string($keys)) {
@@ -293,7 +293,7 @@ class Scrpio_Db_Builder_Core {
 	 * Add tables to the FROM portion of the builder
 	 *
 	 * @param   string|array    table name or array(alias => table)
-	 * @return  Scrpio_Db_Builder
+	 * @return  Scorpio_Db_Builder
 	 */
 	public function from($tables) {
 		if (!is_array($tables)) {
@@ -309,7 +309,7 @@ class Scrpio_Db_Builder_Core {
 	 * Add fields to the GROUP BY portion
 	 *
 	 * @param  mixed  Field names or an array of fields
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function group_by($columns) {
 		if (!is_array($columns)) {
@@ -327,7 +327,7 @@ class Scrpio_Db_Builder_Core {
 	 * @param  mixed   Column name or array of columns => vals
 	 * @param  string  Operation to perform
 	 * @param  mixed   Value
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function having($columns, $op = '=', $value = null) {
 		return $this->and_having($columns, $op, $value);
@@ -339,7 +339,7 @@ class Scrpio_Db_Builder_Core {
 	 * @param  mixed   Column name or array of triplets
 	 * @param  string  Operation to perform
 	 * @param  mixed   Value
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function and_having($columns, $op = '=', $value = null) {
 		if (is_array($columns)) {
@@ -358,7 +358,7 @@ class Scrpio_Db_Builder_Core {
 	 * @param  mixed   Column name or array of triplets
 	 * @param  string  Operation to perform
 	 * @param  mixed   Value
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function or_having($columns, $op = '=', $value = null) {
 		if (is_array($columns)) {
@@ -376,7 +376,7 @@ class Scrpio_Db_Builder_Core {
 	 *
 	 * @param  mixed   Field names or an array of fields (field => direction)
 	 * @param  string  Direction or NULL for ascending
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function order_by($columns, $direction = null) {
 		if (is_array($columns)) {
@@ -398,7 +398,7 @@ class Scrpio_Db_Builder_Core {
 	 * Limit rows returned
 	 *
 	 * @param  int  Number of rows
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function limit($number) {
 		$this->limit = (int)$number;
@@ -410,7 +410,7 @@ class Scrpio_Db_Builder_Core {
 	 * Offset into result set
 	 *
 	 * @param  int  Offset
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function offset($number) {
 		$this->offset = (int)$number;
@@ -486,7 +486,7 @@ class Scrpio_Db_Builder_Core {
 	 * @param  mixed   Column name or array of columns => vals
 	 * @param  string  Operation to perform
 	 * @param  mixed   Value
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function where($columns, $op = '=', $value = null) {
 		return $this->and_where($columns, $op, $value);
@@ -498,7 +498,7 @@ class Scrpio_Db_Builder_Core {
 	 * @param  mixed   Column name or array of triplets
 	 * @param  string  Operation to perform
 	 * @param  mixed   Value
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function and_where($columns, $op = '=', $value = null) {
 		if (is_array($columns)) {
@@ -517,7 +517,7 @@ class Scrpio_Db_Builder_Core {
 	 * @param  mixed   Column name or array of triplets
 	 * @param  string  Operation to perform
 	 * @param  mixed   Value
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function or_where($columns, $op = '=', $value = null) {
 		if (is_array($columns)) {
@@ -558,7 +558,7 @@ class Scrpio_Db_Builder_Core {
 					// Stores each individual condition
 					$vals = array();
 
-					if ($columns instanceof Scrpio_Db_Exception) {
+					if ($columns instanceof Scorpio_Db_Exception) {
 						// Add directly to condition list
 						$vals[] = (string )$columns;
 					} else {
@@ -569,7 +569,7 @@ class Scrpio_Db_Builder_Core {
 						}
 
 						foreach ($columns as $column => $value) {
-							if ($value instanceof Scrpio_Db_Builder) {
+							if ($value instanceof Scorpio_Db_Builder) {
 								// Using a subquery
 								$value->db = $this->db;
 								$value = '(' . (string )$value . ')';
@@ -616,8 +616,8 @@ class Scrpio_Db_Builder_Core {
 	 * Set values for UPDATE
 	 *
 	 * @param  mixed   Column name or array of columns => vals
-	 * @param  mixed   Value (can be a Scrpio_Db_Exception)
-	 * @return Scrpio_Db_Builder
+	 * @param  mixed   Value (can be a Scorpio_Db_Exception)
+	 * @return Scorpio_Db_Builder
 	 */
 	public function set($keys, $value = null) {
 		if (is_string($keys)) {
@@ -633,7 +633,7 @@ class Scrpio_Db_Builder_Core {
 	 * Columns used for INSERT queries
 	 *
 	 * @param  array  Columns
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function columns($columns) {
 		if (!is_array($columns)) {
@@ -658,7 +658,7 @@ class Scrpio_Db_Builder_Core {
 	 * Values used for INSERT queries
 	 *
 	 * @param  array  Values
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function values($values) {
 		if (!is_array($values)) {
@@ -689,10 +689,10 @@ class Scrpio_Db_Builder_Core {
 	 * Create a SELECT query and specify selected columns
 	 *
 	 * @param   string|array    column name or array(alias => column)
-	 * @return  Scrpio_Db_Builder
+	 * @return  Scorpio_Db_Builder
 	 */
 	public function select($columns = null) {
-		$this->type = Scrpio_Db::SELECT;
+		$this->type = Scorpio_Db::SELECT;
 
 		if ($columns === null) {
 			$columns = array('*');
@@ -709,7 +709,7 @@ class Scrpio_Db_Builder_Core {
 	 * Create a SELECT query and specify selected columns
 	 *
 	 * @param   string|array    column name or array(alias => column)
-	 * @return  Scrpio_Db_Builder
+	 * @return  Scorpio_Db_Builder
 	 */
 	public function select_distinct($columns = null) {
 		$this->select($columns);
@@ -723,10 +723,10 @@ class Scrpio_Db_Builder_Core {
 	 * @param  string  Table name
 	 * @param  array   Array of Keys => Values
 	 * @param  array   WHERE conditions
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function update($table = null, $set = null, $where = null) {
-		$this->type = Scrpio_Db::UPDATE;
+		$this->type = Scorpio_Db::UPDATE;
 
 		if (is_array($set)) {
 			$this->set($set);
@@ -748,10 +748,10 @@ class Scrpio_Db_Builder_Core {
 	 *
 	 * @param  string  Table name
 	 * @param  array   Array of Keys => Values
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function insert($table = null, $set = null) {
-		$this->type = Scrpio_Db::INSERT;
+		$this->type = Scorpio_Db::INSERT;
 
 		if (is_array($set)) {
 			$this->columns(array_keys($set));
@@ -770,10 +770,10 @@ class Scrpio_Db_Builder_Core {
 	 *
 	 * @param  string  Table name
 	 * @param  array   WHERE conditions
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function delete($table, $where = null) {
-		$this->type = Scrpio_Db::DELETE;
+		$this->type = Scorpio_Db::DELETE;
 
 		if ($where !== null) {
 			$this->where($where);
@@ -796,7 +796,7 @@ class Scrpio_Db_Builder_Core {
 	public function count_records($table = false, $where = null) {
 		if (count($this->from) < 1) {
 			if ($table === false)
-				throw new Scrpio_Db_Exception('Scrpio_Db count_records requires a table');
+				throw new Scorpio_Db_Exception('Scorpio_Db count_records requires a table');
 
 			$this->from($table);
 		}
@@ -814,7 +814,7 @@ class Scrpio_Db_Builder_Core {
 	/**
 	 * Executes the built query
 	 *
-	 * @param  mixed  Scrpio_Db name or object
+	 * @param  mixed  Scorpio_Db name or object
 	 * @return Database_Result
 	 */
 	public function execute($db = null) {
@@ -824,7 +824,7 @@ class Scrpio_Db_Builder_Core {
 
 		if (!is_object($this->db)) {
 			// Get the database instance
-			$this->db = Scrpio_Db::instance($this->db);
+			$this->db = Scorpio_Db::instance($this->db);
 		}
 
 		$query = $this->compile();
@@ -832,7 +832,7 @@ class Scrpio_Db_Builder_Core {
 		// Reset the query after executing
 		$this->reset();
 
-		if ($this->ttl !== false and $this->type === Scrpio_Db::SELECT) {
+		if ($this->ttl !== false and $this->type === Scorpio_Db::SELECT) {
 			// Return result from cache (only allowed with SELECT)
 			return $this->db->query_cache($query, $this->ttl);
 		} else {
@@ -845,7 +845,7 @@ class Scrpio_Db_Builder_Core {
 	 * Set caching for the query
 	 *
 	 * @param  mixed  Time-to-live (FALSE to disable, NULL for Cache default, seconds otherwise)
-	 * @return Scrpio_Db_Builder
+	 * @return Scorpio_Db_Builder
 	 */
 	public function cache($ttl = null) {
 		$this->ttl = $ttl;
@@ -853,7 +853,7 @@ class Scrpio_Db_Builder_Core {
 		return $this;
 	}
 
-} // End Scrpio_Db_Builder
+} // End Scorpio_Db_Builder
 
 
 ?>

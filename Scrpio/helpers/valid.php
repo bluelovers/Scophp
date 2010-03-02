@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class scovalid extends Scrpio_helper_valid_Core {
+	class scovalid extends Scorpio_helper_valid_Core {
 	}
 }
 
-class Scrpio_helper_valid_Core {
+class Scorpio_helper_valid_Core {
 	protected static $instances = null;
 
 	public static function instance($overwrite = false) {

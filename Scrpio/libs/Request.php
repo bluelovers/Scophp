@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Request extends Scrpio_Request_Core {
+	class Scorpio_Request extends Scorpio_Request_Core {
 	}
 }
 
-class Scrpio_Request_Core {
+class Scorpio_Request_Core {
 
 	// Enable or disable automatic XSS cleaning
 	protected $use_xss_clean = false;
@@ -35,7 +35,7 @@ class Scrpio_Request_Core {
 	public static function &instance($overwrite = false) {
 		if (!self::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
-				$overwrite : 'Scrpio_Request');
+				$overwrite : 'Scorpio_Request');
 			self::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
 			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
@@ -62,7 +62,7 @@ class Scrpio_Request_Core {
 		// Convert all global variables to Kohana charset
 		$_SERVER = $self->clean($_SERVER);
 
-		if (Scrpio_Kenal::$server_api === 'cli') {
+		if (Scorpio_Kenal::$server_api === 'cli') {
 			$_GET = $_POST = $_COOKIE = $_REQUEST = array();
 
 			// Convert command line arguments
@@ -74,19 +74,19 @@ class Scrpio_Request_Core {
 		}
 
 		// Use XSS clean?
-		$self->use_xss_clean = (bool)Scrpio_Kenal::config('core.global_xss_filtering');
+		$self->use_xss_clean = (bool)Scorpio_Kenal::config('core.global_xss_filtering');
 
 		// magic_quotes_runtime is enabled
 		if (get_magic_quotes_runtime()) {
 			@set_magic_quotes_runtime(0);
-			Scrpio_Kenal::log('debug',
+			Scorpio_Kenal::log('debug',
 				'Disable magic_quotes_runtime! It is evil and deprecated: http://php.net/magic_quotes');
 		}
 
 		// magic_quotes_gpc is enabled
 		if (get_magic_quotes_gpc()) {
 			$self->magic_quotes_gpc = true;
-			Scrpio_Kenal::log('debug',
+			Scorpio_Kenal::log('debug',
 				'Disable magic_quotes_gpc! It is evil and deprecated: http://php.net/magic_quotes');
 		}
 
@@ -114,7 +114,7 @@ class Scrpio_Request_Core {
 			}
 
 			// Warn the developer about register globals
-			Scrpio_Kenal::log('debug',
+			Scorpio_Kenal::log('debug',
 				'Disable register_globals! It is evil and deprecated: http://php.net/register_globals');
 		}
 
@@ -156,7 +156,7 @@ class Scrpio_Request_Core {
 		$self->postraw();
 		$self->ip_address();
 
-		Scrpio_Kenal::log('debug', 'Global GET, POST and COOKIE data sanitized');
+		Scorpio_Kenal::log('debug', 'Global GET, POST and COOKIE data sanitized');
 	}
 
 	public function &__get($var) {
@@ -174,7 +174,7 @@ class Scrpio_Request_Core {
 
 			return $$var;
 		} else {
-			throw new Scrpio_Exception('The %(property)s property does not exist in the %(class)s class.',
+			throw new Scorpio_Exception('The %(property)s property does not exist in the %(class)s class.',
 				array('property' => $property, 'class' => get_class($this)));
 		}
 	}
@@ -192,7 +192,7 @@ class Scrpio_Request_Core {
 
 			return $$var;
 		} else {
-			throw new Scrpio_Exception('The %(property)s property does not exist in the %(class)s class.',
+			throw new Scorpio_Exception('The %(property)s property does not exist in the %(class)s class.',
 				array('property' => $property, 'class' => get_class($this)));
 		}
 	}
@@ -329,7 +329,7 @@ class Scrpio_Request_Core {
 	public function xss_clean($data, $tool = null) {
 		if ($tool === null) {
 			// Use the default tool
-			$tool = Scrpio_Kenal::config('core.global_xss_filtering');
+			$tool = Scorpio_Kenal::config('core.global_xss_filtering');
 		}
 
 		if (is_array($data)) {
@@ -347,7 +347,7 @@ class Scrpio_Request_Core {
 		if (is_bool($tool)) {
 			$tool = 'default';
 		} elseif (!method_exists($this, 'xss_filter_' . $tool)) {
-			Scrpio_Kenal::log('error', 'Unable to use self::$instances->xss_filter_' . $tool .
+			Scorpio_Kenal::log('error', 'Unable to use self::$instances->xss_filter_' . $tool .
 				'(), no such method exists');
 			$tool = 'default';
 		}
@@ -448,14 +448,14 @@ class Scrpio_Request_Core {
 		 */
 		if (!class_exists('HTMLPurifier_Config', false)) {
 			// Load HTMLPurifier
-			require Scrpio_Kenal::find_file('vendor', 'htmlpurifier/HTMLPurifier.standalone', true);
+			require Scorpio_Kenal::find_file('vendor', 'htmlpurifier/HTMLPurifier.standalone', true);
 		}
 
 		// Set configuration
 		$config = HTMLPurifier_Config::createDefault();
 		$config->set('HTML.TidyLevel', 'none'); // Only XSS cleaning now
 
-		$cache = Scrpio_Kenal::config('html_purifier.cache');
+		$cache = Scorpio_Kenal::config('html_purifier.cache');
 
 		if ($cache and is_string($cache)) {
 			$config->set('Cache.SerializerPath', $cache);
@@ -536,7 +536,7 @@ class Scrpio_Request_Core {
 				$ER = error_reporting( ~ E_NOTICE);
 
 				// iconv is expensive, so it is only used when needed
-				$str = iconv(Scrpio_Kenal::CHARSET, Scrpio_Kenal::CHARSET . '//IGNORE', $str);
+				$str = iconv(Scorpio_Kenal::CHARSET, Scorpio_Kenal::CHARSET . '//IGNORE', $str);
 
 				// Turn notices back on
 				error_reporting($ER);

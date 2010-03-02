@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Log extends Scrpio_Log_Core {}
+	class Scorpio_Log extends Scorpio_Log_Core {}
 }
 
-class Scrpio_Log_Core {
+class Scorpio_Log_Core {
 
 	// Configuration
 	protected static $config;
@@ -41,37 +41,37 @@ class Scrpio_Log_Core {
 		$variables !== null && $message = scotext::sprintf($message, $variables);
 
 		// Make sure the drivers and config are loaded
-		if ( ! is_array(Scrpio_Log::$config))
+		if ( ! is_array(Scorpio_Log::$config))
 		{
-			Scrpio_Log::$config = Scrpio_Kenal::config('log');
+			Scorpio_Log::$config = Scorpio_Kenal::config('log');
 		}
 
-		if ( ! is_array(Scrpio_Log::$drivers))
+		if ( ! is_array(Scorpio_Log::$drivers))
 		{
-			foreach ( (array) Scrpio_Kenal::config('log.drivers') as $driver_name)
+			foreach ( (array) Scorpio_Kenal::config('log.drivers') as $driver_name)
 			{
 				// Set driver name
 				$driver = 'Log_'.ucfirst($driver_name).'_Driver';
 
 				// Load the driver
-				if ( ! Scrpio_Kenal::auto_load($driver))
-					throw new Scrpio_Exception('Log Driver Not Found: %(driver)s', array('driver' => $driver));
+				if ( ! Scorpio_Kenal::auto_load($driver))
+					throw new Scorpio_Exception('Log Driver Not Found: %(driver)s', array('driver' => $driver));
 
 				// Initialize the driver
-				$driver = new $driver(array_merge(Scrpio_Kenal::config('log'), Scrpio_Kenal::config('log_'.$driver_name)));
+				$driver = new $driver(array_merge(Scorpio_Kenal::config('log'), Scorpio_Kenal::config('log_'.$driver_name)));
 
 				// Validate the driver
 				if ( ! ($driver instanceof Log_Driver))
-					throw new Scrpio_Exception('%(driver)s does not implement the Log_Driver interface', array('driver' => $driver));
+					throw new Scorpio_Exception('%(driver)s does not implement the Log_Driver interface', array('driver' => $driver));
 
-				Scrpio_Log::$drivers[] = $driver;
+				Scorpio_Log::$drivers[] = $driver;
 			}
 
 			// Always save logs on shutdown
-			Event::add('system.shutdown', array('Scrpio_Log', 'save'));
+			Event::add('system.shutdown', array('Scorpio_Log', 'save'));
 		}
 
-		Scrpio_Log::$messages[] = array('date' => time(), 'type' => $type, 'message' => $message);
+		Scorpio_Log::$messages[] = array('date' => time(), 'type' => $type, 'message' => $message);
 	}
 
 	/**
@@ -81,22 +81,22 @@ class Scrpio_Log_Core {
 	 */
 	public static function save()
 	{
-		if (empty(Scrpio_Log::$messages))
+		if (empty(Scorpio_Log::$messages))
 			return;
 
-		foreach (Scrpio_Log::$drivers as $driver)
+		foreach (Scorpio_Log::$drivers as $driver)
 		{
 			// We can't throw exceptions here or else we will get a
 			// Exception thrown without a stack frame error
 			try
 			{
-				$driver->save(Scrpio_Log::$messages);
+				$driver->save(Scorpio_Log::$messages);
 			}
 			catch(Exception $e){}
 		}
 
 		// Reset the messages
-		Scrpio_Log::$messages = array();
+		Scorpio_Log::$messages = array();
 	}
 }
 

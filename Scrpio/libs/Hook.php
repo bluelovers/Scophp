@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Hook extends Scrpio_Hook_Core {}
+	class Scorpio_Hook extends Scorpio_Hook_Core {}
 }
 
-class Scrpio_Hook_Core {
+class Scorpio_Hook_Core {
 	protected static $hooklist = array();
 	protected static $calevenlist = array();
 
@@ -38,10 +38,10 @@ class Scrpio_Hook_Core {
 		if ( !isset( self::$hooklist[$event] ) ) {
 			return false;
 		} elseif (!is_array(self::$hooklist)) {
-			if ($strict) throw new Scrpio_Exception("Global hooks array is not an array!\n");
+			if ($strict) throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			return false;
 		} elseif (!is_array(self::$hooklist[$event])) {
-			if ($strict) throw new Scrpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
+			if ($strict) throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			return false;
 		}
 
@@ -53,10 +53,10 @@ class Scrpio_Hook_Core {
 		if ( !isset( self::$hooklist[$event] ) ) {
 			return true;
 		} elseif (!is_array(self::$hooklist)) {
-			throw new Scrpio_Exception("Global hooks array is not an array!\n");
+			throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			return self::RET_FAILED;
 		} elseif (!is_array(self::$hooklist[$event])) {
-			throw new Scrpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
+			throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			return self::RET_FAILED;
 		}
 
@@ -80,7 +80,7 @@ class Scrpio_Hook_Core {
 
 			if ( is_array( $hook ) ) {
 				if ( count( $hook ) < 1 ) {
-					throw new Scrpio_Exception("Empty array in hooks for " . $event . "\n");
+					throw new Scorpio_Exception("Empty array in hooks for " . $event . "\n");
 				} else if ( is_object( $hook[0] ) ) {
 					$object = self::$hooklist[$event][$index][0];
 					if ( $object instanceof Closure ) {
@@ -115,7 +115,7 @@ class Scrpio_Hook_Core {
 						$have_data = true;
 					}
 				} else {
-					throw new Scrpio_Exception( "Unknown datatype in hooks for " . $event . "\n" );
+					throw new Scorpio_Exception( "Unknown datatype in hooks for " . $event . "\n" );
 				}
 			} else if ( is_string( $hook ) ) { # functions look like strings, too
 				$func = $hook;
@@ -127,7 +127,7 @@ class Scrpio_Hook_Core {
 					$method = "on" . $event;
 				}
 			} else {
-				throw new Scrpio_Exception( "Unknown datatype in hooks for " . $event . "\n" );
+				throw new Scorpio_Exception( "Unknown datatype in hooks for " . $event . "\n" );
 			}
 
 			/* We put the first data element on, if needed. */
@@ -163,7 +163,7 @@ class Scrpio_Hook_Core {
 			if ( is_string( $retval ) ) {
 
 				$this->clear();
-				throw new Scrpio_Exception( $retval );
+				throw new Scorpio_Exception( $retval );
 
 				return false;
 			} elseif( $retval === self::RET_FAILED ) {
@@ -182,7 +182,7 @@ class Scrpio_Hook_Core {
 				} else {
 					$prettyFunc = strval( $callback );
 				}
-				throw new Scrpio_Exception( "Detected bug in an extension! " .
+				throw new Scorpio_Exception( "Detected bug in an extension! " .
 					"Hook $prettyFunc failed to return a value; " .
 					"should return true to continue hook processing or false to abort." );
 			} else if ( !$retval ) {

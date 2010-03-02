@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Db_Result_Mysql extends Scrpio_Db_Result_Mysql_Core {
+	class Scorpio_Db_Result_Mysql extends Scorpio_Db_Result_Mysql_Core {
 	}
 }
 
-class Scrpio_Db_Result_Mysql_Core extends Scrpio_Db_Result {
+class Scorpio_Db_Result_Mysql_Core extends Scorpio_Db_Result {
 	public function __construct($result, $sql, &$db) {
 		$this->db = $db;
 
@@ -31,7 +31,7 @@ class Scrpio_Db_Result_Mysql_Core extends Scrpio_Db_Result {
 			$this->total_rows = $this->db->num_rows($this->result);
 		} elseif (is_bool($result)) {
 			if ($result == false) {
-				throw new Scrpio_Db_Exception('#:errno: :error [ :query ]', array(':error' => $this->db->error(), ':query' => $this->sql, ':errno' => $this->db->errno()));
+				throw new Scorpio_Db_Exception('#:errno: :error [ :query ]', array(':error' => $this->db->error(), ':query' => $this->sql, ':errno' => $this->db->errno()));
 			} else {
 				// It's a DELETE, INSERT, REPLACE, or UPDATE query
 				$this->insert_id = $this->db->insert_id();

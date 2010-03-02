@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Session_Db extends Scrpio_Session_Db_Core {
+	class Scorpio_Session_Db extends Scorpio_Session_Db_Core {
 	}
 }
 
-class Scrpio_Session_Db_Core extends Scrpio_Session {
+class Scorpio_Session_Db_Core extends Scorpio_Session {
 
 }
 

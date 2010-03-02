@@ -13,11 +13,11 @@
 
 if (0) {
 	// for IDE
-	class scoexpires extends Scrpio_helper_expires_Core {
+	class scoexpires extends Scorpio_helper_expires_Core {
 	}
 }
 
-class Scrpio_helper_expires_Core {
+class Scorpio_helper_expires_Core {
 
 	static $format = 'D, d M Y H:i:s T';
 
@@ -104,7 +104,7 @@ class Scrpio_helper_expires_Core {
 				scoexpires::set($max_age, $last_modified, $now);
 
 				// Clear any output
-				//Scrpio_Event::add('system.display', create_function('', 'Kohana::$output = "";'));
+				//Scorpio_Event::add('system.display', create_function('', 'Kohana::$output = "";'));
 
 				//exit;
 			} elseif ($max_age < 0) {

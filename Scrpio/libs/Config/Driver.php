@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	abstract class Scrpio_Config_Driver extends Scrpio_Config_Driver_Core {}
+	abstract class Scorpio_Config_Driver extends Scorpio_Config_Driver_Core {}
 }
 
-abstract class Scrpio_Config_Driver_Core {
+abstract class Scorpio_Config_Driver_Core {
 	/**
 	 * The changed status of configuration values,
 	 * current state versus the stored state.

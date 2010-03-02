@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Db_Builder_Mysql extends Scrpio_Db_Builder_Mysql_Core {}
+	class Scorpio_Db_Builder_Mysql extends Scorpio_Db_Builder_Mysql_Core {}
 }
 
-class Scrpio_Db_Builder_Mysql_Core extends Scrpio_Db_Builder {
+class Scorpio_Db_Builder_Mysql_Core extends Scorpio_Db_Builder {
 
 }
 

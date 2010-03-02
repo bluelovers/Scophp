@@ -14,13 +14,13 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_SYS_Base extends Scrpio_SYS_Base_Core {
+	class Scorpio_SYS_Base extends Scorpio_SYS_Base_Core {
 	}
-	class Sco_Base extends Scrpio_SYS_Base {
+	class Sco_Base extends Scorpio_SYS_Base {
 	}
 }
 
-class Scrpio_SYS_Base_Core {
+class Scorpio_SYS_Base_Core {
 
 	protected static $instances = null;
 
@@ -60,10 +60,10 @@ class Scrpio_SYS_Base_Core {
 		if (!$_do) {
 			$_do = true;
 
-			require_once (SYSPATH . 'Scrpio/libs/File.php');
-			require_once (SYSPATH . 'Scrpio/libs/Loader.php');
+			require_once (SYSPATH . 'Scorpio/libs/File.php');
+			require_once (SYSPATH . 'Scorpio/libs/Loader.php');
 
-			$file = new Scrpio_File_Core();
+			$file = new Scorpio_File_Core();
 
 			$base = $file->dirname(dirname(__file__), '..');
 
@@ -71,24 +71,24 @@ class Scrpio_SYS_Base_Core {
 				include_once ($base . 'syntax/' . $file);
 			}
 
-			Scrpio_Loader_Core::lib('Spl_Class');
-			Scrpio_Loader_Core::lib('Loader');
+			Scorpio_Loader_Core::lib('Spl_Class');
+			Scorpio_Loader_Core::lib('Loader');
 
-			spl_autoload_register(array('Scrpio_Loader', 'load'));
+			spl_autoload_register(array('Scorpio_Loader', 'load'));
 		}
 	}
 
 	public static function Setup() {
-		Scrpio_Loader::lib('File');
-		Scrpio_Loader::lib('Event');
-		Scrpio_Loader::core('Base');
+		Scorpio_Loader::lib('File');
+		Scorpio_Loader::lib('Event');
+		Scorpio_Loader::core('Base');
 
 		Sco_Base::$buffer_level = ob_get_level();
 
-		Scrpio_Kenal_Core::$config = array('Sco_Base', 'config');
+		Scorpio_Kenal_Core::$config = array('Sco_Base', 'config');
 
 		// Set autoloader
-		spl_autoload_unregister(array('Scrpio_Loader', 'load'));
+		spl_autoload_unregister(array('Scorpio_Loader', 'load'));
 		spl_autoload_register(array('Sco_Base', 'auto_load'));
 
 		// Register a shutdown function to handle system.shutdown events
@@ -112,20 +112,20 @@ class Scrpio_SYS_Base_Core {
 		$run = true;
 
 		// Run system.shutdown event
-		Scrpio_Event::run('system.shutdown');
+		Scorpio_Event::run('system.shutdown');
 
 		// Close output buffers
 		//Sco_Base::close_buffers(true);
 
 		// Run the output event
-		Scrpio_Event::run('system.display', Sco_Base::$output);
+		Scorpio_Event::run('system.display', Sco_Base::$output);
 
 		// Render the final output
 		Sco_Base::render(Sco_Base::$output);
 	}
 
 	public static function auto_load($class) {
-		Scrpio_Event::run('system.autoload', $class);
+		Scorpio_Event::run('system.autoload', $class);
 
 		return self::instance()->loader->load($class);
 	}
@@ -166,7 +166,7 @@ class Scrpio_SYS_Base_Core {
 	function &__get($key) {
 		switch ($key) {
 			case 'loader':
-				$ret = Scrpio_Loader::instance();
+				$ret = Scorpio_Loader::instance();
 				break;
 			case 'php':
 				$ret = scophp::instance();
@@ -175,7 +175,7 @@ class Scrpio_SYS_Base_Core {
 
 				//trigger_error('Sco_Base: Unknown (' . $key . ')', E_USER_ERROR);
 
-				throw new Scrpio_Exception('The %(property)s property does not exist in the %(class)s class.',
+				throw new Scorpio_Exception('The %(property)s property does not exist in the %(class)s class.',
 					array('property' => $key, 'class' => 'Sco_Base'));
 
 				break;

@@ -14,14 +14,14 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Math_Sort extends Scrpio_Math_Sort_Core {
+	class Scorpio_Math_Sort extends Scorpio_Math_Sort_Core {
 	}
 }
 
 /**
  * @see http://be-evil.org/post-109.html
  */
-class Scrpio_Math_Sort_Core {
+class Scorpio_Math_Sort_Core {
 
 	// 冒泡排序
 	function BubbleSort($arr) {

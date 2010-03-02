@@ -14,14 +14,14 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Spl extends Scrpio_Spl_Core {}
+	class Scorpio_Spl extends Scorpio_Spl_Core {}
 }
 
-class Scrpio_Spl_Core {
-	protected $_scrpio_ = array();
-	protected $_scrpio_base_ = null;
+class Scorpio_Spl_Core {
+	protected $_scorpio_ = array();
+	protected $_scorpio_base_ = null;
 
-	protected $_scrpio_type_ = null;
+	protected $_scorpio_type_ = null;
 }
 
 ?>

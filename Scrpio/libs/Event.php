@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Event extends Scrpio_Event_Core {}
+	class Scorpio_Event extends Scorpio_Event_Core {}
 }
 
-class Scrpio_Event_Core {
+class Scorpio_Event_Core {
 	protected static $_events = array();
 
 	protected static $_has_run = array();
@@ -34,7 +34,7 @@ class Scrpio_Event_Core {
 	public static function instance($overwrite = false) {
 		if (!self::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
-				$overwrite : 'Scrpio_Event');
+				$overwrite : 'Scorpio_Event');
 			self::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
 			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
@@ -76,7 +76,7 @@ class Scrpio_Event_Core {
 	}
 
 	public static function hook() {
-		self::$_events[$event][] = new Scrpio_Hook($event);
+		self::$_events[$event][] = new Scorpio_Hook($event);
 
 		return self::instance();
 	}

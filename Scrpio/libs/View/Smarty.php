@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_View_Smarty extends Scrpio_View_Smarty_Core {
+	class Scorpio_View_Smarty extends Scorpio_View_Smarty_Core {
 	}
 }
 
-class Scrpio_View_Smarty_Core extends Scrpio_View {
+class Scorpio_View_Smarty_Core extends Scorpio_View {
 
 }
 

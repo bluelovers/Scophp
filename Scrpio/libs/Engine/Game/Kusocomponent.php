@@ -14,7 +14,7 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Engine_Game_Kusocomponent extends Scrpio_Engine_Game_Kusocomponent_Core {
+	class Scorpio_Engine_Game_Kusocomponent extends Scorpio_Engine_Game_Kusocomponent_Core {
 	}
 }
 
@@ -24,7 +24,7 @@ if (0) {
  * http://w3.nctu.edu.tw/~u8912009/mis/component_check.rar
  * http://w3.nctu.edu.tw/~u8912009/mis/component_check_4.2.rar
  */
-class Scrpio_Engine_Game_Kusocomponent_Core {
+class Scorpio_Engine_Game_Kusocomponent_Core {
 
 	//成份列表
 	//重複出現的東西，出現率會比較高。總長度建議不要超過255。
@@ -241,7 +241,7 @@ $elements=array(
 '謎'
 );
 
-$d = new Scrpio_Engine_Game_Kusocomponent_Core($elements);
+$d = new Scorpio_Engine_Game_Kusocomponent_Core($elements);
 
 var_dump($d->setName('妖蛛蛛'));
 

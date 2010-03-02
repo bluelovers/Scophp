@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Db_Driver_Mysql extends Scrpio_Db_Driver_Mysql_Core {
+	class Scorpio_Db_Driver_Mysql extends Scorpio_Db_Driver_Mysql_Core {
 	}
 }
 
-class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
+class Scorpio_Db_Driver_Mysql_Core extends Scorpio_Db {
 
 	const _FUNC = 'mysql_';
 
@@ -62,7 +62,7 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 
 		if ($status === false) {
 			// Unable to set charset
-			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->
+			throw new Scorpio_Db_Exception('#:errno: :error', array(':error' => $this->
 				_error($this->connection), ':errno' => $this->_errno($this->connection)));
 
 			return false;
@@ -126,7 +126,7 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 		$this->connection or $this->connect();
 
 		if (($value = $this->_escape($value)) === false) {
-			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->
+			throw new Scorpio_Db_Exception('#:errno: :error', array(':error' => $this->
 				_error($this->connection), ':errno' => $this->_errno($this->connection)));
 		}
 
@@ -182,11 +182,11 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 	}
 
 	protected function _result($result, $sql) {
-		return new Scrpio_Db_Result_Mysql($result, $sql, &$this);
+		return new Scorpio_Db_Result_Mysql($result, $sql, &$this);
 	}
 
 	public function build() {
-		return $this->build or $this->build = new Scrpio_Db_Builder_Mysql(&$this);
+		return $this->build or $this->build = new Scorpio_Db_Builder_Mysql(&$this);
 	}
 
 	protected function _connect($host, $port, $user, $pass, $params) {
@@ -208,18 +208,18 @@ class Scrpio_Db_Driver_Mysql_Core extends Scrpio_Db {
 			// Connect to the database
 			$this->connection = $this->_connect($host, $port, $user, $pass, $params);
 		}
-		catch (Scrpio_Exception_PHP $e) {
+		catch (Scorpio_Exception_PHP $e) {
 			// No connection exists
 			$this->connection = null;
 
 			// Unable to connect to the database
-			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->
+			throw new Scorpio_Db_Exception('#:errno: :error', array(':error' => $this->
 				_error(), ':errno' => $this->_errno()));
 		}
 
 		if (!$this->_select_db($database, $this->connection)) {
 			// Unable to select database
-			throw new Scrpio_Db_Exception('#:errno: :error', array(':error' => $this->
+			throw new Scorpio_Db_Exception('#:errno: :error', array(':error' => $this->
 				_error($this->connection), ':errno' => $this->_errno($this->connection)));
 		}
 

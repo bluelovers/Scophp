@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Config_Driver_Kohana extends Scrpio_Config_Driver_Kohana_Core {}
+	class Scorpio_Config_Driver_Kohana extends Scorpio_Config_Driver_Kohana_Core {}
 }
 
-class Scrpio_Config_Driver_Kohana_Core extends Scrpio_Config_Driver implements ArrayAccess {
+class Scorpio_Config_Driver_Kohana_Core extends Scorpio_Config_Driver implements ArrayAccess {
 
 }
 

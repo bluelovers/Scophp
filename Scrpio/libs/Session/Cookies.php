@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Session_Cookies extends Scrpio_Session_Cookies_Core {
+	class Scorpio_Session_Cookies extends Scorpio_Session_Cookies_Core {
 	}
 }
 
-class Scrpio_Session_Cookies_Core extends Scrpio_Session {
+class Scorpio_Session_Cookies_Core extends Scorpio_Session {
 
 }
 

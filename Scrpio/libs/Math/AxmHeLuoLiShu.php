@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Math_AxmHeLuoLiShu extends Scrpio_Math_AxmHeLuoLiShu_Core {
+	class Scorpio_Math_AxmHeLuoLiShu extends Scorpio_Math_AxmHeLuoLiShu_Core {
 	}
 }
 
-class Scrpio_Math_AxmHeLuoLiShu_Core {
+class Scorpio_Math_AxmHeLuoLiShu_Core {
 	//天干取數
 	function TianGanQuShu($gan) {
 		//甲6 乙2 丙8 丁7 戊1 己9 庚3 辛4 壬6 癸2

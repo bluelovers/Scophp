@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Image_Driver_ImageMagick extends Scrpio_Image_Driver_ImageMagick_Core {}
+	class Scorpio_Image_Driver_ImageMagick extends Scorpio_Image_Driver_ImageMagick_Core {}
 }
 
-class Scrpio_Image_Driver_ImageMagick_Core extends Scrpio_Image_Driver {
+class Scorpio_Image_Driver_ImageMagick_Core extends Scorpio_Image_Driver {
 
 }
 

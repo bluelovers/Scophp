@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Image_Driver extends Scrpio_Image_Driver_Core {}
+	class Scorpio_Image_Driver extends Scorpio_Image_Driver_Core {}
 }
 
-class Scrpio_Image_Driver_Core {
+class Scorpio_Image_Driver_Core {
 
 }
 

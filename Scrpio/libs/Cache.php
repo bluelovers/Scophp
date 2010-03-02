@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Cache extends Scrpio_Cache_Core {
+	class Scorpio_Cache extends Scorpio_Cache_Core {
 	}
 }
 
-class Scrpio_Cache_Core {
+class Scorpio_Cache_Core {
 
 }
 

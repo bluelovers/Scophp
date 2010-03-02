@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Client_Http extends Scrpio_Client_Http_Core {}
+	class Scorpio_Client_Http extends Scorpio_Client_Http_Core {}
 }
 
-class Scrpio_Client_Http_Core {
+class Scorpio_Client_Http_Core {
 
 }
 

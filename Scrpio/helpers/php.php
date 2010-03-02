@@ -14,15 +14,15 @@
 
 if (0) {
 	// for IDE
-	class scophp extends Scrpio_helper_php_Core {
+	class scophp extends Scorpio_helper_php_Core {
 	}
 }
 
-class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
+class Scorpio_helper_php_Core extends Scorpio_Spl_Array {
 	protected static $_ = array();
 	protected static $instances = null;
 
-	protected static $_scrpio_self_classname_ = 'scophp';
+	protected static $_scorpio_self_classname_ = 'scophp';
 
 	public static function &instance($overwrite = false) {
 		if (!self::$instances) {
@@ -68,7 +68,7 @@ class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
 			self::$instances = $this;
 		}
 
-		$this->_scrpio_ &= self::$instances->_scrpio_ = array(
+		$this->_scorpio_ &= self::$instances->_scorpio_ = array(
 			'GLOBALS' => &self::$_['GLOBALS'],
 			'_TMP' => &self::$_['_TMP'],
 			'_ENV' => &self::$_['_ENV'],
@@ -78,7 +78,7 @@ class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
 	}
 
 	protected static function _self($name = null, $val = null) {
-		$self = self::$instances ? get_class(self::$instances) : self::$_scrpio_self_classname_;
+		$self = self::$instances ? get_class(self::$instances) : self::$_scorpio_self_classname_;
 
 		if ($name) {
 			return $val !== null ? scophp::set_static_value($self, $name, $val) : scophp::get_static_value($self, $name);
@@ -304,7 +304,7 @@ class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
 	 * @param $http_response_code
 	 */
 	public static function header($string, $replace = true, $http_response_code = null) {
-		Scrpio_Event::run('php.header', array(&$string, &$replace, &$http_response_code));
+		Scorpio_Event::run('php.header', array(&$string, &$replace, &$http_response_code));
 		header($string, $replace, $http_response_code);
 
 		//echo $string."<br>";
@@ -323,7 +323,7 @@ class Scrpio_helper_php_Core extends Scrpio_Spl_Array {
 				return get_runtime_defined_vars(get_defined_vars());
 			}
 		} else {
-			throw new Scrpio_Exception_PHP('PHP Warning: scophp::include_file(): Filename cannot be empty or not exists!!');
+			throw new Scorpio_Exception_PHP('PHP Warning: scophp::include_file(): Filename cannot be empty or not exists!!');
 		}
 
 		return array();
@@ -432,13 +432,13 @@ EOM
 	}
 
 	public static function get_static_value($class, $name, $val = null) {
-		$ref = new Scrpio_Spl_Ref($class);
+		$ref = new Scorpio_Spl_Ref($class);
 
 		return $ref->getStaticPropertyValue($name, $val);
 	}
 
 	public static function set_static_value($class, $name, $val) {
-		$ref = new Scrpio_Spl_Ref($class);
+		$ref = new Scorpio_Spl_Ref($class);
 
 		$ref->setStaticPropertyValue($name, $val);
 

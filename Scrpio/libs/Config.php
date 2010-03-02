@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Config extends Scrpio_Config_Core {}
+	class Scorpio_Config extends Scorpio_Config_Core {}
 }
 
-class Scrpio_Config_Core {
+class Scorpio_Config_Core {
 
 }
 

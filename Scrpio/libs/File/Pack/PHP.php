@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_File_Pack_PHP extends Scrpio_File_Pack_PHP_Core {}
+	class Scorpio_File_Pack_PHP extends Scorpio_File_Pack_PHP_Core {}
 }
 
-class Scrpio_File_Pack_PHP_Core {
+class Scorpio_File_Pack_PHP_Core {
 
 }
 

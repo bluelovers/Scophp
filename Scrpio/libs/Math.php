@@ -14,25 +14,25 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Math extends Scrpio_Math_Core {
+	class Scorpio_Math extends Scorpio_Math_Core {
 	}
 }
 
 # Credits
 global $_scCredits;
 
-$_scCredits['librarys']['Scrpio_Math_Core'][] = array(
-	'name'				=> 'Scrpio_Math_Core - Math Functions',
+$_scCredits['librarys']['Scorpio_Math_Core'][] = array(
+	'name'				=> 'Scorpio_Math_Core - Math Functions',
 	'version'			=> '',
 	'author'			=> '',
-	'description'		=> 'Scrpio_Math_Core - Math Functions',
-	'descriptionmsg'	=> 'Scrpio_Math_Core - Math Functions',
+	'description'		=> 'Scorpio_Math_Core - Math Functions',
+	'descriptionmsg'	=> 'Scorpio_Math_Core - Math Functions',
 	'licence'			=> '',
 	'copyright'			=> '',
 );
 # Credits
 
-class Scrpio_Math_Core {
+class Scorpio_Math_Core {
 	function a($n = 2) {
 		$a = array();
 

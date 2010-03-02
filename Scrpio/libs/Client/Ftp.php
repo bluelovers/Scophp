@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Client_Ftp extends Scrpio_Client_Ftp_Core {}
+	class Scorpio_Client_Ftp extends Scorpio_Client_Ftp_Core {}
 }
 
-class Scrpio_Client_Ftp_Core {
+class Scorpio_Client_Ftp_Core {
 
 }
 

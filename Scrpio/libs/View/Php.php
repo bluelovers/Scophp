@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_View_Php extends Scrpio_View_Php_Core {
+	class Scorpio_View_Php extends Scorpio_View_Php_Core {
 	}
 }
 
-class Scrpio_View_Php_Core extends Scrpio_View {
+class Scorpio_View_Php_Core extends Scorpio_View {
 
 }
 

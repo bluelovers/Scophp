@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_View_BBcode extends Scrpio_View_BBcode_Core {
+	class Scorpio_View_BBcode extends Scorpio_View_BBcode_Core {
 	}
 }
 
-class Scrpio_View_BBcode_Core {
+class Scorpio_View_BBcode_Core {
 
 }
 

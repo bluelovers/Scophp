@@ -14,14 +14,14 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Db extends Scrpio_Db_Core {
+	class Scorpio_Db extends Scorpio_Db_Core {
 	}
 }
 
 /**
- * @package Scrpio_Db
+ * @package Scorpio_Db
  */
-class Scrpio_Db_Core {
+class Scorpio_Db_Core {
 
 	const SELECT = 1;
 	const INSERT = 2;
@@ -55,27 +55,27 @@ class Scrpio_Db_Core {
 	 * @return  Database_Core
 	 */
 	public static function instance($name = 'default') {
-		if (!isset(Scrpio_Db::$instances[$name])) {
+		if (!isset(Scorpio_Db::$instances[$name])) {
 			// Load the configuration for this database group
 			$config = call_user_func(array(__class__, 'config'), $name);
 
 			if (is_string($config['connection'])) {
 				// Parse the DSN into connection array
-				$config['connection'] = Scrpio_Db::parse_dsn($config['connection']);
+				$config['connection'] = Scorpio_Db::parse_dsn($config['connection']);
 			}
 
 			// Set the driver class name
 			$driver = 'Database_' . ucfirst($config['connection']['type']);
 
 			// Create the database connection instance
-			Scrpio_Db::$instances[$name] = new $driver($config);
+			Scorpio_Db::$instances[$name] = new $driver($config);
 		}
 
-		return Scrpio_Db::$instances[$name];
+		return Scorpio_Db::$instances[$name];
 	}
 
 	public static function config($name = 'default', $attr = null) {
-		return Scrpio_Base::config('database.' . $name, $attr);
+		return Scorpio_Kenal::config('database.' . $name, $attr);
 	}
 
 	/**
@@ -111,7 +111,7 @@ class Scrpio_Db_Core {
 
 		if ($this->config['benchmark'] === true) {
 			// Benchmark the query
-			Scrpio_Db::$benchmarks[] = array('query' => $sql, 'time' => $stop - $start,
+			Scorpio_Db::$benchmarks[] = array('query' => $sql, 'time' => $stop - $start,
 				'rows' => count($result));
 		}
 
@@ -189,7 +189,7 @@ class Scrpio_Db_Core {
 		if ($this->config['cache'] !== false) {
 			if (is_string($this->config['cache'])) {
 				// Use Cache library
-				$this->cache = new Scrpio_Cache($this->config['cache']);
+				$this->cache = new Scorpio_Cache($this->config['cache']);
 			} elseif ($this->config['cache'] === true) {
 				// Use array
 				$this->cache = array();
@@ -221,7 +221,7 @@ class Scrpio_Db_Core {
 			return 'FALSE';
 		} elseif (is_int($value)) {
 			return (int)$value;
-		} elseif ($value instanceof Scrpio_Db_Exception) {
+		} elseif ($value instanceof Scorpio_Db_Exception) {
 			return (string )$value;
 		}
 
@@ -254,7 +254,7 @@ class Scrpio_Db_Core {
 
 		if ($sql_types === null) {
 			// Load SQL data types
-			$sql_types = Scrpio_Base::config('sql_types');
+			$sql_types = Scorpio_Kenal::config('sql_types');
 		}
 
 		$str = trim($str);
@@ -274,7 +274,7 @@ class Scrpio_Db_Core {
 		}
 
 		if (empty($sql_types[$type]))
-			throw new Scrpio_Db_Exception('Undefined field type :type', array(':type' => $str));
+			throw new Scorpio_Db_Exception('Undefined field type :type', array(':type' => $str));
 
 		// Fetch the field definition
 		$field = $sql_types[$type];
@@ -343,7 +343,7 @@ EOM
 	}
 
 	protected function _result($result, $sql) {
-		return new Scrpio_Db_Result($result, $sql, &$this);
+		return new Scorpio_Db_Result($result, $sql, &$this);
 	}
 
 }

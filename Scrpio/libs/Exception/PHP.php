@@ -14,12 +14,12 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Exception_PHP extends Scrpio_Exception_PHP_Core {}
+	class Scorpio_Exception_PHP extends Scorpio_Exception_PHP_Core {}
 }
 
-class Scrpio_Exception_PHP_Core extends Scrpio_Exception {
+class Scorpio_Exception_PHP_Core extends Scorpio_Exception {
 	public static $enabled = false;
-	protected static $_scrpio_self_classname_ = 'Scrpio_Exception_PHP';
+	protected static $_scorpio_self_classname_ = 'Scorpio_Exception_PHP';
 
 	/**
 	 * Create a new PHP error exception.
@@ -38,9 +38,9 @@ class Scrpio_Exception_PHP_Core extends Scrpio_Exception {
 
 	protected static function _self($name = null, $val = null) {
 		if ($name) {
-			return $val !== null ? scophp::set_static_value(self::$_scrpio_self_classname_, $name, $val) : scophp::get_static_value(self::$_scrpio_self_classname_, $name);
+			return $val !== null ? scophp::set_static_value(self::$_scorpio_self_classname_, $name, $val) : scophp::get_static_value(self::$_scorpio_self_classname_, $name);
 		} else {
-			return self::$_scrpio_self_classname_;
+			return self::$_scorpio_self_classname_;
 		}
 	}
 
@@ -57,7 +57,7 @@ class Scrpio_Exception_PHP_Core extends Scrpio_Exception {
 			set_error_handler(array(self::_self(), 'error_handler'));
 
 			// Handle errors which halt execution
-			Scrpio_Event::add('system.shutdown', array(self::_self(), 'shutdown_handler'));
+			Scorpio_Event::add('system.shutdown', array(self::_self(), 'shutdown_handler'));
 
 			self::_self('enabled', true);
 		}
@@ -74,7 +74,7 @@ class Scrpio_Exception_PHP_Core extends Scrpio_Exception {
 		{
 			restore_error_handler();
 
-			Scrpio_Event::clear('system.shutdown', array(self::_self(), 'shutdown_handler'));
+			Scorpio_Event::clear('system.shutdown', array(self::_self(), 'shutdown_handler'));
 
 			self::_self('enabled', false);
 		}
@@ -110,7 +110,7 @@ class Scrpio_Exception_PHP_Core extends Scrpio_Exception {
 			$self = self::_self();
 
 			// Fake an exception for nice debugging
-			Scrpio_Exception::handle(new ${self}($error['type'], $error['message'], $error['file'], $error['line']));
+			Scorpio_Exception::handle(new ${self}($error['type'], $error['message'], $error['file'], $error['line']));
 		}
 	}
 }

@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Router_Cli extends Scrpio_Router_Cli_Core {
+	class Scorpio_Router_Cli extends Scorpio_Router_Cli_Core {
 	}
 }
 
-class Scrpio_Router_Cli_Core extends Scrpio_Router {
+class Scorpio_Router_Cli_Core extends Scorpio_Router {
 
 }
 

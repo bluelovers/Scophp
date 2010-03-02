@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Router extends Scrpio_Router_Core {}
+	class Scorpio_Router extends Scorpio_Router_Core {}
 }
 
-class Scrpio_Router_Core {
+class Scorpio_Router_Core {
 
 }
 

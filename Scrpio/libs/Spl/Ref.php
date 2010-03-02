@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Spl_Ref extends Scrpio_Spl_Ref_Core {
+	class Scorpio_Spl_Ref extends Scorpio_Spl_Ref_Core {
 	}
 }
 
-class Scrpio_Spl_Ref_Core extends ReflectionClass {
+class Scorpio_Spl_Ref_Core extends ReflectionClass {
 
 	protected static $instances = array();
 	protected $_name = null;

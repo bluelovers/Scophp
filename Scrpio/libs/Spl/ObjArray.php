@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Spl_ObjArray extends Scrpio_Spl_ObjArray_Core {
+	class Scorpio_Spl_ObjArray extends Scorpio_Spl_ObjArray_Core {
 	}
 }
 
-class Scrpio_Spl_ObjArray_Core extends Scrpio_Spl {
+class Scorpio_Spl_ObjArray_Core extends Scorpio_Spl {
 
 }
 

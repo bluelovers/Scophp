@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Dom_Xml extends Scrpio_Dom_Xml_Core {}
+	class Scorpio_Dom_Xml extends Scorpio_Dom_Xml_Core {}
 }
 
-class Scrpio_Dom_Xml_Core {
+class Scorpio_Dom_Xml_Core {
 
 }
 

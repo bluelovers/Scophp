@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class scodate extends Scrpio_helper_date_Core {
+	class scodate extends Scorpio_helper_date_Core {
 	}
 }
 
-class Scrpio_helper_date_Core {
+class Scorpio_helper_date_Core {
 	protected static $instances = null;
 
 	public static function instance($overwrite = false) {
@@ -50,7 +50,7 @@ class Scrpio_helper_date_Core {
 	}
 
 	public static function offsetfix() {
-		scophp::set('offsetfix', scodate::offset(Scrpio_Kenal::config('locale.timezone')));
+		scophp::set('offsetfix', scodate::offset(Scorpio_Kenal::config('locale.timezone')));
 		scophp::set('offset', 0 - scodate::offset('GMT'));
 
 		return scophp::get('offsetfix');

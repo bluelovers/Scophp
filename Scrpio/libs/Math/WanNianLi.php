@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Math_WanNianLi extends Scrpio_Math_WanNianLi_Core {
+	class Scorpio_Math_WanNianLi extends Scorpio_Math_WanNianLi_Core {
 	}
 }
 
-class Scrpio_Math_WanNianLi_Core {
+class Scorpio_Math_WanNianLi_Core {
 	static $startYear = 1901;
 	static $jieQiDb = array('96', 'B4', '96', 'A6', '97', '97', '78', '79', '79', '69',
 		'78', '77', //1901
@@ -178,8 +178,8 @@ class Scrpio_Math_WanNianLi_Core {
 		$flag = '';
 		if ($n % 2 == 0) //雙數
 			{
-			$weizhi = ($yr - Scrpio_Math_WanNianLi::$startYear) * 12 + $n / 2 - 1;
-			$flag = Scrpio_Math_WanNianLi::$jieQiDb[$weizhi];
+			$weizhi = ($yr - Scorpio_Math_WanNianLi::$startYear) * 12 + $n / 2 - 1;
+			$flag = Scorpio_Math_WanNianLi::$jieQiDb[$weizhi];
 			$flag = substr($flag, 1, 1);
 			$flag = str_replace('A', '10', $flag);
 			$flag = str_replace('B', '11', $flag);
@@ -187,8 +187,8 @@ class Scrpio_Math_WanNianLi_Core {
 			return 15 + (int)$flag;
 		}
 		//單數
-		$weizhi = ($yr - Scrpio_Math_WanNianLi::$startYear) * 12 + ($n + 1) / 2 - 1;
-		$flag = Scrpio_Math_WanNianLi::$jieQiDb[$weizhi];
+		$weizhi = ($yr - Scorpio_Math_WanNianLi::$startYear) * 12 + ($n + 1) / 2 - 1;
+		$flag = Scorpio_Math_WanNianLi::$jieQiDb[$weizhi];
 		$flag = substr($flag, 0, 1);
 		$flag = str_replace('A', '10', $flag);
 		$flag = str_replace('B', '11', $flag);
@@ -200,7 +200,7 @@ class Scrpio_Math_WanNianLi_Core {
 	static function JiaoQiDate($year, $n) {
 		$month = 1;
 		$month = round((($n + 1) / 2), 0);
-		return strval($year) . '-' . strval($month) . '-' . strval(Scrpio_Math_WanNianLi::JiaoQiDay($year,
+		return strval($year) . '-' . strval($month) . '-' . strval(Scorpio_Math_WanNianLi::JiaoQiDay($year,
 			$n));
 	}
 }

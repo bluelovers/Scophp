@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Db_Result extends Scrpio_Db_Result_Core {}
+	class Scorpio_Db_Result extends Scorpio_Db_Result_Core {}
 }
 
-class Scrpio_Db_Result_Core {
+class Scorpio_Db_Result_Core {
 	protected $result;
 	protected $db;
 

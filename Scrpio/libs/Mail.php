@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scrpio_Mail extends Scrpio_Mail_Core {}
+	class Scorpio_Mail extends Scorpio_Mail_Core {}
 }
 
-class Scrpio_Mail_Core {
+class Scorpio_Mail_Core {
 
 }
 

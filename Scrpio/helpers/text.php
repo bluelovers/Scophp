@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class scotext extends Scrpio_helper_text_Core {
+	class scotext extends Scorpio_helper_text_Core {
 	}
 }
 
-class Scrpio_helper_text_Core {
+class Scorpio_helper_text_Core {
 
 	protected static $instances = null;
 
