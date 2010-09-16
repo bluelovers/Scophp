@@ -24,23 +24,24 @@ class Scorpio_Hook_Core {
 	const RET_FAILED = null;
 	const RET_SUCCESS = true;
 
-	var $data = null;
+	static $data = null;
+	static $args = null;
 
 	public static function add($event, $args) {
-		self::$hooklist[$event][] = &$args;
+		static::$hooklist[$event][] = &$args;
 	}
 
 	public static function get($event) {
-		return self::$hooklist[$event];
+		return static::$hooklist[$event];
 	}
 
 	public static function exists($event, $strict = false) {
-		if ( !isset( self::$hooklist[$event] ) ) {
+		if ( !isset( static::$hooklist[$event] ) ) {
 			return false;
-		} elseif (!is_array(self::$hooklist)) {
+		} elseif (!is_array(static::$hooklist)) {
 			if ($strict) throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			return false;
-		} elseif (!is_array(self::$hooklist[$event])) {
+		} elseif (!is_array(static::$hooklist[$event])) {
 			if ($strict) throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			return false;
 		}
@@ -48,21 +49,22 @@ class Scorpio_Hook_Core {
 		return true;
 	}
 
-	public static function execute($event, &$data = null) {
+	public static function execute($event, $args = null, $iscall = 0) {
 
-		if ( !isset( self::$hooklist[$event] ) ) {
+		if ( !isset( static::$hooklist[$event] ) ) {
 			return true;
-		} elseif (!is_array(self::$hooklist)) {
+		} elseif (!is_array(static::$hooklist)) {
 			throw new Scorpio_Exception("Global hooks array is not an array!\n");
-			return self::RET_FAILED;
-		} elseif (!is_array(self::$hooklist[$event])) {
+			return static::RET_FAILED;
+		} elseif (!is_array(static::$hooklist[$event])) {
 			throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
-			return self::RET_FAILED;
+			return static::RET_FAILED;
 		}
 
-		$this->data =& $data;
+		static::$data[$event] = $args;
+		static::$args[$event] = $args;
 
-		foreach (self::$hooklist[$event] as $index => $hook) {
+		foreach (static::$hooklist[$event] as $index => $hook) {
 
 			$object = null;
 			$method = null;
@@ -82,7 +84,7 @@ class Scorpio_Hook_Core {
 				if ( count( $hook ) < 1 ) {
 					throw new Scorpio_Exception("Empty array in hooks for " . $event . "\n");
 				} else if ( is_object( $hook[0] ) ) {
-					$object = self::$hooklist[$event][$index][0];
+					$object = static::$hooklist[$event][$index][0];
 					if ( $object instanceof Closure ) {
 						$closure = true;
 						if ( count( $hook ) > 1 ) {
@@ -120,7 +122,7 @@ class Scorpio_Hook_Core {
 			} else if ( is_string( $hook ) ) { # functions look like strings, too
 				$func = $hook;
 			} else if ( is_object( $hook ) ) {
-				$object = self::$hooklist[$event][$index];
+				$object = static::$hooklist[$event][$index];
 				if ( $object instanceof Closure ) {
 					$closure = true;
 				} else {
@@ -133,9 +135,11 @@ class Scorpio_Hook_Core {
 			/* We put the first data element on, if needed. */
 
 			if ( $have_data ) {
-				$hook_args = array_merge(array($data), $args);
+//				$hook_args = array_merge(array($data), $args);
+				$hook_args = array_merge(array($data), static::$args[$event]);
 			} else {
-				$hook_args = $args;
+//				$hook_args = $args;
+				$hook_args = static::$args[$event];
 			}
 
 			if ( $closure ) {
@@ -162,13 +166,13 @@ class Scorpio_Hook_Core {
 
 			if ( is_string( $retval ) ) {
 
-				$this->clear();
+				static::clear($event);
 				throw new Scorpio_Exception( $retval );
 
 				return false;
-			} elseif( $retval === self::RET_FAILED ) {
+			} elseif( $retval === static::RET_FAILED ) {
 
-				$this->clear();
+				static::clear($event);
 
 				if ( $closure ) {
 					$prettyFunc = "$event closure";
@@ -187,18 +191,18 @@ class Scorpio_Hook_Core {
 					"should return true to continue hook processing or false to abort." );
 			} else if ( !$retval ) {
 
-				$this->clear();
+				static::clear($event);
 
 				return false;
 			}
 		}
 
-		self::clear();
+		static::clear($event);
 	}
 
-	public static function clear() {
+	public static function clear($event) {
 		$clear_data = '';
-		$this->data =& $clear_data;
+		static::$data[$event] =& $clear_data;
 	}
 }
 
