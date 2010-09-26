@@ -22,28 +22,32 @@ class Scorpio_helper_text_Core {
 
 	protected static $instances = null;
 
+	// 取得構造物件
 	public static function instance($overwrite = false) {
-		if (!self::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
-				$overwrite : 'scotext');
-			self::$instances = $ref->newInstance();
+		if (!static::$instances) {
+			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
+			static::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
-				get_class(self::$instances));
-			self::$instances = $ref->newInstance();
+			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite:get_called_class());
+			static::$instances = $ref->newInstance();
 		}
 
-		return self::$instances;
+		return static::$instances;
 	}
 
+	// 建立構造
 	function __construct() {
 
 		// make sure self::$instances is newer
-		if (!self::$instances || !in_array(get_class($this), class_parents(self::$instances))) {
-			self::$instances = $this;
+		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
+		// 當已建立 static::$instances 時 如果呼叫的 class 不屬於當前 static::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
+		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {
+			static::$instances = $this;
 		}
 
-		return self::$instances;
+//		print_r(array(get_called_class(), class_parents(static ::$instances), class_parents(self ::$instances), class_parents(get_called_class())));
+
+		return static::$instances;
 	}
 
 	/**
@@ -416,12 +420,12 @@ class Scorpio_helper_text_Core {
 		$sql = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", "\r\n", $sql);
 		*/
 
-		if (strpos($str, "\r") !== false) {
-			$str = preg_replace("/(?<!\\n)\\r+(?!\\n)/", "\r\n", $str);
-			$str = preg_replace("/(?<!\\r)\\n+(?!\\r)/", "\r\n", $str);
-			$str = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", "\r\n", $str);
+		if (strpos($str, CR) !== false) {
+			$str = preg_replace("/(?<!\\n)\\r+(?!\\n)/", CR.LF, $str);
+			$str = preg_replace("/(?<!\\r)\\n+(?!\\r)/", CR.LF, $str);
+			$str = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", CR.LF, $str);
 
-			$str = preg_replace("/\\r\\n/", LF, $str);
+			$str = str_replace(CR.LF, LF, $str);
 		}
 
 		return $str;
