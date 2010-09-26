@@ -16,6 +16,7 @@ define('IN_SCRPIO', true);
 define('DIR_SEP', '/');
 define('LF', "\n");
 define('TAB', "\t");
+define('CR', "\r");
 
 // Define Kohana error constant
 define('E_SCRPIO', 200042);
