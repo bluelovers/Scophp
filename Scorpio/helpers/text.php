@@ -443,6 +443,7 @@ class Scorpio_helper_text_Core {
 
 		return $ip_address;
 	}
+
 }
 
 /*
