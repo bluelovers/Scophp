@@ -125,6 +125,14 @@ class Scorpio_helper_utf8_Core {
 		$serial_str = str_replace("\r", "", $serial_str);
 		return unserialize($serial_str);
 	}
+
+	/**
+	 * A replacement that should be safe on utf-8 strings.
+	 * http://www.php.net/manual/en/function.stripslashes.php#89785
+	 */
+	function mb_stripslashes($str) {
+		return preg_replace(array('/\x5C(?!\x5C)/u', '/\x5C\x5C/u'), array('','\\'), $str);
+	}
 }
 
 ?>
