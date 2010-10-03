@@ -20,7 +20,7 @@ if (0) {
 class Scorpio_helper_array_Core {
 	protected static $instances = null;
 
-	// ¨ú±oºc³yª«¥ó
+	// å–å¾—æ§‹é€ ç‰©ä»¶
 	public static function instance($overwrite = false) {
 		if (!static::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
@@ -33,12 +33,12 @@ class Scorpio_helper_array_Core {
 		return static::$instances;
 	}
 
-	// «Ø¥ßºc³y
+	// å»ºç«‹æ§‹é€ 
 	function __construct() {
 
 		// make sure self::$instances is newer
-		// ·í¥¼«Ø¥ß static::$instances ®É ·|¥H·í«e class §@¬°ºc³yÃş§O
-		// ·í¤w«Ø¥ß static::$instances ®É ¦pªG©I¥sªº class ¤£Äİ©ó·í«e static::$instances ªº¤÷Ãş§O®É «h·|¦Û°Ê¨ú¥N; ¤Ï¤§«h ¤£°µ¥ô¦ó°Ê§@
+		// ç•¶æœªå»ºç«‹ static::$instances æ™‚ æœƒä»¥ç•¶å‰ class ä½œç‚ºæ§‹é€ é¡åˆ¥
+		// ç•¶å·²å»ºç«‹ static::$instances æ™‚ å¦‚æœå‘¼å«çš„ class ä¸å±¬æ–¼ç•¶å‰ static::$instances çš„çˆ¶é¡åˆ¥æ™‚ å‰‡æœƒè‡ªå‹•å–ä»£; åä¹‹å‰‡ ä¸åšä»»ä½•å‹•ä½œ
 		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {
 			static::$instances = $this;
 		}
