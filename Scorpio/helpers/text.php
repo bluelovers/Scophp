@@ -411,7 +411,7 @@ class Scorpio_helper_text_Core {
 	/**
 	 * @see http://www.php.net/manual/en/function.preg-replace.php#87816
 	 */
-	public static function lf($str) {
+	public static function lf($str, $eol = LF, $search = CR) {
 		/*
 		http://www.php.net/manual/en/function.preg-replace.php#87816
 
@@ -420,12 +420,12 @@ class Scorpio_helper_text_Core {
 		$sql = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", "\r\n", $sql);
 		*/
 
-		if (strpos($str, CR) !== false) {
+		if (strpos($str, $search) !== false) {
 			$str = preg_replace("/(?<!\\n)\\r+(?!\\n)/", CR.LF, $str);
 			$str = preg_replace("/(?<!\\r)\\n+(?!\\r)/", CR.LF, $str);
 			$str = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", CR.LF, $str);
 
-			$str = str_replace(CR.LF, LF, $str);
+			($eol != CR.LF) && $str = str_replace(CR.LF, $eol, $str);
 		}
 
 		return $str;

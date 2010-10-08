@@ -49,7 +49,7 @@ class Scorpio_Hook_Core {
 		return true;
 	}
 
-	public static function execute($event, $args = null, $iscall = 0) {
+	public static function execute($event, $args = array(), $iscall = 0) {
 
 		if ( !isset( static::$hooklist[$event] ) ) {
 			return true;

@@ -172,6 +172,36 @@ class Scorpio_helper_valid_Core {
 		$tld = ltrim(substr($matches[1], (int) strrpos($matches[1], '.')), '.');
 		return ctype_alpha($tld[0]);
 	}
+
+	/*
+		$str = "/\[img=(\d{1,4})[x|\,](\d{1,4})\]\s*([^\[\<\r\n]+?)\s*\[\/img\]/ies";
+
+//$str = '/^(.)(.+)\1([a-zA-Z]*)/';
+
+preg_match('/^(?<pattern>[^\s\'"\\\])(?<expression>.+)\1(?<options>[a-zA-Z]*)$/s', $str, $m);
+
+echo $str;
+print_r($m);
+	*/
+	function regex($str) {
+		if (preg_match('/^(?<pattern>[^\s\'"\\\])(?<expression>.+)\1(?<options>[a-zA-Z]*)$/s', $str, $m)) {
+
+			$ret = array(
+				'source' => $str,
+				'pattern' => $m['pattern'],
+				'expression' => $m['expression'],
+				'options' => $m['options'],
+			);
+
+			return $ret;
+		}
+
+		return false;
+	}
+
+	function array($array, $notempty = false) {
+		return $notempty ? (!empty($array) && is_array($array) && $array != array()) : is_array($array);
+	}
 }
 
 ?>
