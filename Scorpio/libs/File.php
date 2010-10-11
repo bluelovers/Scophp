@@ -165,7 +165,8 @@ class Scorpio_File_Core {
 	}
 
 	public static function fileext($filename) {
-		return trim(substr(strrchr($filename, '.'), 1, 10));
+		return array_pop(explode('.', static::basename($filename)));
+//		return trim(substr(strrchr($filename, '.'), 1, 10));
 	}
 
 	public static function preg_files($path, $filter) {
@@ -228,6 +229,10 @@ class Scorpio_File_Core {
 		$ret = (strpos($path, $root) === 0) ? substr($path, strlen($root)) : $path;
 
 		return $ret;
+	}
+
+	public static function basename($path, $suffix = '') {
+		return basename(array_shift(preg_split('/(\?|#)/', $path)), $suffix);
 	}
 }
 
