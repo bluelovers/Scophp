@@ -420,10 +420,14 @@ class Scorpio_helper_text_Core {
 		$sql = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", "\r\n", $sql);
 		*/
 
+		($search === null || $search === false) && $search = CR;
+
 		if (strpos($str, $search) !== false) {
 			$str = preg_replace("/(?<!\\n)\\r+(?!\\n)/", CR.LF, $str);
 			$str = preg_replace("/(?<!\\r)\\n+(?!\\r)/", CR.LF, $str);
 			$str = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", CR.LF, $str);
+
+			($eol === null || $eol === false) && $eol = LF;
 
 			($eol != CR.LF) && $str = str_replace(CR.LF, $eol, $str);
 		}

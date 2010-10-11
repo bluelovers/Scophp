@@ -23,9 +23,12 @@ class Scorpio_Hook_Core {
 
 	const RET_FAILED = null;
 	const RET_SUCCESS = true;
+	const RET_STOP = false;
 
 	static $data = null;
 	static $args = null;
+
+	static $event = null;
 
 	public static function add($event, $args) {
 		static::$hooklist[$event][] = &$args;
@@ -67,6 +70,8 @@ class Scorpio_Hook_Core {
 
 		static::$data[$event] = $args;
 		static::$args[$event] = $args;
+
+		static::$event = $event;
 
 		foreach (static::$hooklist[$event] as $index => $hook) {
 
@@ -174,6 +179,8 @@ class Scorpio_Hook_Core {
 
 			/* String return is an error; false return means stop processing. */
 
+			//TODO: add hook ret object
+
 			if ( is_string( $retval ) ) {
 
 				static::clear($event);
@@ -204,7 +211,7 @@ class Scorpio_Hook_Core {
 						"Hook $prettyFunc failed to return a value; " .
 						"should return true to continue hook processing or false to abort." );
 				}
-			} else if ( !$retval ) {
+			} elseif ( $retval === static::RET_STOP ) {
 
 				static::clear($event);
 
