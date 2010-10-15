@@ -519,6 +519,15 @@ class Scorpio_helper_text_Core {
 		return ($txt);
 	}
 
+	function replace($search, $replace, $subject) {
+		if (!is_array($search) && strpos($subject, $search) === false) return $subject;
+
+		if (is_array($search) && count($search) == 1) $search = $search[0];
+		if (is_array($replace) && count($replace) == 1) $replace = $replace[0];
+
+		return str_replace($search, $replace, $subject);
+	}
+
 }
 
 /*
