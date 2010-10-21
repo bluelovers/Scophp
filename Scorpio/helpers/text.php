@@ -528,24 +528,109 @@ class Scorpio_helper_text_Core {
 		return str_replace($search, $replace, $subject);
 	}
 
-	function parse_url($url, $mode = 0) {
-		$r  = "^(?:(?P<scheme>\w+)://)?";
-		$r .= "(?:(?P<login>\w+):(?P<pass>\w+)@)?";
-		$r .= "(?P<host>(?:(?P<subdomain>[\w\.]+)\.)?" . "(?P<domain>\w+\.(?P<extension>\w+)))";
-		$r .= "(?::(?P<port>\d+))?";
-		$r .= "(?P<path>[\w/]*/(?P<file>[\w\-\.%]+(?:\.\w+)?)?)?";
+	/**
+	 * Parse a URL and return its components
+	 * include ipv6, ip, domainname, localdomain
+	 * base on {@link http://www.php.net/manual/en/function.parse-url.php#86115 j_parseUrl}
+	 * @example ../docs/test/scotext_parse_uri.php
+	 **/
+	function parse_uri($url, $retkey = '') {
+		static $r;
+		if (!$r) {
+			$r  = '^(?P<uri_source>'
+			.	'(?:(?P<scheme>[a-z0-9+-._]+):(?://)?)?'
+			.	'(?:'
+			.		'(?P<host_source>'
+			.			'(?:(?P<userinfo>(?:[a-z0-9-._~!$&\'()*+,;=:]|%[0-9a-f]{2})+)@)?'
+			.			'(?P<host>'
+			.				'(?:\[((?:[a-z0-9:])+)\])'
+			.				'|(?:[a-z0-9-_\.]+\.)?(?:\d+\.\d+\.\d+\.\d+)'
+			.				'|(?:'
+			.						'xn--[a-z0-9]+'
+			.						'|[a-z0-9-._~!$&\'()*+,;=]'
+			.						'|%[0-9a-f]{2}'
+			.						'|[\x{4e00}-\x{9fa5}]+'
+			.					')+'
+			.					'\.(?:xn--[a-z0-9]+|[a-z-_]+|[\x{4e00}-\x{9fa5}]+)'
+			.				'|(?:[a-z0-9-_]+(?!(?:\:\w+)+))'
+			.			')'
+			.			'(?::(?P<port>\d+))?'
+			.		')?'
+			.		'(?P<path>'
+			.			'(?:/(?:[a-z0-9-._~!$&\'()*+,;=:@/]|%[0-9a-f]{2})+?)'
+			.			'|'
+			.			'(?:/'
+			.				'(?:[a-z0-9-._~!$&\'()*+,;=:@]|%[0-9a-f]{2})+'
+			.				'(?:[a-z0-9-._~!$&\'()*+,;=:@\/]|%[0-9a-f]{2})+?'
+			.			')'
+			.			'|\b[^\?\#]+'
+			.		')'
+			.	')'
+			.	'(?:\?(?P<query>(?:[a-z0-9-._~!$&\'()*+,;=:\/?@]|%[0-9a-f]{2})*))?'
+			.	'(?:#(?P<anchor>(?:[a-z0-9-._~!$&\'()*+,;=:\/?@]|%[0-9a-f]{2})*))?'
+			.	')$';
 
-		if ($mode) {
-			$r .= "(?:\?(?P<arg>[\w=&;]+))?";
-		} else {
-			$r .= "(?:\?(?P<arg>[\w=&]+))?";
+			$r = '`'.$r.'`ius';
 		}
 
-		$r .= "(?:#(?P<anchor>\w+))?";
-		$r = "!$r!";                                                // Delimiters
+		$parts = array();
+		preg_match($r, $url, $parts);
 
-		preg_match ( $r, $url, $out );
-		return $out;
+		foreach ($parts as $k => $v) {
+			if (is_int($k) || $v === '') unset($parts[$k]);
+		}
+
+		list($parts['user'], $parts['pass']) = explode(':', $parts['userinfo'], 2);
+
+		$parts['authority'] = ($parts['userinfo'] ? $parts['userinfo'].'@':'').
+			$parts['host'].
+			($parts['port'] ? ':'.$parts['port'] : '');
+
+		$parts['fragment'] = $parts['anchor'];
+
+		if ($parts['host']) {
+			static $r2;
+			if (!$r2) {
+				$r2 = '/^(?:'
+				.		'(?:'
+				.			'(?:(?P<ip_subdomain>.*)\.)?'
+				.			'(?P<ip_maindomian>(?:\d+\.){3}(?:\d+))'
+				.		')'
+				.		'|(?:'
+				.			'(?:(?P<host_subdomain>.*)\.)?'
+				.			'(?P<host_maindomian>[a-z0-9_\-]+|[\x{4e00}-\x{9fa5}]+|xn--[a-z0-9]+)'
+				.			'(?:\.(?P<host_ext>[a-z]{2,6}|[\x{4e00}-\x{9fa5}]+|xn--[a-z0-9]+))'
+				.		')'
+				.		'|(?:'
+				.			'(?:(?P<host2_subdomain>.*)\.)?'
+				.			'(?P<host2_maindomian>[a-z0-9_\-]+)'
+				.		')'
+				.	')$/iu';
+			}
+			$match = array();
+			if (preg_match($r2, $parts['host'], $match)) {
+				foreach (array('ip', 'host', 'host2') as $k) {
+					if ($match[$k.'_maindomian']) {
+						$parts['domain'] = $match[$k.'_maindomian'].($match[$k.'_ext'] ? '.'.$match[$k.'_ext'] : '');
+						$parts['subdomain'] = $match[$k.'_subdomian'];
+						$parts['domain_main'] = $match[$k.'_maindomian'];
+						$parts['domain_ext'] = $match[$k.'_ext'];
+					}
+				}
+			}
+		}
+
+		if ($retkey) {
+			return $parts[$retkey];
+		}
+
+		static $f;
+		if (!$f) {
+			$f = create_function('$value', 'return ($value !== 0 && empty($value)) ? false : true;');
+		}
+		$parts = array_filter($parts, $f);
+
+		return $parts;
 	}
 
 	function parse_url_agv($url) {
