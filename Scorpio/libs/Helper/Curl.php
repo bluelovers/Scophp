@@ -70,92 +70,92 @@ if (0) {
 }
 
 class Scorpio_Helper_Curl_Core {
-	/**
-	 * The mapping to caseless header names.
-	 *
-	 * @access private
-	 * @var array
-	 */
 
-	var $m_caseless ;
+	protected $_scorpio_ = array(
+		/**
+		 * The mapping to caseless header names.
+		 *
+		 * @access private
+		 * @var array
+		 */
+		'caseless'	=> null,
 
-	/**
-	 * The handle for the current curl session.
-	 *
-	 * @access private
-	 * @var resource
-	 */
+		/**
+		 * The handle for the current curl session.
+		 *
+		 * @access private
+		 * @var resource
+		 */
+		'handle'	=> null,
 
-	var $m_handle ;
+		/**
+		 * The parsed contents of the HTTP header if one happened in the
+		 * message.  All repeated elements appear as arrays.
+		 *
+		 * The headers are stored as an associative array, the key of which
+		 * is the name of the header, e.g., Set-Cookie, and the values of which
+		 * are the bodies of the header in the order in which they occurred.
+		 *
+		 * Some headers can be repeated in a single header, e.g., Set-Cookie and
+		 * pragma, so each type of header has an array containing one or more
+		 * headers of the same type.
+		 *
+		 * The names of the headers can, potentially, vary in spelling from
+		 * server to server and client to client.  No attempt to regulate this
+		 * is made, i.e., the curl class does not force all headers to lower
+		 * or upper class, but it DOES collect all headers of the same type
+		 * under the spelling of the type of header used by the FIRST header
+		 * of that type.
+		 *
+		 * For example, two headers:
+		 *
+		 *    1. Set-Cookie: ...
+		 *    2. set-cookie: ...
+		 *
+		 * Would appear as $this->_scorpio_['header']['Set-Cookie'][0] and ...[1]
+		 *
+		 * @access private
+		 * @var mixed
+		 */
+		'header'	=> null,
 
-	/**
-	 * The parsed contents of the HTTP header if one happened in the
-	 * message.  All repeated elements appear as arrays.
-	 *
-	 * The headers are stored as an associative array, the key of which
-	 * is the name of the header, e.g., Set-Cookie, and the values of which
-	 * are the bodies of the header in the order in which they occurred.
-	 *
-	 * Some headers can be repeated in a single header, e.g., Set-Cookie and
-	 * pragma, so each type of header has an array containing one or more
-	 * headers of the same type.
-	 *
-	 * The names of the headers can, potentially, vary in spelling from
-	 * server to server and client to client.  No attempt to regulate this
-	 * is made, i.e., the curl class does not force all headers to lower
-	 * or upper class, but it DOES collect all headers of the same type
-	 * under the spelling of the type of header used by the FIRST header
-	 * of that type.
-	 *
-	 * For example, two headers:
-	 *
-	 *    1. Set-Cookie: ...
-	 *    2. set-cookie: ...
-	 *
-	 * Would appear as $this->m_header['Set-Cookie'][0] and ...[1]
-	 *
-	 * @access private
-	 * @var mixed
-	 */
+		/**
+		 * Current setting of the curl options.
+		 *
+		 * @access private
+		 * @var mixed
+		 */
+		'options'	=> null,
 
-	var $m_header ;
+		/**
+		 * Status information for the last executed http request.  Includes the errno and error
+		 * in addition to the information returned by curl_getinfo.
+		 *
+		 * The keys defined are those returned by curl_getinfo with two additional
+		 * ones specified, 'error' which is the value of curl_error and 'errno' which
+		 * is the value of curl_errno.
+		 *
+		 * @link http://www.php.net/curl_getinfo
+		 * @link http://www.php.net/curl_errno
+		 * @link http://www.php.net/curl_error
+		 * @access private
+		 * @var mixed
+		 */
+		'status'	=> null,
 
-	/**
-	 * Current setting of the curl options.
-	 *
-	 * @access private
-	 * @var mixed
-	 */
+		/**
+		 * Collection of headers when curl follows redirections as per CURLOPTION_FOLLOWLOCATION.
+		 * The collection includes the headers of the final page too.
+		 *
+		 * @access private
+		 * @var array
+		 */
+		'followed'	=> null,
 
-	var $m_options ;
+		'setting'	=> null,
 
-	/**
-	 * Status information for the last executed http request.  Includes the errno and error
-	 * in addition to the information returned by curl_getinfo.
-	 *
-	 * The keys defined are those returned by curl_getinfo with two additional
-	 * ones specified, 'error' which is the value of curl_error and 'errno' which
-	 * is the value of curl_errno.
-	 *
-	 * @link http://www.php.net/curl_getinfo
-	 * @link http://www.php.net/curl_errno
-	 * @link http://www.php.net/curl_error
-	 * @access private
-	 * @var mixed
-	 */
-
-	var $m_status ;
-
-	/**
-	 * Collection of headers when curl follows redirections as per CURLOPTION_FOLLOWLOCATION.
-	 * The collection includes the headers of the final page too.
-	 *
-	 * @access private
-	 * @var array
-	 */
-
-	var $m_followed ;
-	var $m_setting ;
+		'cache'		=> null,
+	);
 
 	public static $default_options = array(
 		CURLOPT_USERAGENT		=> 'Mozilla/5.0 (compatible; Scorpio +http://www.bluelovers.net/)',
@@ -176,7 +176,7 @@ class Scorpio_Helper_Curl_Core {
 
 	public static function &instance() {
 		$args = func_get_args();
-		$emptyinstances = null;
+
 		static::$instances = &$emptyinstances;
 
 		$ref = new ReflectionClass(get_called_class());
@@ -186,6 +186,14 @@ class Scorpio_Helper_Curl_Core {
 	}
 
 	public static function &_self() {
+		return static::$instances;
+	}
+
+	protected static function &_self_set(&$instances) {
+		$emptyinstances = null;
+		static::$instances = &$emptyinstances;
+
+		static::$instances = &$instances;
 		return static::$instances;
 	}
 
@@ -203,7 +211,7 @@ class Scorpio_Helper_Curl_Core {
 	 * @param string $theURL [optional] the URL to be accessed by this instance of the class.
 	 */
 
-	function __construct($theURL = null) {
+	public function __construct($theURL = null) {
 		if (!function_exists('curl_init')) {
 			trigger_error('PHP was not built with --with-curl, rebuild PHP to use the curl class.',
 				E_USER_ERROR) ;
@@ -211,20 +219,19 @@ class Scorpio_Helper_Curl_Core {
 
 		register_shutdown_function(array($this, '__destruct'));
 
-		$this->m_handle = curl_init() ;
+		foreach($this->_scorpio_ as $_k) {
+			$this->_scorpio_[$_k] = null ;
+		}
 
-		$this->m_caseless = null ;
-		$this->m_header = null ;
-		$this->m_options = null ;
-		$this->m_status = null ;
-		$this->m_followed = null ;
-		$this->m_setting = null ;
+		$this->_scorpio_['handle'] = curl_init() ;
 
 		if (!empty($theURL)) {
 			$this->setopt(CURLOPT_URL, $theURL) ;
 		}
 		$this->setopt(CURLOPT_HEADER, false) ;
 		$this->setopt(CURLOPT_RETURNTRANSFER, true) ;
+
+		static::_self_set(&$this);
 
 		return $this;
 	}
@@ -235,23 +242,23 @@ class Scorpio_Helper_Curl_Core {
 	 * @link http://www.php.net/curl_close
 	 */
 
-	function close($force = false) {
-		!$this->m_closed && @curl_close($this->m_handle) ;
-//		$this->m_handle = null ;
+	public function close($force = false) {
+		(!$this->_scorpio_['cache']['closed'] || $force) && @curl_close($this->_scorpio_['handle']) ;
+//		$this->_scorpio_['handle'] = null ;
 
 		if ($force) {
 			$this->_clear();
 		} else {
-			$this->m_closed = true;
+			$this->_scorpio_['cache']['closed'] = true;
 		}
 
 		return $this;
 	}
 
-	function _clear($chkmode = false) {
-		if (!$chkmode || $this->m_closed) {
-			$this->m_closed = false;
-			$this->m_handle = null;
+	protected function _clear($chkmode = false) {
+		if (!$chkmode || $this->_scorpio_['cache']['closed']) {
+			$this->_scorpio_['cache']['closed'] = false;
+			$this->_scorpio_['handle'] = null;
 		}
 	}
 
@@ -266,7 +273,9 @@ class Scorpio_Helper_Curl_Core {
 	 *                 settings of the various curl options).
 	 */
 
-	function exec($theURL = null) {
+	public function exec($theURL = null) {
+		static::_self_set(&$this);
+
 		$this->_clear(1);
 
 		if (!empty($theURL)) {
@@ -280,38 +289,38 @@ class Scorpio_Helper_Curl_Core {
 
 		$this->_setopt(1);
 
-		$theReturnValue = curl_exec($this->m_handle) ;
+		$theReturnValue = curl_exec($this->_scorpio_['handle']) ;
 
-		$this->m_status = curl_getinfo($this->m_handle) ;
-		$this->m_status['errno'] = curl_errno($this->m_handle) ;
-		$this->m_status['error'] = curl_error($this->m_handle) ;
+		$this->_scorpio_['status'] = curl_getinfo($this->_scorpio_['handle']) ;
+		$this->_scorpio_['status']['errno'] = curl_errno($this->_scorpio_['handle']) ;
+		$this->_scorpio_['status']['error'] = curl_error($this->_scorpio_['handle']) ;
 
 		// Collect headers espesically if CURLOPT_FOLLOWLOCATION set.
 		// Parse out the http header (from last one if any).
 
-		$this->m_header = null ;
-		$this->m_followed = null;
+		$this->_scorpio_['header'] = null ;
+		$this->_scorpio_['followed'] = null;
 
 		// If there has been a curl error, just return a null string.
 
-		if ($this->m_status['errno']) {
+		if ($this->hasError()) {
 			return '' ;
 		}
 
 		if ($this->getOption(CURLOPT_HEADER)) {
-			$this->m_followed = array() ;
+			$this->_scorpio_['followed'] = array() ;
 			$rv = $theReturnValue ;
 
-			while (count($this->m_followed) <= $this->m_status['redirect_count']) {
+			while (count($this->_scorpio_['followed']) <= $this->_scorpio_['status']['redirect_count']) {
 				$theArray = preg_split("/(\r\n){2,2}/", $rv, 2) ;
 
-				$this->m_followed[] = $theArray[0] ;
+				$this->_scorpio_['followed'][] = $theArray[0] ;
 
 				$rv = $theArray[1] ;
 			}
 
 			$this->parseHeader($theArray[0]) ;
-			$this->m_retval = $theArray[1];
+			$this->_scorpio_['retval'] = $theArray[1];
 
 			if (0 && $this->getOption(CURLOPT_FOLLOWLOCATION)) {
 				$_f = $this->getFollowedHeaders();
@@ -338,30 +347,32 @@ class Scorpio_Helper_Curl_Core {
 
 			}
 		} else {
-			$this->m_retval = $theReturnValue ;
+			$this->_scorpio_['retval'] = $theReturnValue ;
 		}
 
 		if (
 			0 && $this->getSetting('javascript_loop') > 0
 			&& (
-				preg_match("/>[[:space:]]+window\.location\.replace\('(.*)'\)/i", $this->m_retval, $m)
-				|| preg_match("/>[[:space:]]+window\.location\=\"(.*)\"/i", $this->m_retval, $m)
+				preg_match("/>[[:space:]]+window\.location\.replace\('(.*)'\)/i", $this->_scorpio_['retval'], $m)
+				|| preg_match("/>[[:space:]]+window\.location\=\"(.*)\"/i", $this->_scorpio_['retval'], $m)
 			)
 		) {
 			$this->setSetting('javascript_loop', $this->getSetting('javascript_loop') -1)->exec($m[1]);
 		}
 
-		return $this->m_retval;
+		return $this->_scorpio_['retval'];
 	}
 
-	function getExec($detial = false) {
+	public function getExec($detial = false) {
+		static::_self_set(&$this);
+
 		return $detial ? array(
 			'header' => $this->getHeader(),
-			'exec' => $this->m_retval,
+			'exec' => $this->_scorpio_['retval'],
 			'followed' => $this->getFollowedHeaders(),
-			'options' => $this->m_options,
+			'options' => $this->_scorpio_['options'],
 			'status' => $this->getStatus(),
-		) : $this->m_retval;
+		) : $this->_scorpio_['retval'];
 	}
 
 	/**
@@ -375,21 +386,22 @@ class Scorpio_Helper_Curl_Core {
 	 * @returns mixed
 	 */
 
-	function getHeader($theHeader = null) {
+	public function getHeader($theHeader = null) {
+		static::_self_set(&$this);
 
 		// There can't be any headers to check if there weren't any headers
 		// returned (happens in the event of errors).
 
-		if (empty($this->m_header)) {
+		if (empty($this->_scorpio_['header'])) {
 			return false ;
 		}
 
 		if (empty($theHeader)) {
-			return $this->m_header ;
+			return $this->_scorpio_['header'] ;
 		} else {
 			$theHeader = strtoupper($theHeader) ;
-			if (isset($this->m_caseless[$theHeader])) {
-				return $this->m_header[$this->m_caseless[$theHeader]] ;
+			if (isset($this->_scorpio_['caseless'][$theHeader])) {
+				return $this->_scorpio_['header'][$this->_scorpio_['caseless'][$theHeader]] ;
 			} else {
 				return false ;
 			}
@@ -404,9 +416,11 @@ class Scorpio_Helper_Curl_Core {
 	 * @returns mixed
 	 */
 
-	function getOption($theOption) {
-		if (isset($this->m_options[$theOption])) {
-			return $this->m_options[$theOption] ;
+	public function getOption($theOption) {
+		static::_self_set(&$this);
+
+		if (isset($this->_scorpio_['options'][$theOption])) {
+			return $this->_scorpio_['options'][$theOption] ;
 		}
 
 		return null ;
@@ -419,9 +433,11 @@ class Scorpio_Helper_Curl_Core {
 	 *                occurred, false otherwise.
 	 */
 
-	function hasError() {
-		if (isset($this->m_status['error'])) {
-			return (empty($this->m_status['error']) ? false : $this->m_status['error']) ;
+	public function hasError() {
+		static::_self_set(&$this);
+
+		if (isset($this->_scorpio_['status']['error'])) {
+			return (empty($this->_scorpio_['status']['error']) ? false : $this->_scorpio_['status']['error']) ;
 		} else {
 			return false ;
 		}
@@ -444,8 +460,10 @@ class Scorpio_Helper_Curl_Core {
 	 * @param string $theHeader The HTTP data header.
 	 */
 
-	function parseHeader($theHeader) {
-		$this->m_caseless = array() ;
+	public function parseHeader($theHeader) {
+		static::_self_set(&$this);
+
+		$this->_scorpio_['caseless'] = array() ;
 
 		$theArray = preg_split("/(\r\n)+/", $theHeader) ;
 
@@ -460,11 +478,11 @@ class Scorpio_Helper_Curl_Core {
 
 			$theCaselessTag = strtoupper($theHeaderStringArray[0]) ;
 
-			if (!isset($this->m_caseless[$theCaselessTag])) {
-				$this->m_caseless[$theCaselessTag] = $theHeaderStringArray[0] ;
+			if (!isset($this->_scorpio_['caseless'][$theCaselessTag])) {
+				$this->_scorpio_['caseless'][$theCaselessTag] = $theHeaderStringArray[0] ;
 			}
 
-			$this->m_header[$this->m_caseless[$theCaselessTag]][] = $theHeaderStringArray[1] ;
+			$this->_scorpio_['header'][$this->_scorpio_['caseless'][$theCaselessTag]][] = $theHeaderStringArray[1] ;
 		}
 	}
 
@@ -479,12 +497,14 @@ class Scorpio_Helper_Curl_Core {
 	 * @returns mixed
 	 */
 
-	function getStatus($theField = null) {
+	public function getStatus($theField = null) {
+		static::_self_set(&$this);
+
 		if (empty($theField)) {
-			return $this->m_status ;
+			return $this->_scorpio_['status'] ;
 		} else {
-			if (isset($this->m_status[$theField])) {
-				return $this->m_status[$theField] ;
+			if (isset($this->_scorpio_['status'][$theField])) {
+				return $this->_scorpio_['status'][$theField] ;
 			} else {
 				return false ;
 			}
@@ -499,7 +519,7 @@ class Scorpio_Helper_Curl_Core {
 	 * @param mixed $theValue the value of the curl option.
 	 */
 
-	function setopt($theOption, $theValue = null) {
+	public function setopt($theOption, $theValue = null) {
 		$this->_clear(1);
 
 		if (is_array($theOption)) {
@@ -512,14 +532,14 @@ class Scorpio_Helper_Curl_Core {
 				$theValue = str_replace('&amp;', '&', urldecode(trim($theValue)));
 			}
 
-//			curl_setopt($this->m_handle, $theOption, $theValue) ;
-			$this->m_options[$theOption] = $theValue ;
+//			curl_setopt($this->_scorpio_['handle'], $theOption, $theValue) ;
+			$this->_scorpio_['options'][$theOption] = $theValue ;
 		}
 
 		return $this;
 	}
 
-	function _setopt($default = false) {
+	protected function _setopt($default = false) {
 
 		if ($default) {
 			foreach (static::$default_options as $_k => $_v) {
@@ -529,17 +549,17 @@ class Scorpio_Helper_Curl_Core {
 			}
 		}
 
-		foreach ($this->m_options as $theOption => $theValue) {
-			curl_setopt($this->m_handle, $theOption, $theValue);
+		foreach ($this->_scorpio_['options'] as $theOption => $theValue) {
+			curl_setopt($this->_scorpio_['handle'], $theOption, $theValue);
 		}
 
 		return $this;
 	}
 
-	function setSetting($theOption, $theValue) {
-		if ($this->m_closed) {
-			$this->m_closed = false;
-			$this->m_handle = null;
+	public function setSetting($theOption, $theValue) {
+		if ($this->_scorpio_['closed']) {
+			$this->_scorpio_['closed'] = false;
+			$this->_scorpio_['handle'] = null;
 		}
 
 		if (is_array($theOption)) {
@@ -547,16 +567,18 @@ class Scorpio_Helper_Curl_Core {
 				$this->setSetting($_k, $_v);
 			}
 		} else {
-//			curl_setopt($this->m_handle, $theOption, $theValue) ;
-			$this->m_setting[$theOption] = $theValue ;
+//			curl_setopt($this->_scorpio_['handle'], $theOption, $theValue) ;
+			$this->_scorpio_['setting'][$theOption] = $theValue ;
 		}
 
 		return $this;
 	}
 
-	function getSetting($theOption) {
-		if (isset($this->m_setting[$theOption])) {
-			return $this->m_setting[$theOption] ;
+	public function getSetting($theOption) {
+		static::_self_set(&$this);
+
+		if (isset($this->_scorpio_['setting'][$theOption])) {
+			return $this->_scorpio_['setting'][$theOption] ;
 		}
 
 		return null ;
@@ -570,7 +592,7 @@ class Scorpio_Helper_Curl_Core {
 	 * @access public
 	 */
 
-	function &fromPostString(&$thePostString) {
+	public function &fromPostString(&$thePostString) {
 		$return = array() ;
 		$fields = explode('&', $thePostString) ;
 		foreach($fields as $aField) {
@@ -592,7 +614,7 @@ class Scorpio_Helper_Curl_Core {
 	 * @access public
 	 */
 
-	function &asPostString(&$theData, $theName = null) {
+	public function &asPostString(&$theData, $theName = null) {
 		$thePostString = '' ;
 		$thePrefix = $theName ;
 
@@ -623,10 +645,12 @@ class Scorpio_Helper_Curl_Core {
 	 * @access public
 	 */
 
-	function getFollowedHeaders() {
+	public function getFollowedHeaders() {
+		static::_self_set(&$this);
+
 		$theHeaders = array() ;
-		if ($this->m_followed) {
-			foreach ($this->m_followed as $aHeader) {
+		if ($this->_scorpio_['followed']) {
+			foreach ($this->_scorpio_['followed'] as $aHeader) {
 				$theHeaders[] = explode("\r\n", $aHeader) ;
 			} ;
 			return $theHeaders ;
@@ -635,7 +659,9 @@ class Scorpio_Helper_Curl_Core {
 		return $theHeaders ;
 	}
 
-	function cookies($chkmode = false) {
+	public function cookies($chkmode = false) {
+		static::_self_set(&$this);
+
 		static $cookies;
 
 		(!$chkmode && !$cookies) && $cookies = tempnam ($_SERVER['SERVER_ROOT'].'/tmp', "CURLCOOKIE");
