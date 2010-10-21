@@ -202,6 +202,10 @@ print_r($m);
 	function array($array, $notempty = false) {
 		return $notempty ? (!empty($array) && is_array($array) && $array != array()) : is_array($array);
 	}
+
+	function empty($s, $strict = FALSE) {
+		return $strict ? (($s === null || $s === '' || $s === array()) ? false : true) : !empty($s);
+	}
 }
 
 ?>

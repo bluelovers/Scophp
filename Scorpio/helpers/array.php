@@ -84,6 +84,20 @@ class Scorpio_helper_array_Core {
 		return $array;
 	}
 
+	static function search_all_not($needle, array $haystack, $strict = false) {
+		$array = array();
+
+		foreach ((array)$haystack as $k => $v) {
+			if (!$strict && $haystack[$k] != $needle) {
+				$array[] = $k;
+			} elseif ($strict && $haystack[$k] !== $needle) {
+				$array[] = $k;
+			}
+		}
+
+		return $array;
+	}
+
 	function in_array_default ($needle, $haystack, $default = null, $strict = false) {
 		return in_array($needle, $haystack, $strict) ? $needle : ($default === null ? $haystack[0] : $default);
 	}
