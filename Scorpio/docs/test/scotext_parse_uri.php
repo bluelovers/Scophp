@@ -46,7 +46,7 @@ foreach(array(
 	$unitvalue = parse_url($_url);
 	echo $_url."\n";
 	_unit_print_r(parse_url($_url), $unitvalue);
-	_unit_print_r(scotext::parse_url($_url), $unitvalue);
+	_unit_print_r(scotext::parse_uri($_url), $unitvalue);
 }
 
 function _unit_print_r($array, $unitvalue = array(), $pp = '') {

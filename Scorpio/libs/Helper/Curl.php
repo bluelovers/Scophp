@@ -529,7 +529,8 @@ class Scorpio_Helper_Curl_Core {
 		} else {
 
 			if ($theOption == CURLOPT_URL) {
-				$theValue = str_replace('&amp;', '&', urldecode(trim($theValue)));
+//				$theValue = str_replace('&amp;', '&', urldecode(trim($theValue)));
+				$theValue = str_replace('&amp;', '&', trim($theValue));
 			}
 
 //			curl_setopt($this->_scorpio_['handle'], $theOption, $theValue) ;

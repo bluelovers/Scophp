@@ -633,7 +633,29 @@ class Scorpio_helper_text_Core {
 		return $parts;
 	}
 
-	function parse_url_agv($url) {
+	/**
+	 * @see parse_uri()
+	 **/
+	function uri_parse($url, $retkey = '') {
+		return static::parse_uri($url, $retkey);
+	}
+
+	function uri_build($parse_uri) {
+		return ($parse_uri['scheme'] ? $parse_uri['scheme'].'://' : '').
+			($parse_uri['userinfo'] ? $parse_uri['userinfo'].'@' : '').
+			$parse_uri['host'].
+			($parse_uri['port'] ? ':'.$parse_uri['port'] : '').
+			$parse_uri['path'].
+			($parse_uri['query'] ? '?'.$parse_uri['query'] : '').
+			($parse_uri['anchor'] ? '?'.$parse_uri['anchor'] : '');
+	}
+
+	function uri_modify() {
+
+	}
+
+	function uri_parse_agv($url, $decode = false) {
+		/*
 		$ret = $urlmatch = array();
 		$refererhost = parse_url($url);
 
@@ -642,8 +664,11 @@ class Scorpio_helper_text_Core {
 		foreach ($urlmatch[1] as $key => $value) {
 			$ret[$value] = $urlmatch[2][$key];
 		}
+		*/
+		$ret = array();
+		parse_str(str_replace('&amp;', '&', $decode ? urldecode($url) : $url), $ret);
 
-		return $ret;
+		return (array)$ret;
 	}
 
 	/*
