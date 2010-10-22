@@ -640,8 +640,8 @@ class Scorpio_helper_text_Core {
 		return static::parse_uri($url, $retkey);
 	}
 
-	function uri_build($parse_uri) {
-		return ($parse_uri['scheme'] ? $parse_uri['scheme'].'://' : '').
+	function uri_build($parse_uri, $notparse = false) {
+		return $notparse ? http_build_query($parse_uri) : ($parse_uri['scheme'] ? $parse_uri['scheme'].'://' : '').
 			($parse_uri['userinfo'] ? $parse_uri['userinfo'].'@' : '').
 			$parse_uri['host'].
 			($parse_uri['port'] ? ':'.$parse_uri['port'] : '').
