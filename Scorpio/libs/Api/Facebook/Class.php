@@ -25,6 +25,29 @@ class Scorpio_Api_Facebook_Class_Core {
 	public function __construct(&$core) {
 		$this->core = &$core;
 	}
+
+	function _ksort_by_array($array, $fields, $fields_filp = false) {
+		if (empty($array)) return array();
+
+		$fields = $fields_filp ? array_flip($fields) : $fields;
+
+		$_array_add = array_diff_key($array, $fields);
+		$_array = array();
+
+		foreach ($fields as $_k => $_v) {
+			if ((isset($array[$_k]) || !empty($array[$_k])) && $array[$_k] !== null) {
+				$_array[$_k] = $array[$_k];
+			}
+		}
+
+		if (!empty($_array_add)) {
+			 $ret = $_array + (array)$_array_add;
+		} else {
+			$ret = $_array;
+		}
+
+		return $ret;
+	}
 }
 
 ?>

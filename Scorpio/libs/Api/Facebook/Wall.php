@@ -27,19 +27,20 @@ class Scorpio_Api_Facebook_Wall_Core extends Scorpio_Api_Facebook_Class {
 	<div class="mts uiAttachmentDesc">{description}</div>
 </div>
 		*/
+		//The link attached to this post
+		'link',
 		//The name of the link
 		'name',
 		//The caption of the link (appears beneath the link name)
 		'caption',
 		//A description of the link (appears beneath the link caption)
 		'description',
-		//The link attached to this post
-		'link',
+
+		//If available, a link to the picture included with this post
+		'picture',
 
 		//The message
 		'message',
-		//If available, a link to the picture included with this post
-		'picture',
 
 		//If available, the source link attached to this post (for example, a flash or video file)
 		'source',
@@ -57,16 +58,19 @@ class Scorpio_Api_Facebook_Wall_Core extends Scorpio_Api_Facebook_Class {
 
 		$params = array_filter($params);
 
-		if ($type == 'message' || ($type == null && !empty($params['message']))) {
+		if ($type == 'message'
+//			|| ($type == null && !empty($params['message']))
+		) {
 			$type == 'message';
 
 			unset($params['link'], $params['description'], $params['name'], $params['caption']);
-			unset($params['link'], $params['name']);
-		} else {
-			unset($params['message']);
+//			unset($params['link'], $params['name']);
 		}
 
-		return $this->core->api('/'.(string)$who.'/feed', 'POST', (array)$params);
+		// fix bug: if message index > link index
+		$_params = $this->_ksort_by_array($params, static::$fields, 1);
+
+		return $this->core->api('/'.(string)$who.'/feed', 'POST', (array)$_params);
 	}
 }
 
