@@ -199,6 +199,10 @@ Array (
 				}
 				$_lastclass = $_class;
 			}
+
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -232,15 +236,23 @@ Array (
 	}
 
 	static function setup($update = false) {
+		static $spl_autoload_register = false;
+
 		if ($update) {
-			spl_autoload_unregister(array(static::instance(), 'load'));
+			$spl_autoload_register && spl_autoload_unregister(array(static::instance(), 'load'));
 
 			if (!static::exists('Scorpio_Loader')) {
 				static::load('Scorpio_Loader');
 			}
+
+			$spl_autoload_register = true;
+			spl_autoload_register(array(Scorpio_Loader::instance(1), 'load'));
+		} else {
+			$spl_autoload_register = true;
+			spl_autoload_register(array(static::instance(1), 'load'));
 		}
 
-		spl_autoload_register(array(static::instance(1), 'load'));
+		return static::instance();
 	}
 }
 
