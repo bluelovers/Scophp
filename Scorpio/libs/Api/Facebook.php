@@ -236,6 +236,8 @@ class Scorpio_Api_Facebook_Core extends Facebook {
 	public function setSession($session=null, $write_cookie=null, $decode = null) {
 		if ($write_cookie === null || $write_cookie == -1) $write_cookie = $this->useCookieSupport();
 
+//		$this->magic_quotes_gpc();
+
 		if ($decode) {
 			$_session_ = null;
 			if ($decode == 'array' || $decode == 'serialize' || $decode == 'unserialize') {
@@ -243,12 +245,46 @@ class Scorpio_Api_Facebook_Core extends Facebook {
 			} elseif ($decode == 'base64_decode' || $decode == 'base64') {
 				$_session_ = @unserialize(@base64_decode($session));
 			} else {
-				$_session_ = @json_decode($session);
+				$_session_ = @json_decode($session, true);
 			}
 			$session = $_session_;
 		}
 
 		return parent::setSession($session, $write_cookie);
+	}
+
+	function magic_quotes_gpc() {
+		if (!get_magic_quotes_gpc()) {
+			global $_REQUEST, $_COOKIE;
+			$_REQUEST['session'] = stripslashes($_REQUEST['session']);
+
+//			echo '<pre>session:<br>';
+//			echo($_REQUEST['session']);
+//
+//			$session = $this->validateSessionObject($_REQUEST['session']);
+//        	print_r($session);
+//
+//        	echo '<br>----------------</br>';
+
+			if ($this->useCookieSupport()) {
+				$cookieName = $this->getSessionCookieName();
+        		if (isset($_COOKIE[$cookieName])) {
+        			$_COOKIE[$cookieName] = stripslashes($_COOKIE[$cookieName]);
+        		}
+
+//        		echo($_COOKIE[$cookieName]);
+//
+//        		parse_str(trim($_COOKIE[$cookieName], '"'), $session);
+//
+//        		print_r($session);
+//
+//        		$session = $this->validateSessionObject($session);
+//        		print_r($session);
+			}
+
+
+
+		}
 	}
 }
 
