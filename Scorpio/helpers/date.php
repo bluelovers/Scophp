@@ -21,7 +21,7 @@ if (0) {
 class Scorpio_helper_date_Core {
 	protected static $instances = null;
 
-	public static function instance($overwrite = false) {
+	public static function &instance($overwrite = false) {
 		if (!self::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
 				$overwrite : 'scodate');

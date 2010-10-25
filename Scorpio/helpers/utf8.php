@@ -25,7 +25,7 @@ class Scorpio_helper_utf8_Core {
 	public static $default_driver = 'mbstring';
 	protected static $drivers;
 
-	public static function instance($overwrite = false) {
+	public static function &instance($overwrite = false) {
 		if (!self::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
 				$overwrite : 'scoutf8');

@@ -12,19 +12,19 @@
 
 if (!function_exists("lc")) {
 	function lc($str) {
-		return strtolower($str);
+		return scotext::strtolower($str);
 	}
 }
 
 if (!function_exists("uc")) {
 	function uc($str) {
-		return strtoupper($str);
+		return scotext::strtoupper($str);
 	}
 }
 
 if (!function_exists("length")) {
 	function length($str) {
-		return is_array($str) ? count($str) : strlen($str);
+		return is_string($str) ? scotext::strlen($str) : count($str);
 	}
 }
 

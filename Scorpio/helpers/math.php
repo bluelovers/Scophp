@@ -23,7 +23,7 @@ class Scorpio_helper_math_Core {
 
 	public static $rand = 1000000;
 
-	public static function instance($overwrite = false) {
+	public static function &instance($overwrite = false) {
 		if (!self::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
 				$overwrite : 'scomath');

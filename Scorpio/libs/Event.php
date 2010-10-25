@@ -31,7 +31,7 @@ class Scorpio_Event_Core {
 
 	protected static $instances = null;
 
-	public static function instance($overwrite = false) {
+	public static function &instance($overwrite = false) {
 		if (!self::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
 				$overwrite : 'Scorpio_Event');

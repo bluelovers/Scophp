@@ -23,7 +23,7 @@ class Scorpio_helper_text_Core {
 	protected static $instances = null;
 
 	// 取得構造物件
-	public static function instance($overwrite = false) {
+	public static function &instance($overwrite = false) {
 		if (!static::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
 			static::$instances = $ref->newInstance();

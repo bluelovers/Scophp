@@ -24,7 +24,7 @@ class Scorpio_helper_exc_Core {
 	static $_prefix_ = 'Scorpio_Exception_';
 	static $_Exception_ = array('php' => 'Scorpio_Exception_PHP', );
 
-	public static function instance($overwrite = false) {
+	public static function &instance($overwrite = false) {
 		if (!static::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
 			static::$instances = $ref->newInstance();
