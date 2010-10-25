@@ -25,7 +25,6 @@ if (!(class_exists('Facebook') || interface_exists('Facebook'))) {
 }
 
 class Scorpio_Api_Facebook_Core extends Facebook {
-
 	protected $_opts = array();
 	public static $req_perms = array(
 		/* Publishing Permissions */
@@ -161,6 +160,16 @@ class Scorpio_Api_Facebook_Core extends Facebook {
 		static $friends = null;
 		($friends === null) && $friends =& new Scorpio_Api_Facebook_Friends(&$this);
 		return $friends;
+	}
+
+	public function &session() {
+		static $ret = null;
+		($ret === null) && $ret =& $this->getSession();
+		return $ret;
+	}
+
+	public function &getSession() {
+		return parent::getSession();
 	}
 
 	public function &wall($who = 'me') {

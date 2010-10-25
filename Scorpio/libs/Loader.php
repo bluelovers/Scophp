@@ -82,7 +82,7 @@ class Scorpio_Loader_Core {
 			$ret['rename_core'] = 'Scorpio_Helper_'.ucfirst($ret['name']).$ret['core'];
 			$ret['rename_def'] = $rename_def;
 			$ret['rename_new'] = $rename_new;
-		} elseif (preg_match('/^(?P<suffix>'.$suffix_preg.')?(?:(?P<path>[a-zA-Z][a-zA-Z_\d]+_)(?P<pathsub>(?:[a-zA-Z][a-zA-Z_\d]+_)+)?)?(?<name>[a-zA-Z][_\w\d]+)(?P<core>_Core)?$/', $class, $matchs)) {
+		} elseif (preg_match('/^(?P<suffix>'.$suffix_preg.')(?:(?P<path>[a-zA-Z][a-zA-Z_\d]+_)(?P<pathsub>(?:[a-zA-Z][a-zA-Z_\d]+_)+)?)?(?<name>(?:(?:[a-zA-BD-Z]|C(?!ore))[a-zA-Z\d]+_?)+)(?P<core>_Core)?$/', $class, $matchs)) {
 			$ret['name'] = $matchs['name'];
 			$ret['source'] = $class;
 
@@ -102,7 +102,7 @@ class Scorpio_Loader_Core {
 			$ret['rename_def'] = $rename_def;
 			$ret['rename_new'] = $rename_new;
 
-//			$ret['matchs'] = $matchs;
+			$ret['matchs'] = $matchs;
 		} elseif (preg_match('/^(?P<suffix>'.$suffix_preg.'|[a-zA-Z][a-zA-Z\d]+_)?(?:(?P<path>[a-zA-Z][a-zA-Z_\d]+_)(?P<pathsub>(?:[a-zA-Z][a-zA-Z_\d]+_)+)?)?(?<name>[a-zA-Z][_\w\d]+)(?P<core>_Core)?$/', $class, $matchs)) {
 			$fail = true;
 		} else {
@@ -182,42 +182,16 @@ Array (
 		$class = static::$suffix . implode('_', $name2);
 
 		return static::class_parse($class);
-
-		$rename_def = $class;
-		$rename_new = $rename ? $rename : $rename_def;
-
-		$ret = array();
-
-		$ret['core'] = '_Core';
-		$ret['name'] = array_pop($name2);
-		$ret['source'] = $class;
-
-		if ($name2[0] == 'Helper') {
-			$ret['type'] = static::OBJ_HELPER;
-		} else {
-			$ret['type'] = static::OBJ_LIB;
-		}
-
-		$ret['issco'] = ($ret['type'] > 0 && $ret['type'] < 100) ? true : false;
-		if ($ret['issco']) {
-			$ret['syspath'] = SYSPATH;
-		}
-
-		$ret['file'] = ucfirst($ret['name']).'.php';
-		$ret['path'] = 'Scorpio/libs/'.implode('/', $name2);
-
-		$ret['rename_core'] = $ret['source'].$ret['core'];
-		$ret['rename_def'] = $rename_def;
-		$ret['rename_new'] = $rename_new;
-
-		!$fail && ksort($ret);
-
-		return $ret;
 	}
 
 	static function load($class) {
 		if ($ret = static::class_parse($class)) {
-			include_once Scorpio_File_Core::file($ret['syspath'], $ret['path'], $ret['file']);
+			if (!static::exists($ret['rename_core'])) {
+//				echo(Scorpio_File_Core::file($ret['syspath'], $ret['path'], $ret['file']).LF);
+//				print_r($ret);
+
+				include_once Scorpio_File_Core::file($ret['syspath'], $ret['path'], $ret['file']);
+			}
 
 			foreach (array_unique(array($ret['rename_core'], $ret['rename_def'], $ret['rename_new'])) as $_class) {
 				if (!static::exists($_class)) {
@@ -226,59 +200,6 @@ Array (
 				$_lastclass = $_class;
 			}
 		}
-	}
-
-	private static function _load($type, array $args) {
-		//extract($args, EXTR_OVERWRITE);
-
-		list($core, $class, $rename_def, $rename_new, $rename, $name, $path) = $args;
-
-		if ($type == self::OBJ_HELPER) {
-			$syspath = SYSPATH . 'Scorpio/helpers/';
-		} elseif ($type == self::OBJ_CORE) {
-			$syspath = SYSPATH . 'Scorpio/system/';
-		} else {
-			$_temp = split('_', $name);
-			$name = array_pop($_temp);
-
-			if (!$core) {
-				$name = array_pop($_temp);
-			}
-
-			$syspath = SYSPATH . 'Scorpio/libs/' . join('/', $_temp) . '/';
-		}
-
-		if (!self::exists($rename_def)) {
-
-			//todo: do something
-
-			if (!self::exists($class)) {
-
-				if (!self::exists($class . $core)) {
-					$basename = $name . '.php';
-
-					include_once $syspath . $basename;
-				}
-
-				//todo: do something
-
-				if ($class != $class . $core)
-					self::class_create($class, $class . $core);
-			}
-
-			//todo: do something
-
-			if ($rename === false) {
-				return new Scorpio_Spl_Class($class);
-			} elseif ($class != $rename_def) {
-				self::class_create($rename_def, $class, $type == self::OBJ_CORE);
-			}
-		}
-
-		//todo: do something
-
-		return new Scorpio_Spl_Class($rename_new == $rename_def ? $rename_new : self::
-			class_create($rename_new, $rename_def));
 	}
 
 	static function class_create($class, $extends, $final = false, $abstract = false) {
