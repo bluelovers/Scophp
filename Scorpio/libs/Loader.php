@@ -301,7 +301,13 @@ Array (
 	}
 
 	static function exists($class) {
-		return (class_exists($class, false) || interface_exists($class, false)) ? true : false;
+		static $cache = array();
+
+		if (!isset($cache[$class]) || $cache[$class] == false) {
+			$cache[$class] = (class_exists($class, false) || interface_exists($class, false)) ? true : false;
+		}
+
+		return $cache[$class];
 	}
 
 	static function setup($update = false) {
