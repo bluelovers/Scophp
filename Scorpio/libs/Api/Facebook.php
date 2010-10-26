@@ -152,8 +152,10 @@ class Scorpio_Api_Facebook_Core extends Facebook {
 		return $instances;
 	}
 
-	public function __construct($config) {
+	public function __construct($config, $force_magic_quotes_gpc = 0) {
 		parent::__construct($config);
+
+		$force_magic_quotes_gpc && $this->magic_quotes_gpc();
 	}
 
 	public function &friends() {
