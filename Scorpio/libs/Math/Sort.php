@@ -134,7 +134,7 @@ class Scorpio_Math_Sort_Core {
 		}
 		// 如果左索引有值 則對左索引排序
 		if ($l > 1) {
-			$left = QuickSort($left);
+			$left = static::QuickSort($left);
 		}
 		// 排序後的數組
 		$new_arr = $left;
@@ -142,7 +142,7 @@ class Scorpio_Math_Sort_Core {
 		$new_arr[] = $arr[0];
 		// 如果又索引有值 則對右索引排序
 		if ($r > 1) {
-			$right = QuickSort($right);
+			$right = static::QuickSort($right);
 		}
 		// 根據右索引的長度再次增加數據
 		for ($i = 0; $i < $r; $i++) {

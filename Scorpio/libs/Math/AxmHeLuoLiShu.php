@@ -44,8 +44,8 @@ class Scorpio_Math_AxmHeLuoLiShu_Core {
 		for ($i = 0; $i < 4; $i++) {
 			$gan = $siZhu[$i][0];
 			$zhi = $siZhu[$i][1];
-			$ganQuShu = $this->TianGanQuShu($gan);
-			$zhiQuShu = $this->DiZhiQuShu($zhi);
+			$ganQuShu = static::TianGanQuShu($gan);
+			$zhiQuShu = static::DiZhiQuShu($zhi);
 			if (IsOddNo($ganQuShu)) {
 				$tianShu += $ganQuShu;
 			} else {
@@ -72,7 +72,7 @@ class Scorpio_Math_AxmHeLuoLiShu_Core {
 			$shang = $shang % 10;
 		}
 		if ($shang == 5) {
-			$shang = $this->JiGong($sex, $yuan, $yinyang);
+			$shang = static::JiGong($sex, $yuan, $yinyang);
 		}
 		$xia = ReviseInt($tiandiShu[1], 30);
 		if ($xia % 10 == 0) {
@@ -81,7 +81,7 @@ class Scorpio_Math_AxmHeLuoLiShu_Core {
 			$xia = $xia % 10;
 		}
 		if ($xia == 5) {
-			$xia = $this->JiGong($sex, $yuan, $yinyang);
+			$xia = static::JiGong($sex, $yuan, $yinyang);
 		}
 		$xtg->ShangGua($shang);
 		$xtg->XiaGua($xia);
