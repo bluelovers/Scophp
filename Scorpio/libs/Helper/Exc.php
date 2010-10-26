@@ -40,7 +40,7 @@ class Scorpio_Helper_Exc_Core {
 	// 建立構造
 	function __construct() {
 
-		// make sure self::$instances is newer
+		// make sure static::$instances is newer
 		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
 		// 當已建立 static::$instances 時 如果呼叫的 class 不屬於當前 static::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
 		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {

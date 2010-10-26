@@ -37,7 +37,7 @@ class Scorpio_Helper_Date_Core {
 	// 建立構造
 	function __construct() {
 
-		// make sure self::$instances is newer
+		// make sure static::$instances is newer
 		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
 		// 當已建立 static::$instances 時 如果呼叫的 class 不屬於當前 static::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
 		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {
@@ -62,8 +62,8 @@ class Scorpio_Helper_Date_Core {
 
 	public static function gmdate($format, $timestamp = null) {
 		$timestamp = null === $timestamp ? scophp::get('timestamp') : $timestamp;
-		//$timestamp += self::offsetfix() + scophp::get('offset');
-		$timestamp += self::offsetfix() + scophp::get('offset');
+		//$timestamp += static::offsetfix() + scophp::get('offset');
+		$timestamp += static::offsetfix() + scophp::get('offset');
 
 		$args = array();
 
@@ -92,7 +92,7 @@ class Scorpio_Helper_Date_Core {
 
 	public static function date($format, $timestamp = null) {
 		$timestamp = null === $timestamp ? scophp::get('timestamp') : $timestamp;
-		//		$timestamp += (self::offsetfix() - php::instance()->offset);
+		//		$timestamp += (static::offsetfix() - php::instance()->offset);
 
 		if (strpos($format, 'u') !== false) {
 			$format = preg_replace('`(?<!\\\\)u`', sprintf('%06d', ($timestamp - (int)$timestamp) *

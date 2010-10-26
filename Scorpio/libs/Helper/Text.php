@@ -38,7 +38,7 @@ class Scorpio_Helper_Text_Core {
 	// 建立構造
 	function __construct() {
 
-		// make sure self::$instances is newer
+		// make sure static::$instances is newer
 		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
 		// 當已建立 static::$instances 時 如果呼叫的 class 不屬於當前 static::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
 		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {
@@ -161,15 +161,15 @@ class Scorpio_Helper_Text_Core {
 							$matchs['fultext']));
 
 						//$replace = sprintf($search, $_args[$varname]);
-						$replace = self::sprintf_hack($search, $_args[$varname]);
+						$replace = static::sprintf_hack($search, $_args[$varname]);
 					} elseif ($varname == 'LF') {
-						$replace = self::sprintf_hack($search, LF);
+						$replace = static::sprintf_hack($search, LF);
 					} else {
 						//echo 'undef: ' . $varname . ":";
 						$replace = sprintf($search, null);
 					}
 
-					$replace = self::sprintf_quote($replace);
+					$replace = static::sprintf_quote($replace);
 
 					$format = preg_replace('/(?<!%)' . preg_quote($fultext, '/') . '/s', $replace, $format);
 					//echo  $replace."\n";
@@ -182,11 +182,11 @@ class Scorpio_Helper_Text_Core {
 					//$replace = '%';
 					//					$format = preg_replace('/(?<!%)'.preg_quote($fultext, '/').'\b/s', $replace, $format);
 				} else {
-					//$replace = self::mb_encode(sprintf(self::mb_decode($fultext), self::mb_decode(array_shift($args))));
+					//$replace = static::mb_encode(sprintf(static::mb_decode($fultext), static::mb_decode(array_shift($args))));
 
-					$replace = self::sprintf_hack($fultext, array_shift($args));
+					$replace = static::sprintf_hack($fultext, array_shift($args));
 
-					$replace = self::sprintf_quote($replace);
+					$replace = static::sprintf_quote($replace);
 					$format = preg_replace('/(?<!%)' . preg_quote($fultext, '/') . '/s', $replace, $format,
 						1);
 
@@ -199,7 +199,7 @@ class Scorpio_Helper_Text_Core {
 			//$format = sprintf($format, null);
 
 			//echo $format."\n";
-			$format = self::sprintf_quote($format, 1);
+			$format = static::sprintf_quote($format, 1);
 			//echo $format."\n";
 			//
 			//var_dump($matchs);
@@ -223,7 +223,7 @@ class Scorpio_Helper_Text_Core {
 	}
 
 	protected function sprintf_hack($format, $string) {
-		$parse = self::sprintf_parse($format);
+		$parse = static::sprintf_parse($format);
 
 		//echo var_dump($parse);
 		//		exit();
@@ -232,7 +232,7 @@ class Scorpio_Helper_Text_Core {
 			$pad = (!empty($parse['pad2']) || $parse['pad3'] !== '') ? (!empty($parse['pad2']) ?
 				$parse['pad2'] : (string )$parse['pad3']) : ' ';
 
-			$ret = $parse['pre'] . self::str_pad($parse['size2'] ? mb_substr($string, 0, $parse['size2']) :
+			$ret = $parse['pre'] . static::str_pad($parse['size2'] ? mb_substr($string, 0, $parse['size2']) :
 				$string, $parse['size'], $pad, $parse['sign'] == '-' ? STR_PAD_RIGHT :
 				STR_PAD_LEFT);
 
