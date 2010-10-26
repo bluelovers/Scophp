@@ -12,9 +12,9 @@
  * @copyright 2010
  */
 
-include_once '../../helpers/text.php';
+include_once '../../Bootstrap.php';
 
-class scocurl extends Scorpio_Helper_Curl_Core {}
+Scorpio_Loader_Core::setup(1);
 
 echo '<style>* {font-size: 12px;}.red {color: red;}.blue {color: blue;}</style><pre>';
 

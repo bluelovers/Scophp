@@ -28,4 +28,12 @@ foreach (Scorpio_File_Core::scandir_ext('php', Scorpio_File_Core::dirname(SYSPAT
 
 unset($_file);
 
+/* @demo
+
+include_once 'Bootstrap.php';
+
+Scorpio_Loader_Core::setup(1);
+
+*/
+
 ?>
