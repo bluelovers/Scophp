@@ -14,13 +14,14 @@
 
 if (0) {
 	// for IDE
-	class scoregex extends Scorpio_helper_regex_Core {}
+	class scoinclude extends Scorpio_Helper_Include_Core {
+	}
 }
 
-class Scorpio_helper_regex_Core {
+class Scorpio_Helper_Include_Core {
 	protected static $instances = null;
 
-	// å–å¾—æ§‹é€ ç‰©ä»¶
+	// ¨ú±oºc³yª«¥ó
 	public static function &instance($overwrite = false) {
 		if (!static::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
@@ -33,12 +34,12 @@ class Scorpio_helper_regex_Core {
 		return static::$instances;
 	}
 
-	// å»ºç«‹æ§‹é€ 
+	// «Ø¥ßºc³y
 	function __construct() {
 
 		// make sure self::$instances is newer
-		// ç•¶æœªå»ºç«‹ static::$instances æ™‚ æœƒä»¥ç•¶å‰ class ä½œç‚ºæ§‹é€ é¡žåˆ¥
-		// ç•¶å·²å»ºç«‹ static::$instances æ™‚ å¦‚æžœå‘¼å«çš„ class ä¸å±¬æ–¼ç•¶å‰ static::$instances çš„çˆ¶é¡žåˆ¥æ™‚ å‰‡æœƒè‡ªå‹•å–ä»£; åä¹‹å‰‡ ä¸åšä»»ä½•å‹•ä½œ
+		// ·í¥¼«Ø¥ß static::$instances ®É ·|¥H·í«e class §@¬°ºc³yÃþ§O
+		// ·í¤w«Ø¥ß static::$instances ®É ¦pªG©I¥sªº class ¤£ÄÝ©ó·í«e static::$instances ªº¤÷Ãþ§O®É «h·|¦Û°Ê¨ú¥N; ¤Ï¤§«h ¤£°µ¥ô¦ó°Ê§@
 		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {
 			static::$instances = $this;
 		}
@@ -48,10 +49,24 @@ class Scorpio_helper_regex_Core {
 		return static::$instances;
 	}
 
-	function chk_regex($str) {
-		return scovalid::regex($str);
-	}
+    /**
+	 * @param $filename
+	 * @param bool - return runtime_defined_vars
+	 *
+	 * @return array
+	 */
+	public static function include_file() {
+		if (is_file(func_get_arg(0))) {
+			include func_get_arg(0);
+			if (true === func_get_arg(1)) {
+				return scophp::instance()->get_runtime_defined_vars(get_defined_vars());
+			}
+		} else {
+			throw new Scorpio_Exception_PHP('PHP Warning: scophp::include_file(): Filename cannot be empty or not exists!!');
+		}
 
+		return array();
+	}
 }
 
 ?>

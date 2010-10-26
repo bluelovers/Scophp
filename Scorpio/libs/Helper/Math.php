@@ -14,48 +14,52 @@
 
 if (0 || 1) {
 	// for IDE
-	class scomath extends Scorpio_helper_math_Core {
+	class scomath extends Scorpio_Helper_Math_Core {
 	}
 }
 
-class Scorpio_helper_math_Core {
+class Scorpio_Helper_Math_Core {
 	protected static $instances = null;
 
 	public static $rand = 1000000;
 
+	// 取得構造物件
 	public static function &instance($overwrite = false) {
-		if (!self::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
-				$overwrite : 'scomath');
-			self::$instances = $ref->newInstance();
+		if (!static::$instances) {
+			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
+			static::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
-				get_class(self::$instances));
-			self::$instances = $ref->newInstance();
+			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite:get_called_class());
+			static::$instances = $ref->newInstance();
 		}
 
-		return self::$instances;
+		return static::$instances;
 	}
 
+	// 建立構造
 	function __construct() {
 
 		// make sure self::$instances is newer
-		if (!self::$instances || !in_array(get_class($this), class_parents(self::$instances))) {
-			self::$instances = $this;
+		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
+		// 當已建立 static::$instances 時 如果呼叫的 class 不屬於當前 static::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
+		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {
+			static::$instances = $this;
 		}
 
-		scomath::_srand();
+//		print_r(array(get_called_class(), class_parents(static ::$instances), class_parents(self ::$instances), class_parents(get_called_class())));
 
-		return self::$instances;
+		static::_srand();
+
+		return static::$instances;
 	}
 
 	protected static function _srand() {
 		$scale = 15;
 		//bcscale(9);
 
-		scomath::$rand = bcadd((float)microtime(true) - time(), (float)scomath::$rand * mt_rand(-100, 200) / 100, $scale);
+		static::$rand = bcadd((float)microtime(true) - time(), (float)static::$rand * mt_rand(-100, 200) / 100, $scale);
 
-		return scomath::$rand;
+		return static::$rand;
 	}
 
 	protected static function _rand(array &$r, $retval) {
@@ -78,7 +82,7 @@ class Scorpio_helper_math_Core {
 	}
 
 	function rand($ra = 0, $rb = 0, $low = 1, $high = 100, $step = 1, $retval = true) {
-		srand((float)microtime(true) * rand(-100, 200)/100 * scomath::_srand());
+		srand((float)microtime(true) * rand(-100, 200)/100 * static::_srand());
 
 		$r = array();
 
@@ -87,13 +91,13 @@ class Scorpio_helper_math_Core {
 		$r['n2'] = rand($low - 1, $high);
 		$r['c'] = rand(0, 1 + $rb);
 
-		scomath::_rand($r['a'], $retval);
+		static::_rand($r['a'], $retval);
 
 		return $r['r'];
 	}
 
 	function mt_rand($ra = 0, $rb = 0, $low = 1, $high = 100, $step = 1, $retval = true) {
-		mt_srand((float)microtime(true) * mt_rand(-100, 200)/100 * scomath::_srand() + ((float)microtime(true)-time()));
+		mt_srand((float)microtime(true) * mt_rand(-100, 200)/100 * static::_srand() + ((float)microtime(true)-time()));
 
 		$r = array();
 
@@ -102,7 +106,7 @@ class Scorpio_helper_math_Core {
 		$r['n2'] = mt_rand($low - 1, $high);
 		$r['c'] = mt_rand(0, 1 + $rb);
 
-		scomath::_rand($r['a'], $retval);
+		static::_rand($r['a'], $retval);
 
 		return $r['r'];
 	}
