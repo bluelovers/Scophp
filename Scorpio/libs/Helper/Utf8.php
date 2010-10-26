@@ -41,7 +41,7 @@ class Scorpio_Helper_Utf8_Core {
 	// 建立構造
 	function __construct() {
 
-		// make sure self::$instances is newer
+		// make sure static::$instances is newer
 		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
 		// 當已建立 static::$instances 時 如果呼叫的 class 不屬於當前 static::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
 		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {
@@ -84,7 +84,7 @@ class Scorpio_Helper_Utf8_Core {
 	public static function str_pad($str, $final_str_length, $pad_str = ' ', $pad_type =
 		STR_PAD_RIGHT) {
 
-		if (self::is_ascii($str) and self::is_ascii($pad_str)) {
+		if (static::is_ascii($str) and static::is_ascii($pad_str)) {
 			return str_pad($str, $final_str_length, $pad_str, $pad_type);
 		}
 
