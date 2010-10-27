@@ -36,6 +36,8 @@ class Scorpio_Helper_Db_Mysql_Core {
 		return call_user_func_array(static::$func_prefix.$func, $args);
 	}
 
+	public static $connection;
+
 	/**
 	 * Get number of affected rows in previous MySQL operation
 	 */
