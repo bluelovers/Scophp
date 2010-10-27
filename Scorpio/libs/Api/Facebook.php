@@ -143,6 +143,124 @@ class Scorpio_Api_Facebook_Core extends Facebook {
 
 	);
 
+	static $apilist = array(
+		'/{:who:}',
+		'/{:who:}/friends',
+		'/{:who:}/home',
+		'/{:who:}/feed',
+		'/{:who:}/movies',
+		'/{:who:}/books',
+		'/{:who:}/notes',
+		'/{:who:}/photos',
+		'/{:who:}/albums',
+		'/{:who:}/videos',
+		'/{:who:}/videos/uploaded',
+		'/{:who:}/events',
+		'/{:who:}/groups',
+		'/{:who:}/checkins',
+
+		'/{:who:}/accounts',
+		'/{:who:}/family',
+		'/{:who:}/interests',
+		'/{:who:}/music',
+		'/{:who:}/television',
+		'/{:who:}/tagged',
+		'/{:who:}/statuses',
+		'/{:who:}/links',
+		'/{:who:}/inbox',
+		'/{:who:}/outbox',
+		'/{:who:}/updates',
+		'/{:who:}/apprequests',
+
+		'/{:who:}/invited',
+		'/{:who:}/picture',
+		'/{:who:}/attending',
+		'/{:who:}/maybe',
+		'/{:who:}/noreply',
+		'/{:who:}/declined',
+		'/{:who:}?metadata=1',
+
+		'/{:who:}/posts',
+
+		'/{:who:}/likes',
+		'/{:who:}/comments',
+	);
+
+	static $fields = array(
+		/**
+		 * create a new post on the given profile's feed/wall
+		 **/
+		'feed' => array(
+			'message', 'picture', 'link', 'name', 'caption', 'description', 'source',
+		),
+
+		/**
+		 * comment on the given post
+		 **/
+		'comments' => array(
+			'message',
+		),
+
+		/**
+		 * like the given post
+		 **/
+		'likes' => array(
+		),
+
+		/**
+		 * write a note on the given profile
+		 **/
+		'notes' => array(
+			'message', 'subject',
+		),
+
+		/**
+		 * write a link on the given profile
+		 **/
+		'links' => array(
+			'link', 'message',
+		),
+
+		/**
+		 * create an event
+		 **/
+		'events' => array(
+			'name', 'start_time', 'end_time',
+		),
+
+		/**
+		 * attend the given event
+		 **/
+		'attending' => array(
+		),
+
+		/**
+		 * maybe attend the given event
+		 **/
+		'maybe' => array(
+		),
+
+		/**
+		 * decline the given event
+		 **/
+		'declined' => array(
+		),
+
+		/**
+		 * create an album
+		 **/
+		'albums' => array(
+			'name', 'message',
+		),
+
+		/**
+		 * upload a photo to an album
+		 **/
+		'photos' => array(
+			'message',
+		),
+	);
+
 	public function &instance($config) {
 		$args = func_get_args();
 

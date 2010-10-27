@@ -53,7 +53,15 @@ class Scorpio_Api_Facebook_Wall_Core extends Scorpio_Api_Facebook_Class {
 		$this->_data['uid'] = $is_me ? (string)$this->core->getUser() : (string)$uid;
 	}
 
-	function post($params = array(), $type = null) {
+	function id() {
+		return $this->_data['uid'];
+	}
+
+	function is_me() {
+		return $this->_data['is_me'];
+	}
+
+	function post($params = array(), $type = null, $action = 'feed') {
 		$who = $this->_data['is_me'] ? 'me' : (string)$this->_data['uid'];
 
 		$params = array_filter($params);
@@ -63,14 +71,14 @@ class Scorpio_Api_Facebook_Wall_Core extends Scorpio_Api_Facebook_Class {
 		) {
 			$type == 'message';
 
-			unset($params['link'], $params['description'], $params['name'], $params['caption']);
+//			unset($params['link'], $params['description'], $params['name'], $params['caption']);
 //			unset($params['link'], $params['name']);
 		}
 
 		// fix bug: if message index > link index
 		$_params = $this->_ksort_by_array($params, static::$fields, 1);
 
-		return $this->core->api('/'.(string)$who.'/feed', 'POST', (array)$_params);
+		return $this->core->api('/'.(string)$who.'/'.$action, 'POST', (array)$_params);
 	}
 }
 

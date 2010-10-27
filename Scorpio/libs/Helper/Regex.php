@@ -137,6 +137,11 @@ class Scorpio_Helper_Regex_Core {
 	 * 當前沒有其它特性受此修正符控制。
 	 **/
 	const PCRE_EXTRA = 'X';
+
+	/**
+	 * The (?J) internal option setting changes the local PCRE_DUPNAMES option.
+	 * Allow duplicate names for subpatterns.
+	 **/
 	const PCRE_INFO_JCHANGED = 'J';
 
 	/**
@@ -151,8 +156,63 @@ class Scorpio_Helper_Regex_Core {
 		PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit was exhausted!',
 	);
 
+	public static $options = array(
+		'pattern_fix' => false,
+//		'pattern_fix' => true,
+	);
+
+	/*
+		$str = "/\[img=(\d{1,4})[x|\,](\d{1,4})\]\s*([^\[\<\r\n]+?)\s*\[\/img\]/ies";
+
+//$str = '/^(.)(.+)\1([a-zA-Z]*)/';
+
+preg_match('/^(?<pattern>[^\s\'"\\\])(?<expression>.+)\1(?<options>[a-zA-Z]*)$/s', $str, $m);
+
+echo $str;
+print_r($m);
+	*/
 	function is_regex($str) {
-		return scovalid::regex($str);
+		if (preg_match('/^(?<pattern>[^\s\'"\\\])(?<expression>.+)\1(?<options>[a-zA-Z]*)$/s', $str, $m)) {
+
+			$ret = array(
+				'source' => $str,
+				'pattern' => $m['pattern'],
+				'expression' => $m['expression'],
+				'options' => $m['options'],
+			);
+
+			return $ret;
+		}
+
+		return false;
+	}
+
+	function pattern_fix($pattern, $type = null) {
+
+//		exit($type);
+
+		if (
+			$type == 'replace_callback'
+//			|| strncmp($type, 'match', 5) >= 0
+		) {
+			if (is_array($pattern)) {
+				foreach ($pattern as $_k => $_v) {
+					$pattern[$_k] = static::pattern_fix($_v, $type);
+				}
+
+				return $pattern;
+			} elseif ($ret = static::is_regex($pattern)) {
+				$ret['options'] = str_replace('e', '', $ret['options']);
+
+//				exit($ret['pattern'].$ret['expression'].$ret['pattern'].$ret['options']);
+
+				return $ret['pattern'].$ret['expression'].$ret['pattern'].$ret['options'];
+			} else {
+				return $pattern;
+			}
+		} else {
+			return $pattern;
+		}
 	}
 
 	/**
@@ -171,6 +231,11 @@ Array (
 )
 	 **/
 	function filter($pattern, $replacement, $input, $limit = -1, &$count = 0) {
+		if (static::$options['pattern_fix']) {
+			$pattern = static::pattern_fix($pattern, __FUNCTION__);
+//			exit($pattern);
+		}
+
 		return preg_filter($pattern, $replacement, $input, $limit, &$count);
 	}
 
@@ -179,6 +244,11 @@ Array (
 	 * @param int $flags PREG_GREP_INVERT
 	 **/
 	function grep($pattern, $input, $flags = 0) {
+		if (static::$options['pattern_fix']) {
+			$pattern = static::pattern_fix($pattern, __FUNCTION__);
+//			exit($pattern);
+		}
+
 		return preg_grep($pattern, $input, $flags);
 	}
 
@@ -201,7 +271,12 @@ Array (
 	 * @param int $flags PREG_PATTERN_ORDER|PREG_SET_ORDER|PREG_OFFSET_CAPTURE
 	 **/
 	function match_all($pattern, $input, &$matches, $flags = PREG_PATTERN_ORDER, $offset = 0) {
-		return call_user_func_array('preg_match_all', $pattern, $input, &$matches, $flags, $offset);
+		if (static::$options['pattern_fix']) {
+			$pattern = static::pattern_fix($pattern, __FUNCTION__);
+//			exit($pattern);
+		}
+
+		return preg_match_all($pattern, $input, &$matches, $flags, $offset);
 	}
 
 	/**
@@ -209,7 +284,12 @@ Array (
 	 * @param int $flags 0|PREG_OFFSET_CAPTURE
 	 **/
 	function match($pattern, $input, &$matches = array(), $flags = 0, $offset = 0) {
-		return call_user_func_array('preg_match', $pattern, $input, &$matches, $flags, $offset);
+		if (static::$options['pattern_fix']) {
+			$pattern = static::pattern_fix($pattern, __FUNCTION__);
+//			exit($pattern);
+		}
+
+		return preg_match($pattern, $input, &$matches, $flags, $offset);
 	}
 
 	/**
@@ -232,12 +312,22 @@ Array (
 	 * one should specify a callback.
 	 **/
 	function replace_callback($pattern, $callback, $input, $limit = -1, &$count = 0) {
+		if (static::$options['pattern_fix']) {
+			$pattern = static::pattern_fix($pattern, __FUNCTION__);
+//			exit($pattern);
+		}
+
 		return preg_replace_callback($pattern, $callback, $input, $limit, &$count);
 	}
 	/**
 	 * Perform a regular expression search and replace
 	 **/
 	function replace($pattern, $replacement, $subject, $limit = -1, &$count = 0) {
+		if (static::$options['pattern_fix']) {
+			$pattern = static::pattern_fix($pattern, __FUNCTION__);
+//			exit($pattern);
+		}
+
 		return preg_replace($pattern, $replacement, $subject, $limit, &$count);
 	}
 
@@ -246,6 +336,11 @@ Array (
 	 * @param int $flags PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE|PREG_SPLIT_OFFSET_CAPTURE
 	 **/
 	function split($pattern, $input, $limit = -1, $flags = 0) {
+		if (static::$options['pattern_fix']) {
+			$pattern = static::pattern_fix($pattern, __FUNCTION__);
+//			exit($pattern);
+		}
+
 		return preg_split($pattern, $input, $limit, $flags);
 	}
 
