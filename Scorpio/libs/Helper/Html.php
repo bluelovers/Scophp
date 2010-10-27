@@ -145,12 +145,16 @@ class Scorpio_Helper_Html_Core {
 		}
 	}
 
-	function elem($tag, $attr = array(), $noclose = false, $noend = false) {
+	function elem($tag, $contents = '', $attr = array(), $noclose = false, $noend = false) {
 		$retattr = static::makeattr($attr);
 
-		$ret = '<'.$tag.' '.$retattr.($noend ? '' : '>').($noclose ? '' : '</'.$tag.'>');
+		$ret = '<'.$tag.' '.$retattr.($noend ? '' : '>'.$contents.($noclose ? '' : '</'.$tag.'>'));
 
 		return $ret;
+	}
+
+	function strip($str, $allowable_tags = '') {
+		return strip_tags((string)$str, $allowable_tags);
 	}
 }
 
