@@ -151,7 +151,7 @@ class Scorpio_Helper_Regex_Core {
 		PREG_BACKTRACK_LIMIT_ERROR => 'Backtrack limit was exhausted!',
 	);
 
-	function chk_regex($str) {
+	function is_regex($str) {
 		return scovalid::regex($str);
 	}
 
