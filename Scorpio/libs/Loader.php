@@ -76,10 +76,29 @@ class Scorpio_Loader_Core {
 			$ret['file'] = ucfirst($ret['name']).'.php';
 			$ret['path'] = 'Scorpio/libs/Helper/';
 
-			$rename_def = static::$suffix.'Helper_'.ucfirst($ret['name']);
+			$_path = explode('_', $ret['name']);
+
+			$rename_def = static::$suffix.'Helper';
+
+			if (count($_path) > 1) {
+				$_pop = array_pop($_path);
+				foreach ($_path as $_k) {
+					$_ku = ucfirst($_k);
+					$ret['path'] .= $_ku.'/';
+
+					$rename_def .= '_'.$_ku;
+				}
+				$_ku = ucfirst($_pop);
+				$rename_def .= '_'.$_ku;
+
+				$ret['file'] = $_ku.'.php';
+			} else {
+				$rename_def .= '_'.ucfirst($ret['name']);
+			}
+
 			$rename_new = $class ? $class : $rename_def;
 
-			$ret['rename_core'] = 'Scorpio_Helper_'.ucfirst($ret['name']).$ret['core'];
+			$ret['rename_core'] = $rename_def.$ret['core'];
 			$ret['rename_def'] = $rename_def;
 			$ret['rename_new'] = $rename_new;
 		} elseif (preg_match('/^(?P<suffix>'.$suffix_preg.')(?:(?P<path>[a-zA-Z][a-zA-Z_\d]+_)(?P<pathsub>(?:[a-zA-Z][a-zA-Z_\d]+_)+)?)?(?<name>(?:(?:[a-zA-BD-Z]|C(?!ore))[a-zA-Z\d]+_?)+)(?P<core>_Core)?$/', $class, $matchs)) {
