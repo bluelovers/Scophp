@@ -77,6 +77,7 @@ class Scorpio_Api_Facebook_Wall_Core extends Scorpio_Api_Facebook_Class {
 
 		// fix bug: if message index > link index
 		$_params = $this->_ksort_by_array($params, static::$fields, 1);
+//		$_params = $params;
 
 		return $this->core->api('/'.(string)$who.'/'.$action, 'POST', (array)$_params);
 	}
