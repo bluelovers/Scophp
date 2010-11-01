@@ -320,40 +320,60 @@ class Scorpio_Api_Facebook_Core extends Facebook {
 		}
 	}
 
-	public function getLoginUrl($params = array()) {
-		$_params = array();
+	public function getLoginUrl($params = array(), $req_perms = array()) {
+		$params = is_array($params) ? $params : array();
+		if (empty($req_perms) && !empty($params['req_perms'])) {
+			$req_perms = $params['req_perms'];
+		}
 
-		if (is_string($params) || empty($params['req_perms']) || $this->_is_numkey_array($params)) {
-			if ($params == 'all') {
-				$params = array_filter(array_values(static::$req_perms));
-			} elseif (is_string($params)) {
-				$params = explode($params, ',');
-			} elseif ($this->_is_numkey_array($params)) {
-				$params = array_values($params);
-			} elseif (!empty($params) && is_array($params)) {
-				$params = array_filter($params);
-				$params = array_keys($params);
+		if (!empty($req_perms)) {
+			if ($req_perms == 'all') {
+				$req_perms = array_filter(array_values(static::$req_perms));
+			} elseif (is_string($req_perms)) {
+				$req_perms = explode($req_perms, ',');
+			} elseif ($this->_is_numkey_array($req_perms)) {
+				$req_perms = array_values($req_perms);
+			} elseif (!empty($req_perms) && is_array($req_perms)) {
+				$req_perms = array_filter($req_perms);
+				$req_perms = array_keys($req_perms);
 			} else {
-				$params = array();
+				$req_perms = array();
 			}
 
-			$params = array_unique($params);
-			$_params['req_perms'] = implode((array)$params, ',');
-		} else {
-			$_params = $params;
+			$req_perms = array_unique($req_perms);
+			$params['req_perms'] = implode((array)$req_perms, ',');
 		}
 
 //		echo var_dump($_params);
 //		exit();
 
-		return parent::getLoginUrl((array)$_params);
+		return parent::getLoginUrl($params);
+	}
+
+	public function getCurrentUrl($query = array()) {
+		if (!empty($query) && is_array($query)) {
+			$parts = parse_url(parent::getCurrentUrl());
+
+			$agv = scotext::uri_parse_agv($parts['query']);
+			$agv = scoarray::merge($agv, $query);
+
+			foreach ($agv as $_k => $_v) {
+				if ($_v === null) unset($agv[$_k]);
+			}
+
+			$parts['query'] = scotext::uri_build($agv, 1);
+
+			return scotext::uri_build($parts);
+		} else {
+			return parent::getCurrentUrl();
+		}
 	}
 
 	function _is_numkey_array($array) {
 		return (range(0, count($array) - 1) == array_keys($array)) ? true : false;
 	}
 
-	public function setSession($session=null, $write_cookie=null, $decode = null) {
+	public function &setSession($session=null, $write_cookie=null, $decode = null) {
 		if ($write_cookie === null || $write_cookie == -1) $write_cookie = $this->useCookieSupport();
 
 //		$this->magic_quotes_gpc();
