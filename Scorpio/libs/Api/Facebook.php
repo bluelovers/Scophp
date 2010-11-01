@@ -322,8 +322,9 @@ class Scorpio_Api_Facebook_Core extends Facebook {
 
 	public function getLoginUrl($params = array(), $req_perms = array()) {
 		$params = is_array($params) ? $params : array();
-		if (empty($req_perms) && !empty($params['req_perms'])) {
+		if (empty($req_perms) && (isset($params['req_perms']) || !empty($params['req_perms']))) {
 			$req_perms = $params['req_perms'];
+			unset($params['req_perms']);
 		}
 
 		if (!empty($req_perms)) {
