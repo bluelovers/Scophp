@@ -31,7 +31,6 @@ class Scorpio_Db_Driver_Mysql_Core extends Scorpio_Db {
 	protected function __construct(array $config) {
 		parent::__construct($config);
 
-		$this->driver = 'mysql';
 		$this->driver_core = scodb::instance($this->driver);
 
 		$this->build();
