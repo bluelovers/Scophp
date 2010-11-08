@@ -19,29 +19,40 @@ if (0) {
 
 class Scorpio_Helper_Db_Core {
 	protected $driver = 'mysql';
-	protected $driver_core = null;
+	protected static $driver_core = null;
+	protected static $instances = null;
 
-	public static function &instance() {
+	public static function &instance($driver = null) {
+		if ($driver == null && static::$instances) return static::$instances;
+
 		$args = func_get_args();
 
 		$ref = new ReflectionClass(get_called_class());
-		$instances =& $ref->newInstanceArgs((array)$args);
+		static::$instances = $ref->newInstanceArgs((array)$args);
 
-		return $instances;
+		return static::$instances;
 	}
 
-	function &__construct($driver = 'mysql') {
+	public function &__construct($driver = 'mysql') {
 		$this->driver = $driver == 'mysqli' ? $driver : 'mysql';
 
-		$ref = new ReflectionClass('scodb_'.$this->driver);
-		$this->driver_core =& $ref->newInstance();
+		if (static::driver_core == null || static::driver_core[$this->driver] == null) {
+			$ref = new ReflectionClass('scodb_'.$this->driver);
+			static::driver_core[$this->driver] =& $ref->newInstance();
+		}
+
+		static::$instances = $this;
 
 		return $this;
 	}
 
-	public function &__call($method, $args) {
+	public function &__call($method, $args = array()) {
 		$ref = call_user_func_array(array($this->driver_core, $method), $args);
+		return $ref;
+	}
 
+	public static function &__callStatic($method, $args = array()) {
+		$ref = static::instance()->__call($method, $args);
 		return $ref;
 	}
 }
