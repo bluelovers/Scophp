@@ -22,13 +22,17 @@ class Scorpio_Helper_Db_Core {
 	protected static $driver_core = null;
 	protected static $instances = null;
 
-	public static function &instance($driver = null) {
+	public static function &instance($driver = null, $core = false) {
 		if ($driver == null && static::$instances) return static::$instances;
 
 		$args = func_get_args();
 
-		$ref = new ReflectionClass(get_called_class());
-		static::$instances = $ref->newInstanceArgs((array)$args);
+		if ($core) {
+			static::$instances = call_user_func_array('Scorpio_Db::instance', $args);
+		} else {
+			$ref = new ReflectionClass(get_called_class());
+			static::$instances = $ref->newInstanceArgs((array)$args);
+		}
 
 		return static::$instances;
 	}
