@@ -45,8 +45,6 @@ class Scorpio_Helper_Db_Core {
 			static::driver_core[$this->driver] =& $ref->newInstance();
 		}
 
-		static::$instances = $this;
-
 		return $this;
 	}
 
