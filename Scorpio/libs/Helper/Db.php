@@ -20,7 +20,6 @@ if (0) {
 class Scorpio_Helper_Db_Core {
 	protected $driver = 'mysql';
 	protected $driver_core = null;
-	protected $instances = null;
 
 	public static function &instance() {
 		$args = func_get_args();

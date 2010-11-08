@@ -19,26 +19,33 @@ if (0) {
 }
 
 class Scorpio_Db_Driver_Mysql_Core extends Scorpio_Db {
-
-	const _FUNC = 'mysql_';
-
 	// Use SET NAMES to set the character set
 	protected static $set_names;
 
 	// Quote character to use for identifiers (tables/columns/aliases)
 	protected $quote = '`';
 
+	protected $driver = 'mysql';
+	protected $driver_core = null;
+
 	protected function __construct(array $config) {
 		parent::__construct($config);
+
+		$this->driver = 'mysql';
+		$this->driver_core = scodb::instance($this->driver);
 
 		$this->build();
 	}
 
 	protected function _query($sql, $type = '') {
-		$func = $type == 'UNBUFFERED' && @function_exists('mysql_unbuffered_query') ?
-			'mysql_unbuffered_query' : 'mysql_query';
+		static $static_cache;
+		if ($static_cache == null || $static_cache[$this->driver] === null) {
+			$static_cache[$this->driver] = method_exists($this->driver_core, 'unbuffered_query') ? true : false;
+		}
 
-		return $func($sql, $this->connection);
+		$func = ($type == 'UNBUFFERED' && $static_cache[$this->driver]) ? 'unbuffered_query' : 'query';
+
+		return call_user_func_array(array($this->driver_core, $func), array($sql, $this->connection));
 	}
 
 	/**
@@ -50,14 +57,17 @@ class Scorpio_Db_Driver_Mysql_Core extends Scorpio_Db {
 		// Make sure the database is connected
 		$this->connection or $this->connect();
 
-		self::$set_names === null && self::$set_names = !function_exists('mysql_set_charset');
+		static $static_cache;
+		if ($static_cache == null || $static_cache[$this->driver] === null) {
+			$static_cache[$this->driver] = method_exists($this->driver_core, 'set_charset') ? true : false;
+		}
 
-		if (self::$set_names === true) {
+		if ($static_cache[$this->driver] === true) {
 			// PHP is compiled against MySQL 4.x
 			$status = (bool)$this->_query('SET NAMES ' . $this->quote($charset));
 		} else {
 			// PHP is compiled against MySQL 5.x
-			$status = mysql_set_charset($charset, $this->connection);
+			$status = $this->driver_core->set_charset($charset, $this->connection);
 		}
 
 		if ($status === false) {
@@ -72,12 +82,14 @@ class Scorpio_Db_Driver_Mysql_Core extends Scorpio_Db {
 	}
 
 	protected function _escape($value) {
-		return mysql_real_escape_string($value, $this->connection);
+		return $this->driver_core->real_escape_string($value, $this->connection);
 	}
 
 	protected function _func($func, $args = null) {
-		return $args !== null ? call_user_func_array(self::_FUNC . $func, (is_array($args) ?
-			$args : array($args))) : call_user_func(self::_FUNC . $func);
+
+		$args = is_array($args) ? $args : ($args === null ? array() : array($args));
+
+		return call_user_func_array(array($this->driver_core, $func), $args);
 	}
 
 	protected function __call($func, $args = null) {
@@ -134,19 +146,19 @@ class Scorpio_Db_Driver_Mysql_Core extends Scorpio_Db {
 	}
 
 	protected function _select_db($database) {
-		return mysql_select_db($database, $this->connection);
+		return $this->driver_core->select_db($database, $this->connection);
 	}
 
 	protected function _error() {
-		return $this->connection ? mysql_error($this->connection) : mysql_error();
+		return $this->connection ? $this->driver_core->error($this->connection) : $this->driver_core->error();
 	}
 
 	protected function _errno() {
-		return $this->connection ? mysql_errno($this->connection) : mysql_errno();
+		return $this->connection ? $this->driver_core->errno($this->connection) : $this->driver_core->errno();
 	}
 
 	protected function _close() {
-		return mysql_close($this->connection);
+		return $this->driver_core->close($this->connection);
 	}
 
 	public function disconnect() {
@@ -190,8 +202,8 @@ class Scorpio_Db_Driver_Mysql_Core extends Scorpio_Db {
 	}
 
 	protected function _connect($host, $port, $user, $pass, $params) {
-		return ($this->config['persistent'] === true) ? mysql_pconnect($host . $port, $user,
-			$pass, $params) : mysql_connect($host . $port, $user, $pass, true, $params);
+		return ($this->config['persistent'] === true) ? $this->driver_core->pconnect($host . $port, $user,
+			$pass, $params) : $this->driver_core->connect($host . $port, $user, $pass, true, $params);
 	}
 
 	public function connect() {
@@ -234,17 +246,17 @@ class Scorpio_Db_Driver_Mysql_Core extends Scorpio_Db {
 	}
 
 	function fetch_row($query) {
-		$query = mysql_fetch_row($query);
+		$query = $this->driver_core->fetch_row($query);
 		return $query;
 	}
 
 	function fetch_fields($query) {
-		return mysql_fetch_field($query);
+		return $this->driver_core->fetch_field($query);
 	}
 
 	function version() {
 		if (empty($this->version)) {
-			$this->version = mysql_get_server_info($this->connection);
+			$this->version = $this->driver_core->get_server_info($this->connection);
 		}
 		return $this->version;
 	}
@@ -257,10 +269,16 @@ class Scorpio_Db_Driver_Mysql_Core extends Scorpio_Db {
 	}
 
 	function query_info($query = null) {
-		if (function_exists('mysql_info')) {
-			return $query ? mysql_info($query) : mysql_info();
+
+		static $static_cache;
+		if ($static_cache == null || $static_cache[$this->driver] === null) {
+			$static_cache[$this->driver] = method_exists($this->driver_core, 'info') ? true : false;
+		}
+
+		if ($static_cache[$this->driver]) {
+			return $query ? $this->driver_core->info($query) : $this->driver_core->info();
 		} else {
-			return '';
+			return array();
 		}
 
 		//		$return = array();
@@ -552,7 +570,7 @@ class Scorpio_Db_Driver_Mysql_Core extends Scorpio_Db {
 	}
 
 	function result($query, $row = 0, $field = 0) {
-		$query = @mysql_result($query, $row, $field);
+		$query = @$this->driver_core->result($query, $row, $field);
 		return $query;
 	}
 
