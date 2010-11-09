@@ -150,18 +150,59 @@ class Scorpio_File_Core {
 			array('/', '/', '$1', '', '$1'), trim($url));
 	}
 
+	protected function _path_join() {
+		$args = func_get_args();
+
+		if (func_num_args() > 1) {
+			$array = $args;
+		} else {
+			$array = $args[0];
+			if (is_array($array[0])) {
+				$array = $array[0];
+			}
+		}
+
+		if (is_string($array)) return $array;
+
+		$ret = '';
+		while(empty($ret) && $ret !== 0 && $ret !== '0') {
+			$ret = array_shift($array);
+		}
+
+		if (!empty($array)) {
+			foreach ($array as $_v) {
+				$_v = trim($_v);
+				if (empty($_v) && $_v !== 0 && $_v !== '0') continue;
+
+				$ret .= '/'.$_v;
+			}
+		}
+
+//		if (end($array) == 'facebook.php') {
+//			print_r(array(
+//				$array,
+//				$ret
+//			));
+//			exit($ret);
+//		}
+
+		return $ret;
+	}
+
 	public static function path() {
 		$paths = func_get_args();
 		//		return trim(preg_replace(array("/(\\\\|\\|\/\.\/)+/", "/\/{2,}/"), '/', join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/').'/';
 
-		return rtrim(static::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/') .
-			'/';
+//		return rtrim(static::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/') .
+//			'/';
+		return rtrim(static::fix(static::_path_join($paths)), '/').'/';
 	}
 
 	public static function file() {
 		$paths = func_get_args();
 		//		return trim(preg_replace(array("/(\\\\|\\|\/\.\/)+/", "/\/{2,}/"), '/', join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/');
-		return rtrim(static::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/');
+//		return rtrim(static::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/');
+		return rtrim(static::fix(static::_path_join($paths)), '/');
 	}
 
 	public static function fileext($filename) {
