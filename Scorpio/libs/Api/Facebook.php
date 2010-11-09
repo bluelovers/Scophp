@@ -18,11 +18,9 @@ if (0) {
 	}
 }
 
-define('Scorpio_Api_Facebook_LIB', 'D:/xampp/svn/clone/facebook/php-sdk/src/');
-
-if (!(class_exists('Facebook') || interface_exists('Facebook'))) {
-	require_once Scorpio_Api_Facebook_LIB.'facebook.php';
-}
+Scorpio_Loader_Core::instance()
+	->extend('Facebook', 'D:/xampp/svn/clone/facebook/php-sdk/src/facebook.php')
+	->load('Scorpio_Loader');
 
 class Scorpio_Api_Facebook_Core extends Facebook {
 	protected $_opts = array();

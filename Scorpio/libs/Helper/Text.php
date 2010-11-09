@@ -574,7 +574,9 @@ class Scorpio_Helper_Text_Core {
 		}
 
 		$parts = array();
-		preg_match($r, $url, $parts);
+		if (!preg_match($r, $url, $parts)) {
+			$parts = parse_url($url);
+		}
 
 		foreach ($parts as $k => $v) {
 			if (is_int($k) || $v === '') unset($parts[$k]);

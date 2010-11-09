@@ -24,7 +24,13 @@ class Scorpio_Engine_Rpc_PHPRPC_Core {
 	 */
 	public function &server() {
 
-		include_once SYSPATH.'Scorpio/vendor/phprpc/php/phprpc_server.php';
+//		include_once SYSPATH.'Scorpio/vendor/phprpc/php/phprpc_server.php';
+
+		if (!Scorpio_Loader_Core::exists('PHPRPC_Server', true)) {
+			Scorpio_Loader_Core::instance()
+				->extend('PHPRPC_Server', 'Scorpio/vendor/phprpc/php/phprpc_server.php', SYSPATH)
+				->load('PHPRPC_Server');
+		}
 
 		$srrver = new PHPRPC_Server();
 		return $srrver;
@@ -36,7 +42,13 @@ class Scorpio_Engine_Rpc_PHPRPC_Core {
 	 */
 	public function &client($srrver) {
 
-		include_once SYSPATH.'Scorpio/vendor/phprpc/php/phprpc_client.php';
+//		include_once SYSPATH.'Scorpio/vendor/phprpc/php/phprpc_client.php';
+
+		if (!Scorpio_Loader_Core::exists('PHPRPC_Client', true)) {
+			Scorpio_Loader_Core::instance()
+				->extend('PHPRPC_Client', 'Scorpio/vendor/phprpc/php/phprpc_client.php', SYSPATH)
+				->load('PHPRPC_Client');
+		}
 
 		$client = new PHPRPC_Client($srrver);
 		return $client;

@@ -31,6 +31,11 @@ class Scorpio_Loader_Core {
 
 	protected static $instances = null;
 
+	public static $map = array(
+		'class' => array(),
+		'class_cache' => array(),
+	);
+
 	// 取得構造物件
 	public static function &instance($overwrite = false) {
 		if (!static::$instances) {
@@ -45,7 +50,7 @@ class Scorpio_Loader_Core {
 	}
 
 	// 建立構造
-	function __construct() {
+	public function __construct() {
 
 		// make sure static::$instances is newer
 		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
@@ -185,17 +190,21 @@ Array (
 */
 	}
 
-	static function class_parse($class) {
+	public static function class_parse($class) {
 		$ret = array();
 
-		if (!$ret = static::_class_parse($class)) {
+		if (static::map('class', $class)) {
+			$ret = static::map('class', $class);
+		} elseif (static::map('class_cache', $class)) {
+			$ret = static::map('class_cache', $class);
+		} elseif (!$ret = static::_class_parse($class)) {
 
 		}
 
 		return $ret;
 	}
 
-	static function lib($name, $rename = null) {
+	public static function lib($name, $rename = null) {
 		$name2 = explode('/', $name);
 		$name2 = empty($name2) ? array($name) : $name2;
 		$class = static::$suffix . implode('_', $name2);
@@ -203,29 +212,45 @@ Array (
 		return static::class_parse($class);
 	}
 
-	static function load($class) {
-		if ($ret = static::class_parse($class)) {
+	public static function load($class) {
+		if (static::exists($class)) {
+			return true;
+		} elseif ($ret = static::class_parse($class)) {
 			if (!static::exists($ret['rename_core'])) {
 //				echo(Scorpio_File_Core::file($ret['syspath'], $ret['path'], $ret['file']).LF);
 //				print_r($ret);
 
-				include_once Scorpio_File_Core::file($ret['syspath'], $ret['path'], $ret['file']);
+//				if (empty($ret['syspath']) && $ret['syspath'] !== 0 && $ret['syspath'] !== '0') {
+//					$ret['syspath'] = $ret['path'];
+//					unset($ret['path']);
+//				}
+
+//				if ($class == 'Facebook') exit(Scorpio_File_Core::file($ret['syspath'], $ret['path'], $ret['file']));
+
+				$ret['_include_file'] = Scorpio_File_Core::file($ret['syspath'], $ret['path'], $ret['file']);
+				static::map('class_cache', $ret['rename_core'], $ret);
+
+				include_once $ret['_include_file'];
 			}
 
-			foreach (array_unique(array($ret['rename_core'], $ret['rename_def'], $ret['rename_new'])) as $_class) {
+			foreach (array_filter(array_unique(array($ret['rename_core'], $ret['rename_def'], $ret['rename_new']))) as $_class) {
+				if (empty($_class)) continue;
+
 				if (!static::exists($_class)) {
-					static::class_create($_class, $_lastclass);
+//					static::class_create($_class, $_lastclass);
+
+					static::map('class_cache', $_class, $ret)->class_create($_class, $_lastclass);
 				}
 				$_lastclass = $_class;
 			}
 
 			return true;
 		} else {
-			return false;
+			return null;
 		}
 	}
 
-	static function class_create($class, $extends, $final = false, $abstract = false) {
+	public static function class_create($class, $extends, $final = false, $abstract = false) {
 		$extension = 'class ' . $class . ' extends ' . $extends . ' { }';
 
 		$ref = new ReflectionClass($extends);
@@ -244,17 +269,17 @@ Array (
 		return $class;
 	}
 
-	static function exists($class) {
+	public static function exists($class, $autoload = false) {
 		static $cache = array();
 
 		if (!isset($cache[$class]) || $cache[$class] == false) {
-			$cache[$class] = (class_exists($class, false) || interface_exists($class, false)) ? true : false;
+			$cache[$class] = (class_exists($class, $autoload) || interface_exists($class, $autoload)) ? true : false;
 		}
 
 		return $cache[$class];
 	}
 
-	static function setup($update = false) {
+	public static function setup($update = false) {
 		static $spl_autoload_register = false;
 
 		if ($update) {
@@ -269,6 +294,91 @@ Array (
 		} else {
 			$spl_autoload_register = true;
 			spl_autoload_register(array(static::instance(1), 'load'));
+		}
+
+		return static::instance();
+	}
+
+	public static function map() {
+		$_n = func_num_args();
+		$args = func_get_args();
+		if ($_n == 1) {
+			$ret = static::$map['class'][$args[0]];
+			if (empty($ret)) {
+				unset(static::$map['class'][$args[0]]);
+				$ret = null;
+			}
+			return (!empty($ret) && $ret !== array() ) ? $ret : null;
+		} elseif ($_n == 2) {
+			$ret = static::$map[$args[0]][$args[1]];
+			if (empty($ret)) {
+				unset(static::$map[$args[0]][$args[1]]);
+				$ret = null;
+			}
+			return (!empty($ret) && $ret !== array() ) ? $ret : null;
+		} else {
+			static::$map[$args[0]][$args[1]] = $args[2];
+		}
+
+		return static::instance();
+	}
+
+	public static function extend() {
+		if ($_n = func_num_args()) {
+			$args = func_get_args();
+			/*
+	[core] => _Core
+	[file] => Text.php
+	[issco] => 1
+	[name] => Text
+	[path] => Scorpio/libs/Helper/
+	[rename_core] => Scorpio_Helper_Text_Core
+	[rename_def] => Scorpio_Helper_Text
+	[rename_new] => Scorpio_Helper_Text
+	[source] => Scorpio_Helper_Text
+	[syspath] => D:/xampp/svn/clone/discuz/discuzx/upload/extensions/libs/scophp/
+	[type] => 1
+			*/
+
+			switch($_n) {
+				case 2:
+					$args[0] = trim($args[0]);
+
+					if (is_array($args[1])) {
+						$ret = $args[1];
+						ksort($ret);
+//						static::$map['class'][$args[0]] = $ret;
+						static::map('class', $args[0], $ret);
+
+						break;
+					}
+				case 3:
+				case 4:
+					$args[0] = trim($args[0]);
+					if (empty($args[3]) && !empty(static::$map['class'][$args[0]])) break;
+
+					$ret = array(
+						'source' => $args[0],
+
+						'file' => Scorpio_File::basename($args[1]),
+						'path' => Scorpio_File::dirname($args[1], '', 1),
+						'syspath' => trim($args[2]) ? trim($args[2]) : '',
+					);
+					if (!empty($ret) && $ret !== array()) {
+
+						$ret['rename_core'] = $ret['source'];
+
+						ksort($ret);
+
+//						static::$map['class'][$ret['source']] = $ret;
+						static::map('class', $ret['source'], $ret);
+					}
+					break;
+				case 1:
+				default:
+
+					break;
+			}
 		}
 
 		return static::instance();
