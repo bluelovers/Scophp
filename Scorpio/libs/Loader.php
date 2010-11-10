@@ -316,6 +316,8 @@ Array (
 				$ret = null;
 			}
 			return (!empty($ret) && $ret !== array() ) ? $ret : null;
+		} elseif ($_n == 0) {
+			return static::$map;
 		} else {
 			static::$map[$args[0]][$args[1]] = $args[2];
 		}

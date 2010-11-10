@@ -181,12 +181,24 @@ class Scorpio_Helper_Valid_Core {
 		}
 	}
 
-	function array($array, $notempty = false) {
+	function is_array($array, $notempty = false) {
 		return $notempty ? (!empty($array) && is_array($array) && $array != array()) : is_array($array);
 	}
 
-	function empty($s, $strict = FALSE) {
-		return $strict ? (($s !== '0' && $s !== 0 && empty($s)) ? true : false) : empty($s);
+	function is_empty($s, $strict = FALSE) {
+		return $strict ? ((empty($s) && $s !== '0' && $s !== 0) ? true : false) : empty($s);
+	}
+
+	function is_string(&$s, $strict = true) {
+		if (empty($strict) && $strict !== null && is_object($s)) {
+			if (method_exists($s, '__toString')) {
+				$ret = $s->__toString();
+//				$ret = $s.'';
+				return is_string($ret) ? (!empty($ret) ? $ret : true) : false;
+			}
+		}
+
+		return is_string($s);
 	}
 }
 

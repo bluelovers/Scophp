@@ -12,14 +12,14 @@
  * @copyright 2010
  */
 
-define('IN_SCRPIO', true);
+define('IN_SCORPIO', true);
 define('DIR_SEP', '/');
 define('LF', "\n");
 define('TAB', "\t");
 define('CR', "\r");
 
 // Define Kohana error constant
-define('E_SCRPIO', 200042);
+define('E_SCORPIO', 200042);
 
 // Define 404 error constant
 !defined('E_PAGE_NOT_FOUND') and define('E_PAGE_NOT_FOUND', 200043);
@@ -32,5 +32,7 @@ define('OS_IS_WIN', (strpos($_SERVER['OS'], 'Windows_') === 0 or DIRECTORY_SEPAR
 
 // benchmarks are prefixed to prevent collisions
 define('SYSTEM_BENCHMARK', 'system_benchmark');
+
+!defined('E_DEPRECATED') and define('E_DEPRECATED', 8192);
 
 ?>
