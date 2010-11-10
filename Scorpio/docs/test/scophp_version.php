@@ -12,7 +12,7 @@
  * @copyright 2010
  */
 
-include_once '../../Bootstrap.php';
+include_once './Bootstrap.php';
 
 foreach(array(
 	'6.0.0', '5.3.3', '5.3.0', '5.2.0', '5.0.0', '5.x', '5.0', '5', '6.x', 'x'
