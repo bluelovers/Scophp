@@ -37,7 +37,7 @@ class Scorpio_Helper_Math_Core {
 	}
 
 	// 建立構造
-	function __construct() {
+	public function __construct() {
 
 		// make sure static::$instances is newer
 		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
@@ -81,7 +81,7 @@ class Scorpio_Helper_Math_Core {
 		}
 	}
 
-	function rand($ra = 0, $rb = 0, $low = 1, $high = 100, $step = 1, $retval = true) {
+	public function rand($ra = 0, $rb = 0, $low = 1, $high = 100, $step = 1, $retval = true) {
 		srand((float)microtime(true) * rand(-100, 200)/100 * static::_srand());
 
 		$r = array();
@@ -96,7 +96,7 @@ class Scorpio_Helper_Math_Core {
 		return $r['r'];
 	}
 
-	function mt_rand($ra = 0, $rb = 0, $low = 1, $high = 100, $step = 1, $retval = true) {
+	public function mt_rand($ra = 0, $rb = 0, $low = 1, $high = 100, $step = 1, $retval = true) {
 		mt_srand((float)microtime(true) * mt_rand(-100, 200)/100 * static::_srand() + ((float)microtime(true)-time()));
 
 		$r = array();
