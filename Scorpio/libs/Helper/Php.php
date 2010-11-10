@@ -469,7 +469,7 @@ EOM
 		if (scovalid::is_empty($version)) {
 			return PHP_VERSION;
 		} else {
-			return (empty($operator) || $operator === 1 || $operator === true) ? version_compare(PHP_VERSION, $version) : version_compare(PHP_VERSION, $version, $operator);
+			return (empty($operator) || $operator === 1 || $operator === true || $operator < 0) ? version_compare(PHP_VERSION, $version) : version_compare(PHP_VERSION, $version, $operator);
 		}
 	}
 }
