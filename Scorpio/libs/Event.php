@@ -31,54 +31,58 @@ class Scorpio_Event_Core {
 
 	protected static $instances = null;
 
+	// 取得構造物件
 	public static function &instance($overwrite = false) {
-		if (!self::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
-				$overwrite : 'Scorpio_Event');
-			self::$instances = $ref->newInstance();
+		if (!static::$instances) {
+			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
+			static::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
-				get_class(self::$instances));
-			self::$instances = $ref->newInstance();
+			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite:get_called_class());
+			static::$instances = $ref->newInstance();
 		}
 
-		return self::$instances;
+		return static::$instances;
 	}
 
+	// 建立構造
 	function __construct() {
 
-		// make sure self::$instances is newer
-		if (!self::$instances || !in_array(get_class($this), class_parents(self::$instances))) {
-			self::$instances = $this;
+		// make sure static::$instances is newer
+		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
+		// 當已建立 static::$instances 時 如果呼叫的 class 不屬於當前 static::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
+		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {
+			static::$instances = $this;
 		}
 
-		return self::$instances;
+//		print_r(array(get_called_class(), class_parents(static ::$instances), class_parents(self ::$instances), class_parents(get_called_class())));
+
+		return static::$instances;
 	}
 
 	public static function run($event, $args = array()) {
-		self::$_has_run[] &= $event;
+		static::$_has_run[] =& $event;
 
-		isset(self::$_last_event[self::$_deep]) or self::$_last_event[self::$_deep] = array();
+		isset(static::$_last_event[static::$_deep]) or static::$_last_event[static::$_deep] = array();
 
-		array_push(self::$_last_event[self::$_deep], &$event);
+		array_push(static::$_last_event[static::$_deep], &$event);
 
 		// do event hooks
 
-		self::$_last_endevent &= $event;
+		static::$_last_endevent =& $event;
 
-		return self::instance();
+		return static::instance();
 	}
 
 	public static function val() {
-		$ret = self::$_last_endevent;
+		$ret = static::$_last_endevent;
 
 		return $ret;
 	}
 
 	public static function hook() {
-		self::$_events[$event][] = new Scorpio_Hook($event);
+		static::$_events[$event][] = new Scorpio_Hook($event);
 
-		return self::instance();
+		return static::instance();
 	}
 }
 

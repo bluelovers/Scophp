@@ -36,18 +36,20 @@ class Scorpio_Spl_Array_Core extends Scorpio_Spl implements Iterator, ArrayAcces
 	}
 
 	public function offsetGet($index) {
-		return $this->_scorpio_[$index];
+		if ($index === null) return $this->_scorpio_;
+		return isset($this->_scorpio_[$index]) ? $this->_scorpio_[$index] : null;
 	}
 
 	public function offsetExists($index) {
-		return ($this->_scorpio_[$index] != null);
+		return (isset($this->_scorpio_[$index]) && $this->_scorpio_[$index] !== null);
 	}
 
 	/**
 	 * It means: unset($array[$index])
 	 */
 	public function offsetUnset($index) {
-		$this->_scorpio_[$index] = null;
+//		$this->_scorpio_[$index] = null;
+		unset($this->_scorpio_[$index]);
 		return $this;
 	}
 
@@ -55,7 +57,7 @@ class Scorpio_Spl_Array_Core extends Scorpio_Spl implements Iterator, ArrayAcces
 	 * PHP SPL Iterator function.
 	 */
 	public function rewind() {
-		reset($this->_scorpio__);
+		reset($this->_scorpio_);
 	}
 
 	public function valid() {
@@ -73,6 +75,10 @@ class Scorpio_Spl_Array_Core extends Scorpio_Spl implements Iterator, ArrayAcces
 	public function next() {
 		next($this->_scorpio_);
 	}
+
+//	public function getIterator() {
+//		return new ArrayIterator($this->_scorpio_);
+//	}
 }
 
 ?>
