@@ -248,7 +248,7 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 	 * @param $var
 	 * @return bool
 	 */
-	public static function chkenv($var) {
+	public static function env_chk($var) {
 		static::$instances or static::instance();
 
 		return static::env_get($var) == getenv($var);
@@ -271,7 +271,7 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 	 * get $_ENV
 	 * @param $var
 	 */
-	public static function getenv($var) {
+	public static function env_get($var) {
 		static::$instances or static::instance();
 
 		!isset(static::$_['_ENV'][$var]) && static::$_['_ENV'][$var] = static::_env_get($var);
@@ -315,7 +315,7 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 	 * set $_ENV
 	 * @param $string key=value
 	 */
-	public static function putenv($string) {
+	public static function env_put($string) {
 		static::$instances or static::instance();
 
 		list($var, $val) = split('=', $string, 2);
