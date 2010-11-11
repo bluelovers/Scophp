@@ -19,19 +19,29 @@ if (0) {
 }
 
 class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
-	protected static $_ = array();
+	protected static $_ = array(
+		'_INI' => array(),
+		'_TMP' => array(),
+		'GLOBALS' => array(),
+	);
 	protected static $instances = null;
 
-	protected static $_scorpio_self_classname_ = 'scophp';
+	protected static $_ini_var_map = array(
+		'bool' => array(
+			'safe_mode', 'register_globals'
+		),
+		'array' => array(
+			'disable_functions',
+		),
+	);
 
+	// 取得構造物件
 	public static function &instance($overwrite = false) {
 		if (!static::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ?
-				$overwrite : 'scophp');
+			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
 			static::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite :
-				get_class(static::$instances));
+			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite:get_called_class());
 			static::$instances = $ref->newInstance();
 		}
 
@@ -39,8 +49,13 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 	}
 
 	function __construct() {
-		if (static::$instances === null) {
-			static::$instances = $this;
+		static $_init = null;
+		if ($_init === null) {
+			$_init = true;
+
+			foreach(static::$_ini_var_map as $_k => $_v) {
+				static::$_ini_var_map[$_k] = array_flip($_v);
+			}
 
 			global $_ENV;
 
@@ -48,19 +63,26 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 
 			static::$_['_ENV'] = &$_ENV;
 			static::$_['_ENV_DEF'] = array();
-			static::$_['_INI'] = array();
-			static::$_['_TMP'] = array();
-			static::$_['GLOBALS'] = array();
 
-			static::$_['_INI']['safe_mode'] = static::_ini_bool(static::_ini_get('safe_mode'));
+			static::ini_get('safe_mode', 1);
 
-			$functions = explode(',', static::_ini_get('disable_functions'));
-			$functions = array_map('trim', $functions);
-			$functions = array_map('strtolower', $functions);
+			$functions = static::ini_get('disable_functions', 1);
+			if (!empty($functions)) {
+				foreach($functions as $_k => $_v) {
+					$functions[$_k] = trim(strtolower($_v));
+				}
+			}
+			static::$_['_INI']['disable_functions'] = (array)$functions;
 
-			static::$_['_INI']['disable_functions'] = (array )$functions;
+//			static::set('timestamp', microtime(true));
 
-			static::set('timestamp', microtime(true));
+			$this->_scorpio_ = array(
+				'GLOBALS' => &static::$_['GLOBALS'],
+				'_TMP' => &static::$_['_TMP'],
+				'_ENV' => &static::$_['_ENV'],
+
+//				'_INI' => &static::$_['_INI'],
+			);
 		}
 
 		// make sure static::$instances is newer
@@ -68,23 +90,9 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 			static::$instances = $this;
 		}
 
-		$this->_scorpio_ &= static::$instances->_scorpio_ = array(
-			'GLOBALS' => &static::$_['GLOBALS'],
-			'_TMP' => &static::$_['_TMP'],
-			'_ENV' => &static::$_['_ENV'],
-		);
+		$this->_scorpio_ = &static::$instances->_scorpio_;
 
 		return static::$instances;
-	}
-
-	protected static function _self($name = null, $val = null) {
-		$self = static::$instances ? get_class(static::$instances) : static::$_scorpio_self_classname_;
-
-		if ($name) {
-			return $val !== null ? scophp::set_static_value($self, $name, $val) : scophp::get_static_value($self, $name);
-		} else {
-			return $self;
-		}
 	}
 
 	function __get($var) {
@@ -175,7 +183,7 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 		// TODO: php::settimezone
 		static::$instances or static::instance();
 
-		static::setenv('TZ', $tz);
+		static::env_set('TZ', $tz);
 	}
 
 	public static function date_default_timezone_set($tz) {
@@ -188,27 +196,51 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 		echo '</pre>';
 	}
 
-	public static function getini($var) {
-		static::$instances or static::instance();
+	public static function ini_get($var = null, $force = false) {
+		if (empty($var)) return static::$_['_INI'];
 
-		!isset(static::$_['_INI'][$var]) && static::$_['_INI'][$var] = static::_ini_get($var);
+		if ($force || !isset(static::$_['_INI'][$var])) {
+			$v = ini_get($var);
+
+			if (static::$_ini_var_map['bool'][$var] !== null) {
+				$v = static::_ini_bool($v);
+			} elseif (static::$_ini_var_map['array'][$var] !== null && !is_array($v)) {
+				$v = $v !== '' ? explode(',', $v) : array();
+			}
+
+			static::$_['_INI'][$var] = $v;
+		}
 
 		return static::$_['_INI'][$var];
 	}
 
-	protected static function _ini_get($var) {
-		// XXX:
-
-		$val = ini_get($var);
-
-		return $val;
-	}
-
 	public static function _ini_bool($val) {
+		if (is_bool($val) === true) {
+			return $val;
+		} elseif ($val === null || $val === '' || $val === 0) {
+			return false;
+		}
+
 		$val_lc = trim(strtolower($val));
 
-		return $val_lc == 'on' || $val_lc == 'true' || $val_lc == 'yes' || preg_match("/^\s*[+-]?0*[1-9]/",
-			$val);
+		$ret = null;
+		switch($val_lc) {
+			case 'on':
+			case 'true':
+			case 'yes':
+				$ret = true;
+				break;
+			case 'off':
+			case 'false':
+			case 'no':
+				$ret = false;
+				break;
+			default:
+				$ret = $val;
+				break;
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -219,7 +251,7 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 	public static function chkenv($var) {
 		static::$instances or static::instance();
 
-		return static::getenv($var) == getenv($var);
+		return static::env_get($var) == getenv($var);
 	}
 
 	/**
@@ -228,7 +260,7 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 	 * @param $var
 	 * @param $force
 	 */
-	protected static function _getenv($var, $force = true) {
+	protected static function _env_get($var, $force = true) {
 		($force || !isset(static::$_['_ENV_DEF'][$var])) && static::$_['_ENV_DEF'][$var] =
 			getenv($var);
 
@@ -242,7 +274,7 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 	public static function getenv($var) {
 		static::$instances or static::instance();
 
-		!isset(static::$_['_ENV'][$var]) && static::$_['_ENV'][$var] = static::_getenv($var);
+		!isset(static::$_['_ENV'][$var]) && static::$_['_ENV'][$var] = static::_env_get($var);
 
 		return static::$_['_ENV'][$var];
 	}
@@ -252,7 +284,7 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 	 * @param $var
 	 * @param $val
 	 */
-	protected static function _setenv(&$var, &$val) {
+	protected static function _env_set(&$var, &$val) {
 		// XXX:
 
 		if (uc($var) == 'TZ') {
@@ -267,11 +299,11 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 	 * @param $var
 	 * @param $val
 	 */
-	public static function setenv($var, $val) {
+	public static function env_set($var, $val) {
 		static::$instances or static::instance();
 
-		static::_getenv($var);
-		static::_setenv($var, $val);
+		static::_env_get($var);
+		static::_env_set($var, $val);
 
 		// 		@putenv($var.'='.$val);
 		static::$_['_ENV'][$var] = $val;
@@ -288,8 +320,8 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 
 		list($var, $val) = split('=', $string, 2);
 
-		static::_getenv($var);
-		static::_setenv($var, $val);
+		static::_env_get($var);
+		static::_env_set($var, $val);
 
 		@putenv($var . '=' . $val);
 		static::$_['_ENV'][$var] = $val;
