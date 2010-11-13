@@ -102,6 +102,13 @@ class Scorpio_Helper_Date_Core {
 		return date($format, $timestamp);
 	}
 
+	/**
+	 * http://tw2.php.net/manual/en/function.strtotime.php#87900
+	 **/
+	function gmstrtotime($str) {
+		return strtotime($str . " UTC");
+	}
+
 	public static function strtotime($str, $now = 0, $skip = 0) {
 		//BUG:need fix in safemode
 
@@ -115,9 +122,9 @@ class Scorpio_Helper_Date_Core {
 				//print_r($match);
 
 				return $d - (int)$match[2]*3600 - scophp::get('offsetfix');
-   			} elseif ($skip == 0 && preg_match('/(ETC\/GMT[\+\-]\d|UTC|CST|MDT|EAT)/i', $str, $match)) {
+			} elseif ($skip == 0 && preg_match('/(ETC\/GMT[\+\-]\d|UTC|CST|MDT|EAT)/i', $str, $match)) {
 
-   				$dd = scodate::offset($match[0]);
+				$dd = scodate::offset($match[0]);
 
 				return $d + $dd;
 			} else {
