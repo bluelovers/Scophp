@@ -66,7 +66,7 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 
 			static::ini_get('safe_mode', 1);
 
-			$functions = static::ini_get('disable_functions', 1);
+			$functions = array_unique(static::ini_get('disable_functions', 1));
 			if (!empty($functions)) {
 				foreach($functions as $_k => $_v) {
 					$functions[$_k] = trim(strtolower($_v));
@@ -441,7 +441,7 @@ EOM
 
 		if (is_array($string)) {
 			foreach ($string as $key => $val) {
-				$string[$key] = call_user_func_array(__method__, array($val, &$delimiter, &$strip));
+				$string[$key] = call_user_func_array(__method__, array($val, $delimiter, $strip));
 			}
 		} else {
 			$string = addcslashes($strip ? stripcslashes($string) : $string, $delimiter);
@@ -454,7 +454,7 @@ EOM
 
 		if (is_array($string)) {
 			foreach ($string as $key => $val) {
-				$string[$key] = call_user_func_array(__method__, array($val, &$strip));
+				$string[$key] = call_user_func_array(__method__, array($val, $strip));
 			}
 		} else {
 			$string = addslashes($strip ? stripslashes($string) : $string);
