@@ -190,6 +190,10 @@ class Scorpio_Helper_Php_Core extends Scorpio_Spl_Array {
 		static::settimezone($tz);
 	}
 
+	public static function date_default_timezone_get() {
+		return @date_default_timezone_get();
+	}
+
 	public static function phpinfo($key = null, $ob = false) {
 		echo '<pre>';
 		phpinfo($key);
