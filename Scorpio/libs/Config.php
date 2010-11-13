@@ -18,7 +18,13 @@ if (0) {
 }
 
 class Scorpio_Config_Core {
+	public static function get($var) {
+		return null;
+	}
 
+	public static function set($var) {
+		return null;
+	}
 }
 
 ?>
