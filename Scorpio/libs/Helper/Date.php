@@ -91,7 +91,7 @@ class Scorpio_Helper_Date_Core {
 	}
 
 	public static function date($format, $timestamp = null) {
-		$timestamp = null === $timestamp ? scophp::get('timestamp') : $timestamp;
+		$timestamp = null === $timestamp ? static::timestamp() : $timestamp;
 		//		$timestamp += (static::offsetfix() - php::instance()->offset);
 
 		if (strpos($format, 'u') !== false) {
@@ -233,6 +233,9 @@ H:i:s
 	public static function offset($remote, $local = true, $when = 'now') {
 		if ($local === true) {
 			$local = date_default_timezone_get();
+		}
+		if ($remote === null) {
+			return 0;
 		}
 
 		// Create timezone objects
