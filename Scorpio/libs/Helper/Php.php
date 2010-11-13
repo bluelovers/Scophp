@@ -498,10 +498,15 @@ EOM
 	 * @example ../docs/test/scophp_version.php
 	 **/
 	public static function version($version = null, $operator = '>=') {
-		if (scovalid::is_empty($version)) {
-			return PHP_VERSION;
+		if (func_num_args() >= 3) {
+			list($ver, $version, $operator) = func_get_args();
 		} else {
-			return (empty($operator) || $operator === 1 || $operator === true || $operator < 0) ? version_compare(PHP_VERSION, $version) : version_compare(PHP_VERSION, $version, $operator);
+			$ver = PHP_VERSION;
+		}
+		if (scovalid::is_empty($version)) {
+			return $ver;
+		} else {
+			return (empty($operator) || $operator === 1 || $operator === true || $operator < 0) ? version_compare($ver, $version) : version_compare($ver, $version, $operator);
 		}
 	}
 }
