@@ -236,8 +236,12 @@ class Scorpio_File_Core {
 		$retfiles = array(0 => array(), 1 => array());
 		if (is_array($files)) {
 			foreach ($files as $file) {
-				if (is_file($path . $file) && preg_match($dels, $file) && (!$skip || is_array($skip) ?
-					!in_array($file, $skip) : !preg_match($skip, $file))) {
+				if (is_file($path . $file)
+					&& preg_match($dels, $file)
+					&& (!$skip
+						|| (is_array($skip) ? !in_array($file, $skip) : !preg_match($skip, $file))
+					)
+				) {
 					static::unlink($path . $file);
 					$retfiles[0][] = $file;
 				} else {
