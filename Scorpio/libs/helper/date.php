@@ -25,20 +25,17 @@ class Scorpio_helper_date_Core_ {
 	protected static $_scorpio_attr = array();
 
 	// 取得構造物件
-	public static function &instance($overwrite = false) {
+	public static function &instance($overwrite = true) {
 
 		if ($overwrite && !in_array($overwrite, array(true, 1), true)) {
-			$_overwrite = $overwrite
+			$_overwrite = $overwrite;
 		} else {
 			$_overwrite = self::_scorpio_get_called_class();
 		}
 
-		if (!self::$instances) {
-			self::$ref = new ReflectionClass($_overwrite);
-			self::$instances = $ref->newInstance();
-		} elseif ($overwrite) {
-			self::$ref = new ReflectionClass($_overwrite);
-			self::$instances = $ref->newInstance();
+		if ($overwrite || !self::$instances) {
+			self::$_scorpio_ref = new ReflectionClass($_overwrite);
+			self::$instances = self::$_scorpio_ref->newInstance();
 		}
 
 		return self::$instances;
@@ -65,25 +62,21 @@ class Scorpio_helper_date_Core_ {
 	}
 
 	function __get($k) {
-		static $_scorpio_attr = &self::$ref->getStaticPropertyValue('_scorpio_attr');
-		return $_scorpio_attr[$k];
+		return $this->_scorpio_attr[$k];
 	}
 
 	function &__set($k, $v) {
-		static $_scorpio_attr = &self::$ref->getStaticPropertyValue('_scorpio_attr');
-		$_scorpio_attr[$k] = $v;
+		$this->_scorpio_attr[$k] = $v;
 	}
 
 	function __isset($k) {
-		static $_scorpio_attr = &self::$ref->getStaticPropertyValue('_scorpio_attr');
-		return isset($_scorpio_attr[$k]);
+		return isset($this->_scorpio_attr[$k]);
 	}
 
 	function __unset($k) {
-		static $_scorpio_attr = &self::$ref->getStaticPropertyValue('_scorpio_attr');
-		unset($_scorpio_attr[$k]);
+		unset($this->_scorpio_attr[$k]);
 
-		return self::instance();
+		return $this;
 	}
 
 	function get($k) {
