@@ -21,32 +21,69 @@ if (0) {
 class Scorpio_helper_date_Core_ {
 	protected static $instances = null;
 
+	protected static $_scorpio_ref = null;
+	protected static $_scorpio_attr = array();
+
 	// 取得構造物件
 	public static function &instance($overwrite = false) {
-		if (!static::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
-			static::$instances = $ref->newInstance();
-		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite:get_called_class());
-			static::$instances = $ref->newInstance();
+
+		if ($overwrite && !in_array($overwrite, array(true, 1), true)) {
+			$_overwrite = $overwrite
+		} else {
+			$_overwrite = self::_scorpio_get_called_class();
 		}
 
-		return static::$instances;
+		if (!self::$instances) {
+			self::$ref = new ReflectionClass($_overwrite);
+			self::$instances = $ref->newInstance();
+		} elseif ($overwrite) {
+			self::$ref = new ReflectionClass($_overwrite);
+			self::$instances = $ref->newInstance();
+		}
+
+		return self::$instances;
+	}
+
+	protected static function _scorpio_get_called_class() {
+		if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
+			return get_called_class();
+		} else {
+			return 'scodate';
+		}
 	}
 
 	// 建立構造
 	function __construct() {
 
-		// make sure static::$instances is newer
-		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
-		// 當已建立 static::$instances 時 如果呼叫的 class 不屬於當前 static::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
-		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {
-			static::$instances = $this;
+		if (!self::$instances) {
+			self::$instances = $this;
 		}
 
 //		print_r(array(get_called_class(), class_parents(static ::$instances), class_parents(self ::$instances), class_parents(get_called_class())));
 
-		return static::$instances;
+		return self::$instances;
+	}
+
+	function __get($k) {
+		static $_scorpio_attr = &self::$ref->getStaticPropertyValue('_scorpio_attr');
+		return $_scorpio_attr[$k];
+	}
+
+	function &__set($k, $v) {
+		static $_scorpio_attr = &self::$ref->getStaticPropertyValue('_scorpio_attr');
+		$_scorpio_attr[$k] = $v;
+
+		return self::instance();
+	}
+
+	function __isset($k) {
+		static $_scorpio_attr = &self::$ref->getStaticPropertyValue('_scorpio_attr');
+		return isset($_scorpio_attr[$k]);
+	}
+
+	function __unset($k) {
+		static $_scorpio_attr = &self::$ref->getStaticPropertyValue('_scorpio_attr');
+		return unset($_scorpio_attr[$k]);
 	}
 
 	public static function timestamp($update = 0) {
@@ -62,8 +99,8 @@ class Scorpio_helper_date_Core_ {
 
 	public static function gmdate($format, $timestamp = null) {
 		$timestamp = null === $timestamp ? scophp::get('timestamp') : $timestamp;
-		//$timestamp += static::offsetfix() + scophp::get('offset');
-		$timestamp += static::offsetfix() + scophp::get('offset');
+		//$timestamp += self::offsetfix() + scophp::get('offset');
+		$timestamp += self::offsetfix() + scophp::get('offset');
 
 		$args = array();
 
@@ -91,8 +128,8 @@ class Scorpio_helper_date_Core_ {
 	}
 
 	public static function date($format, $timestamp = null) {
-		$timestamp = null === $timestamp ? static::timestamp() : $timestamp;
-		//		$timestamp += (static::offsetfix() - php::instance()->offset);
+		$timestamp = null === $timestamp ? self::timestamp() : $timestamp;
+		//		$timestamp += (self::offsetfix() - php::instance()->offset);
 
 		if (strpos($format, 'u') !== false) {
 			$format = preg_replace('`(?<!\\\\)u`', sprintf('%06d', ($timestamp - (int)$timestamp) *
