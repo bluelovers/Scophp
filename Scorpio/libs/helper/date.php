@@ -57,7 +57,7 @@ class Scorpio_helper_date_Core_ {
 
 //		print_r(array(get_called_class(), class_parents(static ::$instances), class_parents(self ::$instances), class_parents(get_called_class())));
 
-		$this->set('timestamp', microtime(true));
+		$this->timestamp(true);
 
 		return $this;
 	}
@@ -94,9 +94,11 @@ class Scorpio_helper_date_Core_ {
 		return $this->__set($k, $v);
 	}
 
-	public function timestamp($update = 0) {
-		if ($uopdate) {
+	public function timestamp($update = false) {
+		if ($update === true) {
 			$this->set('timestamp', microtime(true));
+		} elseif ($update !== true && $update > 0) {
+			$this->set('timestamp', $update);
 		}
 
 		return $this->get('timestamp');
