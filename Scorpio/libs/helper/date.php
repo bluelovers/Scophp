@@ -21,7 +21,6 @@ if (0) {
 class Scorpio_helper_date_Core_ {
 	protected static $instances = null;
 
-	protected static $_scorpio_ref = null;
 	protected $_scorpio_attr = array();
 
 	// 取得構造物件
@@ -34,8 +33,8 @@ class Scorpio_helper_date_Core_ {
 		}
 
 		if ($overwrite || !self::$instances) {
-			self::$_scorpio_ref = new ReflectionClass($_overwrite);
-			self::$instances = self::$_scorpio_ref->newInstance();
+			$_scorpio_ref = new ReflectionClass($_overwrite);
+			self::$instances = $_scorpio_ref->newInstance();
 		}
 
 		return self::$instances;
