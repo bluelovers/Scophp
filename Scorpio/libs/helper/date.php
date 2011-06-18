@@ -108,7 +108,7 @@ class Scorpio_helper_date_Core_ {
 	}
 
 	public function offsetfix() {
-		$this->set('offsetfix', $this->offset(Scorpio_Kenal::config('locale.timezone')));
+		$this->set('offsetfix', $this->offset($this->get('locale.timezone')));
 		$this->set('offset', 0 - $this->offset('GMT'));
 
 		return $this->get('offsetfix');
