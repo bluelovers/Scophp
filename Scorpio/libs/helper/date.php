@@ -22,7 +22,7 @@ class Scorpio_helper_date_Core_ {
 	protected static $instances = null;
 
 	protected static $_scorpio_ref = null;
-	protected static $_scorpio_attr = array();
+	protected $_scorpio_attr = array();
 
 	// 取得構造物件
 	public static function &instance($overwrite = false) {
@@ -81,15 +81,20 @@ class Scorpio_helper_date_Core_ {
 
 	function get($k) {
 		if ($this) {
-			return $this->$k;
+			return $this->__get($k);
 		} else {
 			return self::instance()->$k;
 		}
 	}
 
 	function set($k, $v) {
-		self::instance()->$k = $v;
-		return self::instance();
+		if ($this) {
+			$this->__set($k, $v);
+			return $this;
+		} else {
+			self::instance()->__set($k, $v);
+			return self::instance();
+		}
 	}
 
 	public static function timestamp($update = 0) {
