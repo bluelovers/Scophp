@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class scodate extends Scorpio_Helper_Date_Core {
+	class scodate extends Scorpio_helper_date_Core_ {
 	}
 }
 
-class Scorpio_Helper_Date_Core {
+class Scorpio_helper_date_Core_ {
 	protected static $instances = null;
 
 	// 取得構造物件
