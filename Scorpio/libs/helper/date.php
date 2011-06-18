@@ -50,7 +50,7 @@ class Scorpio_helper_date_Core_ {
 	}
 
 	// 建立構造
-	function __construct() {
+	public function __construct() {
 
 		if (!self::$instances) {
 			self::$instances = $this;
@@ -61,61 +61,53 @@ class Scorpio_helper_date_Core_ {
 		return $this;
 	}
 
-	function __get($k) {
+	public function __get($k) {
 		return $this->_scorpio_attr[$k];
 	}
 
-	function &__set($k, $v) {
+	public function &__set($k, $v) {
 		$this->_scorpio_attr[$k] = $v;
 
 		return $this;
 	}
 
-	function __isset($k) {
+	public function __isset($k) {
 		return isset($this->_scorpio_attr[$k]);
 	}
 
-	function __unset($k) {
+	public function __unset($k) {
 		unset($this->_scorpio_attr[$k]);
 
 		return $this;
 	}
 
-	function get($k) {
-		if ($this) {
-			return $this->__get($k);
-		} else {
-			return self::instance()->get($k);
-		}
+	public function get($k) {
+		return $this->__get($k);
 	}
 
-	function set($k, $v) {
-		if ($this) {
-			return $this->__set($k, $v);
-		} else {
-			return self::instance()->set($k, $v);
-		}
+	public function set($k, $v) {
+		return $this->__set($k, $v);
 	}
 
-	public static function timestamp($update = 0) {
+	public function timestamp($update = 0) {
 		if ($uopdate) {
-			self::instance()->set('timestamp', microtime(true));
+			$this->set('timestamp', microtime(true));
 		}
 
-		return self::instance()->get('timestamp');
+		return $this->get('timestamp');
 	}
 
-	public static function offsetfix() {
-		scophp::set('offsetfix', scodate::offset(Scorpio_Kenal::config('locale.timezone')));
-		scophp::set('offset', 0 - scodate::offset('GMT'));
+	public function offsetfix() {
+		$this->set('offsetfix', $this->offset(Scorpio_Kenal::config('locale.timezone')));
+		$this->set('offset', 0 - $this->offset('GMT'));
 
-		return scophp::get('offsetfix');
+		return $this->get('offsetfix');
 	}
 
-	public static function gmdate($format, $timestamp = null) {
-		$timestamp = null === $timestamp ? scophp::get('timestamp') : $timestamp;
+	public function gmdate($format, $timestamp = null) {
+		$timestamp = null === $timestamp ? $this->get('timestamp') : $timestamp;
 		//$timestamp += self::offsetfix() + scophp::get('offset');
-		$timestamp += self::offsetfix() + scophp::get('offset');
+		$timestamp += $this->offsetfix() + $this->get('offset');
 
 		$args = array();
 
@@ -128,7 +120,7 @@ class Scorpio_helper_date_Core_ {
 			$i = count($args);
 
 			$format = preg_replace('`(?<!\\\\)T`', '[:'.$i.':]', $format);
-			$args[$i] = 'GMT+'.((scophp::get('offset')+scophp::get('offsetfix'))/3600);
+			$args[$i] = 'GMT+'.(($this->get('offset')+$this->get('offsetfix'))/3600);
 		}
 
 		$ret = gmdate($format, $timestamp);
@@ -142,8 +134,8 @@ class Scorpio_helper_date_Core_ {
 		return $ret;
 	}
 
-	public static function date($format, $timestamp = null) {
-		$timestamp = null === $timestamp ? self::timestamp() : $timestamp;
+	public function date($format, $timestamp = null) {
+		$timestamp = null === $timestamp ? $this->timestamp() : $timestamp;
 		//		$timestamp += (self::offsetfix() - php::instance()->offset);
 
 		if (strpos($format, 'u') !== false) {
@@ -157,14 +149,14 @@ class Scorpio_helper_date_Core_ {
 	/**
 	 * http://tw2.php.net/manual/en/function.strtotime.php#87900
 	 **/
-	function gmstrtotime($str) {
+	public function gmstrtotime($str) {
 		return strtotime($str . " UTC");
 	}
 
-	public static function strtotime($str, $now = 0, $skip = 0) {
+	public function strtotime($str, $now = 0, $skip = 0) {
 		//BUG:need fix in safemode
 
-		$now = $now ? $now : scophp::get('timestamp');
+		$now = $now ? $now : $this->get('timestamp');
 
 		if (@$d = strtotime($str, $now)) {
 			if ($skip > 0) {
@@ -173,10 +165,10 @@ class Scorpio_helper_date_Core_ {
 
 				//print_r($match);
 
-				return $d - (int)$match[2]*3600 - scophp::get('offsetfix');
+				return $d - (int)$match[2]*3600 - $this->get('offsetfix');
 			} elseif ($skip == 0 && preg_match('/(ETC\/GMT[\+\-]\d|UTC|CST|MDT|EAT)/i', $str, $match)) {
 
-				$dd = scodate::offset($match[0]);
+				$dd = $this->offset($match[0]);
 
 				return $d + $dd;
 			} else {
@@ -188,16 +180,16 @@ class Scorpio_helper_date_Core_ {
 					$match[2] = (int)$match[2];
 
 					if ($match[1] == 'T') {
-						$d += scodate::offset('GMT');
+						$d += $this->offset('GMT');
 						if ($match[2]) $d += $match[2]*3600;
 					}
 
 					if ($match[1] == '' && !$match[2]) {
-						$d += -scophp::get('offsetfix') - scophp::get('offset');
+						$d += -$this->get('offsetfix') - $this->get('offset');
 					}
 				}
 
-				return $d - scophp::get('offsetfix');
+				return $d - $this->get('offsetfix');
 			}
 		} else {
 			return 0;
@@ -289,7 +281,7 @@ H:i:s
 	 * @param   string          time at which to calculate
 	 * @return  integer
 	 */
-	public static function offset($remote, $local = true, $when = 'now') {
+	public function offset($remote, $local = true, $when = 'now') {
 		if ($local === true) {
 			$local = date_default_timezone_get();
 		}
