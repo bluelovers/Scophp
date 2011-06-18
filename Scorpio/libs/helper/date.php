@@ -25,7 +25,7 @@ class Scorpio_helper_date_Core_ {
 	protected static $_scorpio_attr = array();
 
 	// 取得構造物件
-	public static function &instance($overwrite = true) {
+	public static function &instance($overwrite = false) {
 
 		if ($overwrite && !in_array($overwrite, array(true, 1), true)) {
 			$_overwrite = $overwrite;
@@ -80,7 +80,11 @@ class Scorpio_helper_date_Core_ {
 	}
 
 	function get($k) {
-		return self::instance()->$k;
+		if ($this) {
+			return $this->$k;
+		} else {
+			return self::instance()->$k;
+		}
 	}
 
 	function set($k, $v) {
