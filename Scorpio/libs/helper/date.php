@@ -57,6 +57,7 @@ class Scorpio_helper_date_Core_ {
 
 //		print_r(array(get_called_class(), class_parents(static ::$instances), class_parents(self ::$instances), class_parents(get_called_class())));
 
+		// 初始化 timestamp
 		$this->timestamp(true);
 
 		return $this;
@@ -96,8 +97,10 @@ class Scorpio_helper_date_Core_ {
 
 	public function timestamp($update = false) {
 		if ($update === true) {
+			// 更新 timestamp
 			$this->set('timestamp', microtime(true));
 		} elseif ($update !== true && $update > 0) {
+			// 以指定的 timestamp 來更新
 			$this->set('timestamp', $update);
 		}
 
