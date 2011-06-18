@@ -57,6 +57,8 @@ class Scorpio_helper_date_Core_ {
 
 //		print_r(array(get_called_class(), class_parents(static ::$instances), class_parents(self ::$instances), class_parents(get_called_class())));
 
+		$this->set('timestamp', microtime(true));
+
 		return $this;
 	}
 
@@ -64,7 +66,7 @@ class Scorpio_helper_date_Core_ {
 		return $this->_scorpio_attr[$k];
 	}
 
-	public function &__set($k, $v) {
+	public function __set($k, $v) {
 		$this->_scorpio_attr[$k] = $v;
 
 		return $this;
@@ -78,6 +80,10 @@ class Scorpio_helper_date_Core_ {
 		unset($this->_scorpio_attr[$k]);
 
 		return $this;
+	}
+
+	public function __toString() {
+		return (string)$this->timestamp();
 	}
 
 	public function get($k) {

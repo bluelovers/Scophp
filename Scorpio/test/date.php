@@ -13,8 +13,18 @@ echo '<pre>';
 $scodate = new scodate();
 $scodate->cache = 'new scodate';
 
+//$scodate->set('timestamp', microtime(true));
+
 print_r(array(
-	'scodate::instance()' => scodate::instance(true)->set('cache', 'scodate::instance()'),
+	'scodate::instance() __toString()' => ''.scodate::instance(true),
+	'new scodate __toString()' => ''.$scodate,
+
+	'scodate::instance() ->timestamp()' => ''.scodate::instance()->timestamp(),
+	'new scodate->timestamp()' => ''.$scodate->timestamp(),
+));
+
+print_r(array(
+	'scodate::instance()' => scodate::instance()->set('cache', 'scodate::instance()'),
 	'new scodate' => $scodate,
 
 //	'scodate::instance()->_scorpio_get_called_class()' => @scodate::instance()->_scorpio_get_called_class(),
