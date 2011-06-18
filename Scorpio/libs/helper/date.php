@@ -116,30 +116,13 @@ class Scorpio_helper_date_Core_ {
 
 	public function gmdate($format, $timestamp = null) {
 		$timestamp = null === $timestamp ? $this->get('timestamp') : $timestamp;
-		//$timestamp += self::offsetfix() + scophp::get('offset');
-		$timestamp += $this->offsetfix() + $this->get('offset');
-
-		$args = array();
 
 		if (strpos($format, 'u') !== false) {
 			$format = preg_replace('`(?<!\\\\)u`', sprintf('%06d', ($timestamp - (int)$timestamp) *
 				1000000), $format);
 		}
 
-		if (strpos($format, 'T') !== false) {
-			$i = count($args);
-
-			$format = preg_replace('`(?<!\\\\)T`', '[:'.$i.':]', $format);
-			$args[$i] = 'GMT+'.(($this->get('offset')+$this->get('offsetfix'))/3600);
-		}
-
 		$ret = gmdate($format, $timestamp);
-
-		if ($args) {
-			for($i = 0; $i<count($args); $i++) {
-				$ret = str_replace('[:'.$i.':]', $args[$i], $ret);
-			}
-		}
 
 		return $ret;
 	}
