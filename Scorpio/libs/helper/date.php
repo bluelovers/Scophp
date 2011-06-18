@@ -72,8 +72,6 @@ class Scorpio_helper_date_Core_ {
 	function &__set($k, $v) {
 		static $_scorpio_attr = &self::$ref->getStaticPropertyValue('_scorpio_attr');
 		$_scorpio_attr[$k] = $v;
-
-		return self::instance();
 	}
 
 	function __isset($k) {
@@ -83,11 +81,26 @@ class Scorpio_helper_date_Core_ {
 
 	function __unset($k) {
 		static $_scorpio_attr = &self::$ref->getStaticPropertyValue('_scorpio_attr');
-		return unset($_scorpio_attr[$k]);
+		unset($_scorpio_attr[$k]);
+
+		return self::instance();
+	}
+
+	function get($k) {
+		return self::instance()->$k;
+	}
+
+	function set($k, $v) {
+		self::instance()->$k = $v;
+		return self::instance();
 	}
 
 	public static function timestamp($update = 0) {
-		return $update ? scophp::set('timestamp', microtime(true))->get('timestamp') : scophp::get('timestamp');
+		if ($uopdate) {
+			self::instance()->set('timestamp', microtime(true));
+		}
+
+		return self::instance()->get('timestamp');
 	}
 
 	public static function offsetfix() {
