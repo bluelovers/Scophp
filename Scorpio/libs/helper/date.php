@@ -58,7 +58,7 @@ class Scorpio_helper_date_Core_ {
 
 //		print_r(array(get_called_class(), class_parents(static ::$instances), class_parents(self ::$instances), class_parents(get_called_class())));
 
-		return self::$instances;
+		return $this;
 	}
 
 	function __get($k) {
@@ -67,6 +67,8 @@ class Scorpio_helper_date_Core_ {
 
 	function &__set($k, $v) {
 		$this->_scorpio_attr[$k] = $v;
+
+		return $this;
 	}
 
 	function __isset($k) {
@@ -83,17 +85,15 @@ class Scorpio_helper_date_Core_ {
 		if ($this) {
 			return $this->__get($k);
 		} else {
-			return self::instance()->$k;
+			return self::instance()->get($k);
 		}
 	}
 
 	function set($k, $v) {
 		if ($this) {
-			$this->__set($k, $v);
-			return $this;
+			return $this->__set($k, $v);
 		} else {
-			self::instance()->__set($k, $v);
-			return self::instance();
+			return self::instance()->set($k, $v);
 		}
 	}
 
