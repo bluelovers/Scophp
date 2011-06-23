@@ -1,6 +1,6 @@
 <?php
 
-include '../libs/helper/date.php';
+include '../../Scorpio/libs/helper/date.php';
 
 if (!class_exists('scodate')) {
 	class scodate extends Scorpio_helper_date_Core_ {
