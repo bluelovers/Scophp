@@ -97,7 +97,7 @@ class Scorpio_Hook_Core {
 					}
 				} else if ( is_object( $hook[0] ) ) {
 					$object = static::$hooklist[$event][$index][0];
-					if ( $object instanceof Closure ) {
+					if ( version_compare(PHP_VERSION, '5.3.0', '>=') && $object instanceof Closure ) {
 						$closure = true;
 						if ( count( $hook ) > 1 ) {
 							$data = $hook[1];
