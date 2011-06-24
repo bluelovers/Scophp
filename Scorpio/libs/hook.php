@@ -33,10 +33,10 @@
 
 if (0) {
 	// for IDE
-	class Scorpio_Hook extends Scorpio_Hook_Core {}
+	class Scorpio_hook extends Scorpio_hook_Core_ {}
 }
 
-class Scorpio_Hook_Core {
+class Scorpio_hook_Core_ {
 	protected static $hooklist = array();
 	protected static $calevenlist = array();
 
