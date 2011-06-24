@@ -155,7 +155,7 @@ class Scorpio_Hook_Core {
 				$func = $hook;
 			} else if ( is_object( $hook ) ) {
 				$object = static::$hooklist[$event][$index];
-				if ( $object instanceof Closure ) {
+				if ( version_compare(PHP_VERSION, '5.3.0', '>=') && $object instanceof Closure ) {
 					$closure = true;
 				} else {
 					$method = 'on' . $event;
