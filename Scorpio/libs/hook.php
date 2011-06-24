@@ -158,16 +158,15 @@ class Scorpio_Hook_Core {
 				if ( $object instanceof Closure ) {
 					$closure = true;
 				} else {
-					$method = "on" . $event;
+					$method = 'on' . $event;
 				}
 			} else {
 				if (class_exists('Scorpio_Exception')) {
-					throw new Scorpio_Exception( "Unknown datatype in hooks for " . $event . "\n" );
+					throw new Scorpio_Exception( 'Unknown datatype in hooks for ' . $event . "\n" );
 				}
 			}
 
 			/* We put the first data element on, if needed. */
-
 			if ( $have_data ) {
 //				$hook_args = array_merge(array($data), $args);
 				$hook_args = array_merge(array($data), static::$args[$event]);
@@ -194,15 +193,37 @@ class Scorpio_Hook_Core {
 			// Run autoloader (workaround for call_user_func_array bug)
 			is_callable( $callback );
 
-			/* Call the hook. */
+			/**
+			 * Call the hook. The documentation of call_user_func_array clearly
+			 * states that FALSE is returned on failure. However this is not
+			 * case always. In some version of PHP if the function signature
+			 * does not match the call signature, PHP will issue an warning:
+			 * Param y in x expected to be a reference, value given.
+			 *
+			 * In that case the call will also return null. The following code
+			 * catches that warning and provides better error message. The
+			 * function documentation also says that:
+			 *     In other words, it does not depend on the function signature
+			 *     whether the parameter is passed by a value or by a reference.
+			 * There is also PHP bug http://bugs.php.net/bug.php?id=47554 which
+			 * is unsurprisingly marked as bogus. In short handling of failures
+			 * with call_user_func_array is a failure, the documentation for that
+			 * function is wrong and misleading and PHP developers don't see any
+			 * problem here.
+			 */
+			$retval = null;
+			//set_error_handler( 'Hooks::hookErrorHandler' );
 			//wfProfileIn( $func );
-			$retval = call_user_func_array( $callback, $hook_args );
+			try {
+				$retval = call_user_func_array( $callback, $hook_args );
+			} catch ( Exception $e ) {
+				$badhookmsg = $e->getMessage();
+			}
 			//wfProfileOut( $func );
+			//restore_error_handler();
 
 			/* String return is an error; false return means stop processing. */
-
 			//TODO: add hook ret object
-
 			if ( is_string( $retval ) ) {
 
 				static::clear($event);
@@ -229,9 +250,11 @@ class Scorpio_Hook_Core {
 				}
 
 				if (class_exists('Scorpio_Exception')) {
-					throw new Scorpio_Exception( "Detected bug in an extension! " .
+					throw new Scorpio_Exception(
+						'Detected bug in an extension! ' .
 						"Hook $prettyFunc failed to return a value; " .
-						"should return true to continue hook processing or false to abort." );
+						'should return true to continue hook processing or false to abort.'
+					);
 				}
 			} elseif ( $retval === static::RET_STOP ) {
 
