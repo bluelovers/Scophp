@@ -25,6 +25,8 @@
  */
 
 /**
+ * This Script Base on MediaWiki Hook Script.
+ *
  * @author bluelovers
  * @copyright 2010
  */
