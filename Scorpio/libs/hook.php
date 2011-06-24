@@ -70,6 +70,17 @@ class Scorpio_Hook_Core {
 		return true;
 	}
 
+	/**
+	 * Call hook functions defined in Hooks::register
+	 *
+	 * Because programmers assign to $wgHooks, we need to be very
+	 * careful about its contents. So, there's a lot more error-checking
+	 * in here than would normally be necessary.
+	 *
+	 * @param $event String: event name
+	 * @param $args Array: parameters passed to hook functions
+	 * @return Boolean
+	 */
 	public static function execute($event, $args = array(), $iscall = 0) {
 
 		// Return quickly in the most common case
@@ -111,7 +122,7 @@ class Scorpio_Hook_Core {
 			if ( is_array( $hook ) ) {
 				if ( count( $hook ) < 1 ) {
 					if (class_exists('Scorpio_Exception')) {
-						throw new Scorpio_Exception("Empty array in hooks for " . $event . "\n");
+						throw new Scorpio_Exception('Empty array in hooks for ' . $event . "\n");
 					}
 				} else if ( is_object( $hook[0] ) ) {
 					$object = static::$hooklist[$event][$index][0];
@@ -123,7 +134,7 @@ class Scorpio_Hook_Core {
 						}
 					} else {
 						if ( count( $hook ) < 2 ) {
-							$method = "on" . $event;
+							$method = 'on' . $event;
 						} else {
 							$method = $hook[1];
 							if ( count( $hook ) > 2 ) {
@@ -148,7 +159,7 @@ class Scorpio_Hook_Core {
 					}
 				} else {
 					if (class_exists('Scorpio_Exception')) {
-						throw new Scorpio_Exception( "Unknown datatype in hooks for " . $event . "\n" );
+						throw new Scorpio_Exception( 'Unknown datatype in hooks for ' . $event . "\n" );
 					}
 				}
 			} else if ( is_string( $hook ) ) { # functions look like strings, too
