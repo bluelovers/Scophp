@@ -1,13 +1,30 @@
 <?
 
 /**
+ * A tool for running hook functions.
  *
- * $HeadURL$
- * $Revision$
- * $Author$
- * $Date$
- * $Id$
+ * Copyright 2004, 2005 Evan Prodromou <evan@wikitravel.org>.
  *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * @author Evan Prodromou <evan@wikitravel.org>
+ * @see hooks.txt
+ * @file
+ */
+
+/**
  * @author bluelovers
  * @copyright 2010
  */
@@ -55,6 +72,7 @@ class Scorpio_Hook_Core {
 
 	public static function execute($event, $args = array(), $iscall = 0) {
 
+		// Return quickly in the most common case
 		if ( !isset( static::$hooklist[$event] ) ) {
 			return true;
 		} elseif (!is_array(static::$hooklist)) {
@@ -164,8 +182,11 @@ class Scorpio_Hook_Core {
 			} elseif ( isset( $object ) ) {
 				$func = get_class( $object ) . '::' . $method;
 				$callback = array( $object, $method );
+			// 5.1 compat code
+			// mediawiki 已經不使用以下這一段代碼來相容 PHP 5.1
 			} elseif ( false !== ( $pos = strpos( $func, '::' ) ) ) {
 				$callback = array( substr( $func, 0, $pos ), substr( $func, $pos + 2 ) );
+			// 5.1 compat code
 			} else {
 				$callback = $func;
 			}
