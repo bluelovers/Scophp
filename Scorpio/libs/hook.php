@@ -51,20 +51,20 @@ class Scorpio_Hook_Core {
 	static $event = null;
 
 	public static function add($event, $args) {
-		static::$hooklist[$event][] = &$args;
+		self::$hooklist[$event][] = &$args;
 	}
 
 	public static function get($event) {
-		return static::$hooklist[$event];
+		return self::$hooklist[$event];
 	}
 
 	public static function exists($event, $strict = false) {
-		if ( !isset( static::$hooklist[$event] ) ) {
+		if ( !isset( self::$hooklist[$event] ) ) {
 			return false;
-		} elseif (!is_array(static::$hooklist)) {
+		} elseif (!is_array(self::$hooklist)) {
 			if ($strict && class_exists('Scorpio_Exception')) throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			return false;
-		} elseif (!is_array(static::$hooklist[$event])) {
+		} elseif (!is_array(self::$hooklist[$event])) {
 			if ($strict && class_exists('Scorpio_Exception')) throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			return false;
 		}
@@ -86,26 +86,26 @@ class Scorpio_Hook_Core {
 	public static function execute($event, $args = array(), $iscall = 0) {
 
 		// Return quickly in the most common case
-		if ( !isset( static::$hooklist[$event] ) ) {
+		if ( !isset( self::$hooklist[$event] ) ) {
 			return true;
-		} elseif (!is_array(static::$hooklist)) {
+		} elseif (!is_array(self::$hooklist)) {
 			if (class_exists('Scorpio_Exception')) {
 				throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			}
-			return static::RET_FAILED;
-		} elseif (!is_array(static::$hooklist[$event])) {
+			return self::RET_FAILED;
+		} elseif (!is_array(self::$hooklist[$event])) {
 			if (class_exists('Scorpio_Exception')) {
 				throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			}
-			return static::RET_FAILED;
+			return self::RET_FAILED;
 		}
 
-		static::$data[$event] = $args;
-		static::$args[$event] = $args;
+		self::$data[$event] = $args;
+		self::$args[$event] = $args;
 
-		static::$event = $event;
+		self::$event = $event;
 
-		foreach (static::$hooklist[$event] as $index => $hook) {
+		foreach (self::$hooklist[$event] as $index => $hook) {
 
 			$object = null;
 			$method = null;
@@ -127,7 +127,7 @@ class Scorpio_Hook_Core {
 						throw new Scorpio_Exception('Empty array in hooks for ' . $event . "\n");
 					}
 				} else if ( is_object( $hook[0] ) ) {
-					$object = static::$hooklist[$event][$index][0];
+					$object = self::$hooklist[$event][$index][0];
 					if ( version_compare(PHP_VERSION, '5.3.0', '>=') && $object instanceof Closure ) {
 						$closure = true;
 						if ( count( $hook ) > 1 ) {
@@ -167,7 +167,7 @@ class Scorpio_Hook_Core {
 			} else if ( is_string( $hook ) ) { # functions look like strings, too
 				$func = $hook;
 			} else if ( is_object( $hook ) ) {
-				$object = static::$hooklist[$event][$index];
+				$object = self::$hooklist[$event][$index];
 				if ( version_compare(PHP_VERSION, '5.3.0', '>=') && $object instanceof Closure ) {
 					$closure = true;
 				} else {
@@ -182,10 +182,10 @@ class Scorpio_Hook_Core {
 			/* We put the first data element on, if needed. */
 			if ( $have_data ) {
 //				$hook_args = array_merge(array($data), $args);
-				$hook_args = array_merge(array($data), static::$args[$event]);
+				$hook_args = array_merge(array($data), self::$args[$event]);
 			} else {
 //				$hook_args = $args;
-				$hook_args = static::$args[$event];
+				$hook_args = self::$args[$event];
 			}
 
 			if ( $closure ) {
@@ -239,15 +239,15 @@ class Scorpio_Hook_Core {
 			//TODO: add hook ret object
 			if ( is_string( $retval ) ) {
 
-				static::clear($event);
+				self::clear($event);
 				if (class_exists('Scorpio_Exception')) {
 					throw new Scorpio_Exception( $retval );
 				}
 
 				return false;
-			} elseif( $retval === static::RET_FAILED ) {
+			} elseif( $retval === self::RET_FAILED ) {
 
-				static::clear($event);
+				self::clear($event);
 
 				if ( $closure ) {
 					$prettyFunc = "$event closure";
@@ -269,20 +269,20 @@ class Scorpio_Hook_Core {
 						'should return true to continue hook processing or false to abort.'
 					);
 				}
-			} elseif ( $retval === static::RET_STOP ) {
+			} elseif ( $retval === self::RET_STOP ) {
 
-				static::clear($event);
+				self::clear($event);
 
 				return false;
 			}
 		}
 
-		static::clear($event);
+		self::clear($event);
 	}
 
 	public static function clear($event) {
 		$clear_data = '';
-		static::$data[$event] =& $clear_data;
+		slef::$data[$event] =& $clear_data;
 	}
 }
 
