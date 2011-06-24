@@ -100,6 +100,9 @@ class Scorpio_Hook_Core {
 			return self::RET_FAILED;
 		}
 
+		static $_support_closure;
+		if ($_support_closure === null) $_support_closure = version_compare(PHP_VERSION, '5.3.0', '>=') ? true : false;
+
 		self::$data[$event] = $args;
 		self::$args[$event] = $args;
 
@@ -128,7 +131,7 @@ class Scorpio_Hook_Core {
 					}
 				} else if ( is_object( $hook[0] ) ) {
 					$object = self::$hooklist[$event][$index][0];
-					if ( version_compare(PHP_VERSION, '5.3.0', '>=') && $object instanceof Closure ) {
+					if ( $_support_closure && $object instanceof Closure ) {
 						$closure = true;
 						if ( count( $hook ) > 1 ) {
 							$data = $hook[1];
@@ -168,7 +171,7 @@ class Scorpio_Hook_Core {
 				$func = $hook;
 			} else if ( is_object( $hook ) ) {
 				$object = self::$hooklist[$event][$index];
-				if ( version_compare(PHP_VERSION, '5.3.0', '>=') && $object instanceof Closure ) {
+				if ( $_support_closure && $object instanceof Closure ) {
 					$closure = true;
 				} else {
 					$method = 'on' . $event;
