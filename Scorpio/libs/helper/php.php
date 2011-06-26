@@ -18,12 +18,7 @@ if (0) {
 	}
 }
 
-class Scorpio_helper_php_Core extends Scorpio_Spl_Array {
-	protected static $_ = array(
-		'_INI' => array(),
-		'_TMP' => array(),
-		'GLOBALS' => array(),
-	);
+class Scorpio_helper_php_Core {
 	protected static $instances = null;
 
 	protected static $_ini_var_map = array(
@@ -37,70 +32,19 @@ class Scorpio_helper_php_Core extends Scorpio_Spl_Array {
 
 	// 取得構造物件
 	public static function &instance($overwrite = false) {
-		if (!static::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
-			static::$instances = $ref->newInstance();
-		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite:get_called_class());
-			static::$instances = $ref->newInstance();
-		}
 
-		return static::$instances;
 	}
 
 	function __construct() {
 		static $_init = null;
-		if ($_init === null) {
-			$_init = true;
 
-			foreach(static::$_ini_var_map as $_k => $_v) {
-				static::$_ini_var_map[$_k] = array_flip($_v);
+		$functions = array_unique(static::ini_get('disable_functions', 1));
+		if (!empty($functions)) {
+			foreach($functions as $_k => $_v) {
+				$functions[$_k] = trim(strtolower($_v));
 			}
-
-			global $_ENV;
-
-			// 			date_default_timezone_set('America/Los_Angeles');
-
-			static::$_['_ENV'] = &$_ENV;
-			static::$_['_ENV_DEF'] = array();
-
-			static::ini_get('safe_mode', 1);
-
-			$functions = array_unique(static::ini_get('disable_functions', 1));
-			if (!empty($functions)) {
-				foreach($functions as $_k => $_v) {
-					$functions[$_k] = trim(strtolower($_v));
-				}
-			}
-			static::$_['_INI']['disable_functions'] = (array)$functions;
-
-//			static::set('timestamp', microtime(true));
-
-			$this->_scorpio_ = array(
-				'GLOBALS' => &static::$_['GLOBALS'],
-				'_TMP' => &static::$_['_TMP'],
-				'_ENV' => &static::$_['_ENV'],
-
-//				'_INI' => &static::$_['_INI'],
-			);
 		}
-
-		// make sure static::$instances is newer
-		if (!static::$instances || !in_array(get_class($this), class_parents(static::$instances))) {
-			static::$instances = $this;
-		}
-
-		$this->_scorpio_ = &static::$instances->_scorpio_;
-
-		return static::$instances;
-	}
-
-	function __get($var) {
-		return static::get($var);
-	}
-
-	function __set($var, $val) {
-		return static::set($var, $val);
+		$_['_INI']['disable_functions'] = (array)$functions;
 	}
 
 	public static function set_include_path($path) {
@@ -109,71 +53,12 @@ class Scorpio_helper_php_Core extends Scorpio_Spl_Array {
 		return static::instance();
 	}
 
-	public static function get($var) {
-		static::$instances or static::instance();
-
-		return isset(static::$_['GLOBALS'][$var]) ? static::$_['GLOBALS'][$var] : null;
-	}
-
-	public static function set($var, $val) {
-		static::$instances or static::instance();
-
-		static::_setglobals($var, $val);
-
-		static::$_['GLOBALS'][$var] = $val;
-		return static::$instances;
-	}
-
-	public static function gettmp($var) {
-		//static::$instances OR static::instance();
-
-		return isset(static::$_['_TMP'][$var]) ? static::$_['_TMP'][$var] : null;
-	}
-
-	public static function settmp($var, $val) {
-		static::$instances or static::instance();
-
-		static::_setglobals($var, $val);
-
-		static::$_['_TMP'][$var] = $val;
-		return static::$instances;
-	}
-
-	protected static function _setglobals(&$var, &$val) {
-		if ($var == 'timestamp') {
-			$mtime = explode('.', $val);
-
-			scodate::offsetfix();
-
-			static::$instances->timenow = array( // 				'time' => date::gmdate("$dateformat $timeformat", $mtime[0]),
-				//				'today' => gmdate("$dateformat", $mtime[0]),
-			'offset' => static::fixzero(static::$instances->offset), 'year' => scodate::date('Y',
-				$mtime[0]), 'month' => scodate::date('n', $mtime[0]), 'date' => scodate::date('j',
-				$mtime[0]), 'hour' => scodate::date('h', $mtime[0]), 'minute' => scodate::date('i',
-				$mtime[0]), 'second' => scodate::date('s', $mtime[0]), 'microsecond' => sprintf
-				("%0.9f", bcsub($val, $mtime[0], 9)),
-				// 				'mtime' => (int)$mtime[0]+sprintf("%10.7f",$val - $mtime[0]),
-				'mtime' => $val, );
-
-			// 			$val = (int)$val;
-		} elseif ($var == 'offset') {
-			$val = static::fixzero($val);
-		}
-	}
-
 	/**
 	 * fix -0 => 0
 	 * @param $n
 	 */
 	public static function fixzero($n) {
 		return $n ? $n : 0;
-	}
-
-	/**
-	 * @see http://php.net/setlocale
-	 */
-	public static function setlocale() {
-		// TODO: php::setlocale
 	}
 
 	/**
@@ -245,92 +130,6 @@ class Scorpio_helper_php_Core extends Scorpio_Spl_Array {
 		}
 
 		return $ret;
-	}
-
-	/**
-	 *
-	 * @param $var
-	 * @return bool
-	 */
-	public static function env_chk($var) {
-		static::$instances or static::instance();
-
-		return static::env_get($var) == getenv($var);
-	}
-
-	/**
-	 * get default $_ENV value
-	 *
-	 * @param $var
-	 * @param $force
-	 */
-	protected static function _env_get($var, $force = true) {
-		($force || !isset(static::$_['_ENV_DEF'][$var])) && static::$_['_ENV_DEF'][$var] =
-			getenv($var);
-
-		return static::$_['_ENV_DEF'][$var];
-	}
-
-	/**
-	 * get $_ENV
-	 * @param $var
-	 */
-	public static function env_get($var) {
-		static::$instances or static::instance();
-
-		!isset(static::$_['_ENV'][$var]) && static::$_['_ENV'][$var] = static::_env_get($var);
-
-		return static::$_['_ENV'][$var];
-	}
-
-	/**
-	 * hook set $_ENV
-	 * @param $var
-	 * @param $val
-	 */
-	protected static function _env_set(&$var, &$val) {
-		// XXX:
-
-		if (uc($var) == 'TZ') {
-			$var = uc($var);
-			@date_default_timezone_set($val);
-			@ini_set('date.timezone', $val);
-		}
-	}
-
-	/**
-	 * set $_ENV
-	 * @param $var
-	 * @param $val
-	 */
-	public static function env_set($var, $val) {
-		static::$instances or static::instance();
-
-		static::_env_get($var);
-		static::_env_set($var, $val);
-
-		// 		@putenv($var.'='.$val);
-		static::$_['_ENV'][$var] = $val;
-
-		return static::$instances;
-	}
-
-	/**
-	 * set $_ENV
-	 * @param $string key=value
-	 */
-	public static function env_put($string) {
-		static::$instances or static::instance();
-
-		list($var, $val) = split('=', $string, 2);
-
-		static::_env_get($var);
-		static::_env_set($var, $val);
-
-		@putenv($var . '=' . $val);
-		static::$_['_ENV'][$var] = $val;
-
-		return static::$instances;
 	}
 
 	/**
@@ -465,20 +264,6 @@ EOM
 		}
 
 		return $string;
-	}
-
-	public static function get_static_value($class, $name, $val = null) {
-		$ref = new Scorpio_Spl_Ref($class);
-
-		return $ref->getStaticPropertyValue($name, $val);
-	}
-
-	public static function set_static_value($class, $name, $val) {
-		$ref = new Scorpio_Spl_Ref($class);
-
-		$ref->setStaticPropertyValue($name, $val);
-
-		return $ref;
 	}
 
 	public static function error_reporting($level = null, $add = null) {
