@@ -13,11 +13,11 @@
 
 if (0) {
 	// for IDE
-	class scoexpires extends Scorpio_Helper_Expires_Core {
+	class scoexpires extends Scorpio_helper_expires_Core {
 	}
 }
 
-class Scorpio_Helper_Expires_Core {
+class Scorpio_helper_expires_Core {
 
 	static $format = 'D, d M Y H:i:s T';
 

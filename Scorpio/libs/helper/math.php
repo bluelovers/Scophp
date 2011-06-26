@@ -14,11 +14,11 @@
 
 if (0 || 1) {
 	// for IDE
-	class scomath extends Scorpio_Helper_Math_Core {
+	class scomath extends Scorpio_helper_math_Core {
 	}
 }
 
-class Scorpio_Helper_Math_Core {
+class Scorpio_helper_math_Core {
 	protected static $instances = null;
 
 	public static $rand = 1000000;
