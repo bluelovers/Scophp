@@ -308,7 +308,7 @@ class Scorpio_Hook_Core_ {
 
 	public static function clear($event) {
 		$clear_data = '';
-		slef::$data[$event] =& $clear_data;
+		self::$data[$event] =& $clear_data;
 	}
 }
 
