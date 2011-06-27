@@ -58,14 +58,28 @@ class Scorpio_Hook_Core_ {
 		return self::$hooklist[$event];
 	}
 
+	protected static function _support() {
+		$_support = array();
+		$_support['closure'] = version_compare(PHP_VERSION, '5.3.0', '>=') ? true : false;
+		$_support['Scorpio_Exception'] = class_exists('Scorpio_Exception');
+		$_support['Scorpio_Event'] = class_exists('Scorpio_Event');
+
+		return $_support;
+	}
+
 	public static function exists($event, $strict = false) {
+		static $_support;
+		if ($_support === null) {
+			$_support = self::_support();
+		}
+
 		if ( !isset( self::$hooklist[$event] ) ) {
 			return false;
 		} elseif (!is_array(self::$hooklist)) {
-			if ($strict && class_exists('Scorpio_Exception')) throw new Scorpio_Exception("Global hooks array is not an array!\n");
+			if ($strict && $_support['Scorpio_Exception']) throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			return false;
 		} elseif (!is_array(self::$hooklist[$event])) {
-			if ($strict && class_exists('Scorpio_Exception')) throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
+			if ($strict && $_support['Scorpio_Exception']) throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			return false;
 		}
 
@@ -84,24 +98,25 @@ class Scorpio_Hook_Core_ {
 	 * @return Boolean
 	 */
 	public static function execute($event, $args = array(), $iscall = 0) {
+		static $_support;
+		if ($_support === null) {
+			$_support = self::_support();
+		}
 
 		// Return quickly in the most common case
 		if ( !isset( self::$hooklist[$event] ) ) {
 			return true;
 		} elseif (!is_array(self::$hooklist)) {
-			if (class_exists('Scorpio_Exception')) {
+			if ($_support['Scorpio_Exception']) {
 				throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			}
 			return self::RET_FAILED;
 		} elseif (!is_array(self::$hooklist[$event])) {
-			if (class_exists('Scorpio_Exception')) {
+			if ($_support['Scorpio_Exception']) {
 				throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			}
 			return self::RET_FAILED;
 		}
-
-		static $_support_closure;
-		if ($_support_closure === null) $_support_closure = version_compare(PHP_VERSION, '5.3.0', '>=') ? true : false;
 
 		self::$data[$event] = $args;
 		self::$args[$event] = $args;
@@ -126,12 +141,12 @@ class Scorpio_Hook_Core_ {
 
 			if ( is_array( $hook ) ) {
 				if ( count( $hook ) < 1 ) {
-					if (class_exists('Scorpio_Exception')) {
+					if ($_support['Scorpio_Exception']) {
 						throw new Scorpio_Exception('Empty array in hooks for ' . $event . "\n");
 					}
 				} else if ( is_object( $hook[0] ) ) {
 					$object = self::$hooklist[$event][$index][0];
-					if ( $_support_closure && $object instanceof Closure ) {
+					if ( $_support['closure'] && $object instanceof Closure ) {
 						$closure = true;
 						if ( count( $hook ) > 1 ) {
 							$data = $hook[1];
@@ -163,7 +178,7 @@ class Scorpio_Hook_Core_ {
 						$have_data = true;
 					}
 				} else {
-					if (class_exists('Scorpio_Exception')) {
+					if ($_support['Scorpio_Exception']) {
 						throw new Scorpio_Exception( 'Unknown datatype in hooks for ' . $event . "\n" );
 					}
 				}
@@ -171,13 +186,13 @@ class Scorpio_Hook_Core_ {
 				$func = $hook;
 			} else if ( is_object( $hook ) ) {
 				$object = self::$hooklist[$event][$index];
-				if ( $_support_closure && $object instanceof Closure ) {
+				if ( $_support['closure'] && $object instanceof Closure ) {
 					$closure = true;
 				} else {
 					$method = 'on' . $event;
 				}
 			} else {
-				if (class_exists('Scorpio_Exception')) {
+				if ($_support['Scorpio_Exception']) {
 					throw new Scorpio_Exception( 'Unknown datatype in hooks for ' . $event . "\n" );
 				}
 			}
@@ -243,7 +258,7 @@ class Scorpio_Hook_Core_ {
 			if ( is_string( $retval ) ) {
 
 				self::clear($event);
-				if (class_exists('Scorpio_Exception')) {
+				if ($_support['Scorpio_Exception']) {
 					throw new Scorpio_Exception( $retval );
 				}
 
@@ -265,7 +280,7 @@ class Scorpio_Hook_Core_ {
 					$prettyFunc = strval( $callback );
 				}
 
-				if (class_exists('Scorpio_Exception')) {
+				if ($_support['Scorpio_Exception']) {
 					throw new Scorpio_Exception(
 						'Detected bug in an extension! ' .
 						"Hook $prettyFunc failed to return a value; " .
