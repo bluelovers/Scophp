@@ -19,7 +19,7 @@ Scorpio_Hook::add('test', function() {
 for ($i=0; $i<10; $i++) {
 	echo 'for_$i: '.$i.' - Start<br>';
 
-	Scorpio_Event('test')->run(array('i' => $i), array('i' => $i));
+	Scorpio_Event::instance('test')->run(array('i' => $i), array('i' => $i));
 
 	echo 'for_$i: '.$i.' - End<br>';
 	echo '<hr>';
