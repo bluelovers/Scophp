@@ -30,7 +30,7 @@ class Scorpio_helper_php_Core {
 		),
 	);
 
-	// ¨ú±oºc³yª«¥ó
+	// å–å¾—æ§‹é€ ç‰©ä»¶
 	public static function &instance($overwrite = false) {
 
 	}
