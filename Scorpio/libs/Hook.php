@@ -40,8 +40,8 @@ class Scorpio_Hook_Core_ {
 	protected static $hooklist = array();
 	protected static $calevenlist = array();
 
-//	const RET_FAILED = null;
-	const RET_FAILED = false;
+	const RET_FAILED = null;
+//	const RET_FAILED = false;
 	const RET_SUCCESS = true;
 	const RET_STOP = false;
 
