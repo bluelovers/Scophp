@@ -209,7 +209,10 @@ class Scorpio_Hook_Core_ {
 
 			// 檢查是否支援 Scorpio_Event
 			if ($_support['Scorpio_Event']) {
-				array_unshift($hook_args, Scorpio_Event::instance($event)->data);
+				array_unshift($hook_args, Scorpio_Event::instance($event)
+					->counter_add($index)
+					->data()
+				);
 			} else {
 				array_unshift($hook_args, null);
 			}
