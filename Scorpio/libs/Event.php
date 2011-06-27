@@ -25,7 +25,7 @@ class Scorpio_Event_Core_ {
 			return self::$_evens[$event];
 		} else {
 			$event = new Scorpio_Event($event, $hook);
-			return $event
+			return $event;
 		}
 	}
 
