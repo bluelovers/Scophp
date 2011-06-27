@@ -45,8 +45,8 @@ class Scorpio_Hook_Core_ {
 	const RET_SUCCESS = true;
 	const RET_STOP = false;
 
-	static $data = null;
-	static $args = null;
+//	static $data = null;
+//	static $args = null;
 
 	static $event = null;
 
@@ -118,8 +118,8 @@ class Scorpio_Hook_Core_ {
 			return self::RET_FAILED;
 		}
 
-		self::$data[$event] = $args;
-		self::$args[$event] = $args;
+//		self::$data[$event] = $args;
+//		self::$args[$event] = $args;
 
 		self::$event = $event;
 
@@ -200,11 +200,11 @@ class Scorpio_Hook_Core_ {
 
 			/* We put the first data element on, if needed. */
 			if ( $have_data ) {
-//				$hook_args = array_merge(array($data), $args);
-				$hook_args = array_merge(array($data), self::$args[$event]);
+				$hook_args = array_merge(array($data), $args);
+//				$hook_args = array_merge(array($data), self::$args[$event]);
 			} else {
-//				$hook_args = $args;
-				$hook_args = self::$args[$event];
+				$hook_args = $args;
+//				$hook_args = self::$args[$event];
 			}
 
 			// 檢查是否支援 Scorpio_Event
@@ -310,8 +310,8 @@ class Scorpio_Hook_Core_ {
 	}
 
 	public static function clear($event) {
-		$clear_data = '';
-		self::$data[$event] =& $clear_data;
+//		$clear_data = '';
+//		self::$data[$event] =& $clear_data;
 	}
 }
 

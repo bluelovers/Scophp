@@ -25,11 +25,13 @@ Scorpio_Hook::add('test', function() {
 
 	print_r(array(
 		$_EVENT,
-		$args
+		$args,
+
+		Scorpio_Hook::$event,
 	));
 	echo '<br>-----------------------<br>';
 
-	return (($args[0] % 2) == 0) ? Scorpio_Hook::RET_STOP : Scorpio_Hook::RET_SUCCESS;
+	return (0 && ($args[0] % 2) == 0) ? Scorpio_Hook::RET_STOP : Scorpio_Hook::RET_SUCCESS;
 });
 
 Scorpio_Hook::add('test', function() {
@@ -41,7 +43,9 @@ Scorpio_Hook::add('test', function() {
 
 	print_r(array(
 		$_EVENT,
-		$args
+		$args,
+
+		Scorpio_Hook::$event,
 	));
 	echo '<br>-----------------------<br>';
 
