@@ -17,7 +17,7 @@ class Scorpio_Event_Core_ {
 	protected static $_evens = array();
 
 	protected $attr = array();
-	protected $data = array();
+	public $data = array();
 	protected $args = array();
 
 	public static function &instance($event, $hook = null) {
