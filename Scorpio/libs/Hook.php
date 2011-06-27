@@ -166,7 +166,8 @@ class Scorpio_Hook_Core_ {
 
 				// bluelovers
 				} else if (is_string($hook[0]) && $hook[0] == 'func' && count($hook) == 3) {
-					$func = create_function($hook[1], $hook[2]);
+					// 追加 $_EVENT 來允許存取 Scorpio_Event::instance($event)->data)
+					$func = create_function('$_EVENT, '.$hook[1], $hook[2]);
 
 					$have_eval = true;
 				// bluelovers
@@ -204,6 +205,13 @@ class Scorpio_Hook_Core_ {
 			} else {
 //				$hook_args = $args;
 				$hook_args = self::$args[$event];
+			}
+
+			// 檢查是否支援 Scorpio_Event
+			if ($_support['Scorpio_Event']) {
+				array_unshift($hook_args, Scorpio_Event::instance($event)->data);
+			} else {
+				array_unshift($hook_args, null);
 			}
 
 			if ( $closure ) {
