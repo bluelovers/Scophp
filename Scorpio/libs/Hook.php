@@ -268,7 +268,7 @@ class Scorpio_Hook_Core_ {
 			//TODO: add hook ret object
 			if ( is_string( $retval ) ) {
 
-				self::clear($event);
+//				self::clear($event);
 				if ($_support['Scorpio_Exception']) {
 					throw new Scorpio_Exception( $retval );
 				}
@@ -276,7 +276,7 @@ class Scorpio_Hook_Core_ {
 				return false;
 			} elseif( $retval === self::RET_FAILED ) {
 
-				self::clear($event);
+//				self::clear($event);
 
 				if ( $closure ) {
 					$prettyFunc = "$event closure";
@@ -300,19 +300,19 @@ class Scorpio_Hook_Core_ {
 				}
 			} elseif ( $retval === self::RET_STOP ) {
 
-				self::clear($event);
+//				self::clear($event);
 
 				return false;
 			}
 		}
 
-		self::clear($event);
+//		self::clear($event);
 	}
 
-	public static function clear($event) {
-//		$clear_data = '';
-//		self::$data[$event] =& $clear_data;
-	}
+//	public static function clear($event) {
+////		$clear_data = '';
+////		self::$data[$event] =& $clear_data;
+//	}
 }
 
 ?>
