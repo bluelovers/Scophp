@@ -66,13 +66,15 @@ class Scorpio_Event_Core_ {
 		);
 		$this->args = $args;
 
-		$this->hook_call('execute', array(
+		$ret = $this->hook_call('execute', array(
 			$this->attr['event.name'],
 			&$this->args
 		));
 
 		$this->data = array();
 		$this->args = array();
+
+		return $ret;
 	}
 
 	/**
