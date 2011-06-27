@@ -34,6 +34,8 @@ class Scorpio_Event_Core_ {
 
 		if ($hook && class_exists($hook)) $this->attr['hook'] = $hook;
 
+		$this->attr['event.index'] = count(self::$_evens[$event]);
+		$this->attr['event.counter'] = 0;
 		self::$_evens[$event] = &$this;
 
 		return $this;
@@ -59,10 +61,13 @@ class Scorpio_Event_Core_ {
 			return false;
 		}
 
+		$this->attr['event.counter']++;
+
 		$this->data = array(
 			'event.name' => $this->attr['event.name'],
 			'event.args' => $args,
 			'event.data' => &$data,
+			'event.attr' => $this->attr,
 		);
 		$this->args = $args;
 
