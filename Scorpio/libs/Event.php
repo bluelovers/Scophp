@@ -13,31 +13,84 @@ if (0) {
 }
 
 class Scorpio_Event_Core_ {
-	static $stop = false;
+	protected static $_hook = 'Scorpio_Hook';
+	protected static $_evens = array();
+
+	protected $attr = array();
+	protected $data = array();
+	protected $args = array();
+
+	public static function &instance($event, $hook = null) {
+		if (isset(self::$_evens[$event])) {
+			return self::$_evens[$event];
+		} else {
+			$event = new Scorpio_Event($event, $hook);
+			return $event
+		}
+	}
+
+	public function __construct($event, $hook = null) {
+		$this->attr['event.name'] = $event;
+
+		if ($hook && class_exists($hook)) $this->attr['hook'] = $hook;
+
+		self::$_evens[$event] = &$this;
+
+		return $this;
+	}
+
+	function hook_call($method, $args = array()) {
+		static $_hook;
+
+		if ($_hook == null) {
+			$_hook = $this->attr['hook'] ? $this->attr['hook'] : self::$_hook;
+		}
+
+		return call_user_func_array(array($_hook, $method), is_array($args) ? $args : array($args));
+	}
 
 	/**
 	 * 呼叫點
 	 **/
-	function run() {
-		if (self::$stop) return false;
+	function run($args = array(), $data = array()) {
+		if ($this->attr['event.stop']) return false;
+
+		if (!$this->hook_call('exists', $this->attr['event.name'])) {
+			return false;
+		}
+
+		$this->data = array(
+			'event.name' => $this->attr['event.name'],
+			'event.args' => $args,
+			'event.data' => $data,
+		);
+		$this->args = $args;
+
+		$this->hook_call('execute', array(
+			$this->attr['event.name'],
+			&$this->args
+		));
+
+		$this->data = array();
+		$this->args = array();
 	}
 
 	/**
 	 * 暫停呼叫事件
 	 **/
 	function stop() {
-		if (self::$stop) return ;
+		if ($this->attr['event.stop']) return ;
 
-		self::$stop = true;
+		$this->attr['event.stop'] = true;
 	}
 
 	/**
 	 * 繼續執行事件
 	 **/
 	function play() {
-		if (!self::$stop) return ;
+		if (!$this->attr['event.stop']) return ;
 
-		self::$stop = false;
+		$this->attr['event.stop'] = false;
 	}
 }
 
