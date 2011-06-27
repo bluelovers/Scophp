@@ -36,8 +36,18 @@ class Scorpio_Event_Core_ {
 
 		$this->attr['event.index'] = count(self::$_evens[$event]);
 		$this->attr['event.counter'] = 0;
+		$this->attr['hook.counter'] = array();
+
 		self::$_evens[$event] = &$this;
 
+		return $this;
+	}
+
+	function counter_add($index) {
+		if ($this->attr['hook.counter'][$index] === null) {
+			$this->attr['hook.counter'][$index] = 0;
+		}
+		$this->attr['hook.counter'][$index]++;
 		return $this;
 	}
 
@@ -49,6 +59,13 @@ class Scorpio_Event_Core_ {
 		}
 
 		return call_user_func_array(array($_hook, $method), is_array($args) ? $args : array($args));
+	}
+
+	function data() {
+		$this->data['event.name'] = $this->attr['event.name'];
+		$this->data['event.attr'] = $this->attr;
+
+		return $this->data;
 	}
 
 	/**
