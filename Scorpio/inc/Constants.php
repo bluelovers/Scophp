@@ -14,9 +14,11 @@
 
 define('IN_SCORPIO', true);
 define('DIR_SEP', '/');
+
 define('LF', "\n");
-define('TAB', "\t");
 define('CR', "\r");
+
+define('TAB', "\t");
 
 // Define Kohana error constant
 define('E_SCORPIO', 200042);
