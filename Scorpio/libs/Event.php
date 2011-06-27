@@ -82,8 +82,13 @@ class Scorpio_Event_Core_ {
 
 		$this->data = array(
 			'event.name' => $this->attr['event.name'],
+
+			// 紀錄呼叫的 atgs
 			'event.args' => $args,
+
+			// 可在 Hook 之間 共享 Event 的資料
 			'event.data' => &$data,
+
 			'event.attr' => $this->attr,
 		);
 		$this->args = $args;
