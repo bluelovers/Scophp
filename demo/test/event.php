@@ -62,4 +62,16 @@ for ($i=0; $i<10; $i++) {
 	echo '<hr>';
 }
 
+echo '<hr>';
+echo '<hr>';
+
+for ($i=0; $i<10; $i++) {
+	echo 'for_$i: '.$i.' - Start<br>';
+
+	Scorpio_Hook::execute('test', array('i' => $i));
+
+	echo 'for_$i: '.$i.' - End<br>';
+	echo '<hr>';
+}
+
 ?>
