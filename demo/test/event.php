@@ -10,7 +10,7 @@ if (!class_exists('Scorpio_Hook')) {
 
 echo '<pre>';
 
-Scorpio_Hook:add('test', function() {
+Scorpio_Hook::add('test', function() {
 	print_r(func_get_args());
 	echo '<br>-----------------------<br>';
 });
