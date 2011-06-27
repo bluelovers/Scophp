@@ -8,10 +8,39 @@ if (!class_exists('Scorpio_Hook')) {
 	class Scorpio_Event extends Scorpio_Event_Core_ {}
 }
 
+echo '
+<style>
+* { font-size: 12px; }
+</style>
+';
+
 echo '<pre>';
 
 Scorpio_Hook::add('test', function() {
-	print_r(func_get_args());
+	$args = func_get_args();
+	$_EVENT = array_shift($args);
+
+	$_EVENT['event.args']['i'] .= ', '.$args[0];
+	$_EVENT['event.data']['i'] .= ', '.$args[0];
+
+	print_r(array(
+		$_EVENT,
+		$args
+	));
+	echo '<br>-----------------------<br>';
+});
+
+Scorpio_Hook::add('test', function() {
+	$args = func_get_args();
+	$_EVENT = array_shift($args);
+
+	$_EVENT['event.args']['i'] .= ', '.$args[0];
+	$_EVENT['event.data']['i'] .= ', '.$args[0];
+
+	print_r(array(
+		$_EVENT,
+		$args
+	));
 	echo '<br>-----------------------<br>';
 });
 
