@@ -83,8 +83,8 @@ class Scorpio_helper_file_Core {
 		return $str;
 	}
 
-	public static function gzencode($context) {
-		return gzencode($context, 9, FORCE_GZIP);
+	public static function gzencode($context, $level = 9, $encoding_mode = FORCE_GZIP) {
+		return gzencode($context, $level, $encoding_mode);
 	}
 
 	public static function mkdir($pathname, $mode = 0777, $recursive = false, $context =
