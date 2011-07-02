@@ -14,10 +14,10 @@
 
 if (0) {
 	// for IDE
-	class Scorpio_File extends Scorpio_File_Core {}
+	class scofile extends Scorpio_helper_file_Core {}
 }
 
-class Scorpio_File_Core {
+class Scorpio_helper_file_Core {
 
 	static $temp;
 
