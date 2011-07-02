@@ -22,13 +22,13 @@ class Scorpio_File_Core {
 	static $temp;
 
 	public static function open($filename, $mode, $use_include_path = false, $context = null) {
-		static::mkdir(static::dirname($filename, '', 1));
+		self::mkdir(self::dirname($filename, '', 1));
 
 		if (@$fp = fopen($filename, $mode)) {
 			return $fp;
 		}
-		$dir = static::dirname($filename, '', 1);
-		//		$dir = preg_replace('/^'.preg_quote(static::dirname($filename), '/.\\+*?[^]$(){}=!<>|:-').'/', '', $filename);
+		$dir = self::dirname($filename, '', 1);
+		//		$dir = preg_replace('/^'.preg_quote(self::dirname($filename), '/.\\+*?[^]$(){}=!<>|:-').'/', '', $filename);
 		exit('Can not write to cache files, please check directory ' . $dir);
 	}
 
@@ -37,12 +37,12 @@ class Scorpio_File_Core {
 
 		//		$path = dirname($path);
 		//		if ($chdir) $path = dirname($path);
-		//		return static::path($path);
+		//		return self::path($path);
 
 		if ($dirnamefunc)
 			$path = dirname($path);
 
-		return ($chdir) ? static::path($path, $chdir) : static::path($path);
+		return ($chdir) ? self::path($path, $chdir) : self::path($path);
 	}
 
 	/**
@@ -52,18 +52,18 @@ class Scorpio_File_Core {
 	public static function write($filename, $context, $dogz = false, $exdata = array
 		()) {
 		if ($dogz)
-			$context = static::gzencode($context);
+			$context = self::gzencode($context);
 
-		$fp = static::open($filename, 'w');
+		$fp = self::open($filename, 'w');
 		fwrite($fp, ($exdata['before'] ? $exdata['before'] . LF : '') . $context . ($exdata['after'] ?
 			LF . $exdata['after'] : ''));
 		fclose($fp);
 	}
 
 	public static function load() {
-		$filename = static::file(func_get_args());
-		$fp = static::open($filename, 'r');
-		$context = static::remove_bom(@fread($fp, filesize($filename)));
+		$filename = self::file(func_get_args());
+		$fp = self::open($filename, 'r');
+		$context = self::remove_bom(@fread($fp, filesize($filename)));
 		fclose($fp);
 
 		return $context;
@@ -89,9 +89,9 @@ class Scorpio_File_Core {
 
 	public static function mkdir($pathname, $mode = 0777, $recursive = false, $context =
 		'', $noindex = 0) {
-		$pathname = static::path($pathname);
+		$pathname = self::path($pathname);
 
-		is_dir(dirname($pathname)) || static::mkdir(dirname($pathname), $mode, $recursive,
+		is_dir(dirname($pathname)) || self::mkdir(dirname($pathname), $mode, $recursive,
 			$context, $noindex);
 
 		if (!$ret = is_dir($pathname)) {
@@ -107,7 +107,7 @@ class Scorpio_File_Core {
 
 	public static function scandir($dir = '.', $sort = 0, $no_dots = false) {
 		$files = array();
-		$dh = @opendir(static::path($dir));
+		$dh = @opendir(self::path($dir));
 
 		if ($dh != false) {
 			while (($dir_content = readdir($dh)) !== false) {
@@ -125,14 +125,14 @@ class Scorpio_File_Core {
 	}
 
 	static function _filter_ext($var) {
-		return is_array(static::$temp['args']) ? in_array(static::fileext($var), static::$temp['args']) : (static::
-			fileext($var) == static::$temp['args']);
+		return is_array(self::$temp['args']) ? in_array(self::fileext($var), self::$temp['args']) : (self::
+			fileext($var) == self::$temp['args']);
 	}
 
 	public static function scandir_ext($ext, $dir = '.') {
-		$files = static::scandir($dir, 0, 1);
+		$files = self::scandir($dir, 0, 1);
 
-		static::$temp['args'] = $ext;
+		self::$temp['args'] = $ext;
 
 		return array_filter($files, array('self', '_filter_ext'));
 	}
@@ -193,26 +193,26 @@ class Scorpio_File_Core {
 		$paths = func_get_args();
 		//		return trim(preg_replace(array("/(\\\\|\\|\/\.\/)+/", "/\/{2,}/"), '/', join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/').'/';
 
-//		return rtrim(static::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/') .
+//		return rtrim(self::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/') .
 //			'/';
-		return rtrim(static::fix(static::_path_join($paths)), '/').'/';
+		return rtrim(self::fix(self::_path_join($paths)), '/').'/';
 	}
 
 	public static function file() {
 		$paths = func_get_args();
 		//		return trim(preg_replace(array("/(\\\\|\\|\/\.\/)+/", "/\/{2,}/"), '/', join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/');
-//		return rtrim(static::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/');
-		return rtrim(static::fix(static::_path_join($paths)), '/');
+//		return rtrim(self::fix(join('/', is_array($paths[0]) ? $paths[0] : $paths)), '/');
+		return rtrim(self::fix(self::_path_join($paths)), '/');
 	}
 
 	public static function fileext($filename) {
-		return array_pop(explode('.', static::basename($filename)));
+		return array_pop(explode('.', self::basename($filename)));
 //		return trim(substr(strrchr($filename, '.'), 1, 10));
 	}
 
 	public static function preg_files($path, $filter) {
-		$path = static::path($path);
-		$files = static::scandir(static::path($path), 0, 1);
+		$path = self::path($path);
+		$files = self::scandir(self::path($path), 0, 1);
 
 		$retfiles = array();
 		if (is_array($files)) {
@@ -230,8 +230,8 @@ class Scorpio_File_Core {
 
 	public static function preg_delete($path, $dels, $skip = '') {
 
-		$path = static::path($path);
-		$files = static::scandir(static::path($path), 0, 1);
+		$path = self::path($path);
+		$files = self::scandir(self::path($path), 0, 1);
 
 		$retfiles = array(0 => array(), 1 => array());
 		if (is_array($files)) {
@@ -242,7 +242,7 @@ class Scorpio_File_Core {
 						|| (is_array($skip) ? !in_array($file, $skip) : !preg_match($skip, $file))
 					)
 				) {
-					static::unlink($path . $file);
+					self::unlink($path . $file);
 					$retfiles[0][] = $file;
 				} else {
 					$retfiles[1][] = $file;
@@ -268,8 +268,8 @@ class Scorpio_File_Core {
 	}
 
 	public static function remove_root($path, $root) {
-		$root = static::path($root);
-		$path = static::file($path);
+		$root = self::path($root);
+		$path = self::file($path);
 
 		$ret = (strpos($path, $root) === 0) ? substr($path, strlen($root)) : $path;
 
