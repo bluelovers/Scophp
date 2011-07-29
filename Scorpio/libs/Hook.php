@@ -73,7 +73,8 @@ class Scorpio_Hook_Core_ {
 			$_support = self::_support();
 		}
 
-		if ( !isset( self::$hooklist[$event] ) ) {
+		// 強化判斷是否存在 hook
+		if ( !isset( self::$hooklist[$event] ) || empty(self::$hooklist[$event]) ) {
 			return false;
 		} elseif (!is_array(self::$hooklist)) {
 			if ($strict && $_support['Scorpio_Exception']) throw new Scorpio_Exception("Global hooks array is not an array!\n");
