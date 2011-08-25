@@ -20,7 +20,9 @@ if (0) {
 
 class Scorpio_Request_Core {
 
-	// Enable or disable automatic XSS cleaning
+	/**
+	 * Enable or disable automatic XSS cleaning
+	 */
 	protected $use_xss_clean = false;
 
 	// Are magic quotes enabled?
