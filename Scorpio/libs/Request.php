@@ -58,10 +58,8 @@ class Scorpio_Request_Core {
 
 	public function init() {
 
-		static $run = 0;
-		if ($run)
-			return self::$instances;
-		$run = 1;
+		if ($this->init) return $this;
+		$this->init = true;
 
 		// Convert all global variables to Kohana charset
 		$_SERVER = $this->clean($_SERVER);
