@@ -41,6 +41,11 @@ class Scorpio_Request_Core {
 	 */
 	public $server_api = PHP_SAPI;
 
+	/**
+	 * init?
+	 */
+	public $init = false;
+
 	protected static $instances = null;
 
 	public static function &instance($overwrite = false) {
@@ -52,10 +57,6 @@ class Scorpio_Request_Core {
 	}
 
 	public function init() {
-
-		if (!self::$instances || !in_array(get_class($this), class_parents(self::$instances))) {
-			self::$instances = &$this;
-		}
 
 		static $run = 0;
 		if ($run)
