@@ -23,12 +23,12 @@ class Scorpio_Request_Core {
 	/**
 	 * Enable or disable automatic XSS cleaning
 	 */
-	protected $use_xss_clean = false;
+	public $use_xss_clean = false;
 
 	/**
 	 * Are magic quotes enabled?
 	 */
-	protected $magic_quotes_gpc = false;
+	public $magic_quotes_gpc = false;
 
 	/**
 	 * IP address of current user
