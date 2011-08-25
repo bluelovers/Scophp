@@ -164,9 +164,9 @@ class Scorpio_Request_Core {
 		}
 	}
 
-	public function _init_postraw() {
+	public function _init_postraw($force = false) {
 		global $HTTP_RAW_POST_DATA;
-		if (!isset($HTTP_RAW_POST_DATA)) {
+		if ($force || !isset($HTTP_RAW_POST_DATA)) {
 			$HTTP_RAW_POST_DATA = file_get_contents("php://input");
 		}
 		return $HTTP_RAW_POST_DATA;
