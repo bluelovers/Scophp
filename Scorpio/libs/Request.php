@@ -251,7 +251,7 @@ class Scorpio_Request_Core {
 		return $this->search_array($_POST, $key, $default, $xss_clean);
 	}
 
-	public function postraw() {
+	public function _init_postraw() {
 		global $HTTP_RAW_POST_DATA;
 		static $postraw;
 		if (!$postraw) {
