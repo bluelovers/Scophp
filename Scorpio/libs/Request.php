@@ -191,7 +191,6 @@ class Scorpio_Request_Core {
 			$_COOKIE = $this->clean($_COOKIE);
 		}
 
-		$this->postraw();
 		$this->ip_address();
 
 		Scorpio_Kenal::log('debug', 'Global GET, POST and COOKIE data sanitized');
