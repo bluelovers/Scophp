@@ -61,6 +61,13 @@ class Scorpio_Request_Core {
 
 	}
 
+	function _init_setting() {
+		/**
+		 * Use XSS clean?
+		 */
+		$this->use_xss_clean = (bool)Scorpio_Kenal::config('core.global_xss_filtering');
+	}
+
 	public function init() {
 
 		if ($this->init) return $this;
@@ -80,8 +87,7 @@ class Scorpio_Request_Core {
 			$_COOKIE = $this->clean($_COOKIE);
 		}
 
-		// Use XSS clean?
-		$this->use_xss_clean = (bool)Scorpio_Kenal::config('core.global_xss_filtering');
+
 
 		// magic_quotes_runtime is enabled
 		if (get_magic_quotes_runtime()) {
