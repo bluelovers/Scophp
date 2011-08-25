@@ -164,6 +164,16 @@ class Scorpio_Request_Core {
 		}
 	}
 
+	public function _init_postraw() {
+		global $HTTP_RAW_POST_DATA;
+		static $postraw;
+		if (!$postraw) {
+			$postraw = 1;
+			$HTTP_RAW_POST_DATA = file_get_contents("php://input");
+		}
+		return $HTTP_RAW_POST_DATA;
+	}
+
 	public function init() {
 
 		if ($this->init) return $this;
@@ -251,15 +261,7 @@ class Scorpio_Request_Core {
 		return $this->search_array($_POST, $key, $default, $xss_clean);
 	}
 
-	public function _init_postraw() {
-		global $HTTP_RAW_POST_DATA;
-		static $postraw;
-		if (!$postraw) {
-			$postraw = 1;
-			$HTTP_RAW_POST_DATA = file_get_contents("php://input");
-		}
-		return $HTTP_RAW_POST_DATA;
-	}
+
 
 	/**
 	 * Fetch an item from the cookie::get() ($_COOKIE won't work with signed
