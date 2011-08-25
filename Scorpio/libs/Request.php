@@ -66,6 +66,15 @@ class Scorpio_Request_Core {
 		 * Use XSS clean?
 		 */
 		$this->use_xss_clean = (bool)Scorpio_Kenal::config('core.global_xss_filtering');
+
+		/**
+		 * magic_quotes_gpc is enabled
+		 */
+		if (get_magic_quotes_gpc()) {
+			$this->magic_quotes_gpc = true;
+			Scorpio_Kenal::log('debug',
+				'Disable magic_quotes_gpc! It is evil and deprecated: http://php.net/magic_quotes');
+		}
 	}
 
 	function _init_env() {
@@ -76,15 +85,6 @@ class Scorpio_Request_Core {
 			@set_magic_quotes_runtime(0);
 			Scorpio_Kenal::log('debug',
 				'Disable magic_quotes_runtime! It is evil and deprecated: http://php.net/magic_quotes');
-		}
-
-		/**
-		 * magic_quotes_gpc is enabled
-		 */
-		if (get_magic_quotes_gpc()) {
-			$this->magic_quotes_gpc = true;
-			Scorpio_Kenal::log('debug',
-				'Disable magic_quotes_gpc! It is evil and deprecated: http://php.net/magic_quotes');
 		}
 	}
 
