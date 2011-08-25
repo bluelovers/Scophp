@@ -172,11 +172,7 @@ class Scorpio_Request_Core {
 		return $HTTP_RAW_POST_DATA;
 	}
 
-	public function init() {
-
-		if ($this->init) return $this;
-		$this->init = true;
-
+	function _init_clear() {
 		// Convert all global variables to Kohana charset
 		$_SERVER = $this->clean($_SERVER);
 
@@ -190,6 +186,12 @@ class Scorpio_Request_Core {
 			$_POST = $this->clean($_POST);
 			$_COOKIE = $this->clean($_COOKIE);
 		}
+	}
+
+	public function init() {
+
+		if ($this->init) return $this;
+		$this->init = true;
 
 		$this->ip_address();
 
