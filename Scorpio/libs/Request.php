@@ -30,7 +30,9 @@ class Scorpio_Request_Core {
 	 */
 	protected $magic_quotes_gpc = false;
 
-	// IP address of current user
+	/**
+	 * IP address of current user
+	 */
 	public $ip_address;
 	public $ip_address_array;
 
