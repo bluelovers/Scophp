@@ -25,7 +25,9 @@ class Scorpio_Request_Core {
 	 */
 	protected $use_xss_clean = false;
 
-	// Are magic quotes enabled?
+	/**
+	 * Are magic quotes enabled?
+	 */
 	protected $magic_quotes_gpc = false;
 
 	// IP address of current user
