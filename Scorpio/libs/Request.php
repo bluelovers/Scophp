@@ -46,6 +46,11 @@ class Scorpio_Request_Core {
 	 */
 	public $init = false;
 
+	/**
+	 * default value is UTF-8
+	 */
+	public $charset = 'UTF-8';
+
 	protected static $instances = null;
 
 	public static function &instance($overwrite = false) {
