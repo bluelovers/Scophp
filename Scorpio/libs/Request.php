@@ -543,7 +543,7 @@ class Scorpio_Request_Core {
 				$ER = error_reporting( ~ E_NOTICE);
 
 				// iconv is expensive, so it is only used when needed
-				$str = iconv(Scorpio_Kenal::CHARSET, Scorpio_Kenal::CHARSET . '//IGNORE', $str);
+				$str = iconv($this->charset, $this->charset . '//IGNORE', $str);
 
 				// Turn notices back on
 				error_reporting($ER);
