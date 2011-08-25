@@ -38,6 +38,10 @@ class Scorpio_Request_Core {
 
 	public function __construct() {
 
+	}
+
+	public function init() {
+
 		if (!self::$instances || !in_array(get_class($this), class_parents(self::$instances))) {
 			self::$instances = &$this;
 		}
