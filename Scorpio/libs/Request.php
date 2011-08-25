@@ -30,6 +30,11 @@ class Scorpio_Request_Core {
 	public $ip_address;
 	public $ip_address_array;
 
+	/**
+	 * PHP_SAPI
+	 */
+	public $server_api = PHP_SAPI;
+
 	protected static $instances = null;
 
 	public static function &instance($overwrite = false) {
