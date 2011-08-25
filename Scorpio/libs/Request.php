@@ -56,24 +56,22 @@ class Scorpio_Request_Core {
 			return self::$instances;
 		$run = 1;
 
-		$self = $this->instance();
-
 		// Convert all global variables to Kohana charset
-		$_SERVER = $self->clean($_SERVER);
+		$_SERVER = $this->clean($_SERVER);
 
 		if (Scorpio_Kenal::$server_api === 'cli') {
 			$_GET = $_POST = $_COOKIE = $_REQUEST = array();
 
 			// Convert command line arguments
-			$_SERVER['argv'] = $self->clean($_SERVER['argv']);
+			$_SERVER['argv'] = $this->clean($_SERVER['argv']);
 		} else {
-			$_GET = $self->clean($_GET);
-			$_POST = $self->clean($_POST);
-			$_COOKIE = $self->clean($_COOKIE);
+			$_GET = $this->clean($_GET);
+			$_POST = $this->clean($_POST);
+			$_COOKIE = $this->clean($_COOKIE);
 		}
 
 		// Use XSS clean?
-		$self->use_xss_clean = (bool)Scorpio_Kenal::config('core.global_xss_filtering');
+		$this->use_xss_clean = (bool)Scorpio_Kenal::config('core.global_xss_filtering');
 
 		// magic_quotes_runtime is enabled
 		if (get_magic_quotes_runtime()) {
@@ -84,7 +82,7 @@ class Scorpio_Request_Core {
 
 		// magic_quotes_gpc is enabled
 		if (get_magic_quotes_gpc()) {
-			$self->magic_quotes_gpc = true;
+			$this->magic_quotes_gpc = true;
 			Scorpio_Kenal::log('debug',
 				'Disable magic_quotes_gpc! It is evil and deprecated: http://php.net/magic_quotes');
 		}
@@ -122,7 +120,7 @@ class Scorpio_Request_Core {
 		if (is_array($_GET)) {
 			foreach ($_GET as $key => $val) {
 				// Sanitize $_GET
-				$_GET[$self->clean_input_keys($key)] = $self->clean_input_data($val);
+				$_GET[$this->clean_input_keys($key)] = $this->clean_input_data($val);
 			}
 		} else {
 			$_GET = array();
@@ -131,7 +129,7 @@ class Scorpio_Request_Core {
 		if (is_array($_POST)) {
 			foreach ($_POST as $key => $val) {
 				// Sanitize $_POST
-				$_POST[$self->clean_input_keys($key)] = $self->clean_input_data($val);
+				$_POST[$this->clean_input_keys($key)] = $this->clean_input_data($val);
 			}
 		} else {
 			$_POST = array();
@@ -146,14 +144,14 @@ class Scorpio_Request_Core {
 					continue;
 
 				// Sanitize $_COOKIE
-				$_COOKIE[$self->clean_input_keys($key)] = $self->clean_input_data($val);
+				$_COOKIE[$this->clean_input_keys($key)] = $this->clean_input_data($val);
 			}
 		} else {
 			$_COOKIE = array();
 		}
 
-		$self->postraw();
-		$self->ip_address();
+		$this->postraw();
+		$this->ip_address();
 
 		Scorpio_Kenal::log('debug', 'Global GET, POST and COOKIE data sanitized');
 	}
