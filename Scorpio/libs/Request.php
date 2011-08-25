@@ -59,7 +59,7 @@ class Scorpio_Request_Core {
 		// Convert all global variables to Kohana charset
 		$_SERVER = $this->clean($_SERVER);
 
-		if (Scorpio_Kenal::$server_api === 'cli') {
+		if ($this->server_api === 'cli') {
 			$_GET = $_POST = $_COOKIE = $_REQUEST = array();
 
 			// Convert command line arguments
