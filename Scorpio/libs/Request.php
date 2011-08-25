@@ -88,7 +88,7 @@ class Scorpio_Request_Core {
 		}
 	}
 
-	function _init_input() {
+	function _init_globals() {
 		/**
 		 * register_globals is enabled
 		 */
@@ -124,6 +124,46 @@ class Scorpio_Request_Core {
 		}
 	}
 
+	function _init_input() {
+		if (is_array($_GET)) {
+			foreach ($_GET as $key => $val) {
+				// Sanitize $_GET
+				$_GET[$this->clean_input_keys($key)] = $this->clean_input_data($val);
+			}
+		} else {
+			$_GET = array();
+		}
+
+		if (is_array($_POST)) {
+			foreach ($_POST as $key => $val) {
+				// Sanitize $_POST
+				$_POST[$this->clean_input_keys($key)] = $this->clean_input_data($val);
+			}
+		} else {
+			$_POST = array();
+		}
+	}
+
+	function _init_request() {
+		$_REQUEST = array();
+		$_REQUEST = array_merge($_GET, $_POST);
+	}
+
+	function _init_cookies() {
+		if (is_array($_COOKIE)) {
+			foreach ($_COOKIE as $key => $val) {
+				// Ignore special attributes in RFC2109 compliant cookies
+				if ($key == '$Version' or $key == '$Path' or $key == '$Domain')
+					continue;
+
+				// Sanitize $_COOKIE
+				$_COOKIE[$this->clean_input_keys($key)] = $this->clean_input_data($val);
+			}
+		} else {
+			$_COOKIE = array();
+		}
+	}
+
 	public function init() {
 
 		if ($this->init) return $this;
@@ -149,40 +189,9 @@ class Scorpio_Request_Core {
 
 
 
-		$_REQUEST = array();
 
-		if (is_array($_GET)) {
-			foreach ($_GET as $key => $val) {
-				// Sanitize $_GET
-				$_GET[$this->clean_input_keys($key)] = $this->clean_input_data($val);
-			}
-		} else {
-			$_GET = array();
-		}
 
-		if (is_array($_POST)) {
-			foreach ($_POST as $key => $val) {
-				// Sanitize $_POST
-				$_POST[$this->clean_input_keys($key)] = $this->clean_input_data($val);
-			}
-		} else {
-			$_POST = array();
-		}
 
-		$_REQUEST = array_merge($_GET, $_POST);
-
-		if (is_array($_COOKIE)) {
-			foreach ($_COOKIE as $key => $val) {
-				// Ignore special attributes in RFC2109 compliant cookies
-				if ($key == '$Version' or $key == '$Path' or $key == '$Domain')
-					continue;
-
-				// Sanitize $_COOKIE
-				$_COOKIE[$this->clean_input_keys($key)] = $this->clean_input_data($val);
-			}
-		} else {
-			$_COOKIE = array();
-		}
 
 		$this->postraw();
 		$this->ip_address();
