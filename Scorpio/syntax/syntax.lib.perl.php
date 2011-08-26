@@ -11,12 +11,18 @@
 */
 
 if (!function_exists("lc")) {
+	/**
+	 * Make a string lowercase
+	 */
 	function lc($str) {
 		return scotext::strtolower($str);
 	}
 }
 
 if (!function_exists("uc")) {
+	/**
+	 * Make a string uppercase
+	 */
 	function uc($str) {
 		return scotext::strtoupper($str);
 	}
