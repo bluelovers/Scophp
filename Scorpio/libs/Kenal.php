@@ -43,6 +43,28 @@ class Scorpio_Kenal_Core {
 	public static function log($type, $message, $variables = null) {
 		return Scorpio_Kenal::instance();
 	}
+
+	function _class_loader($class) {
+		$_core_ = '_Core_';
+
+		$m = array();
+		if (preg_match('/^(?<pre>Scorpio_)(?<class>.+)(?<core>'.$_core_.')?$/', $m)) {
+			if (!class_exists($m['core'] ? $m[0] : $m['pre'].$m['class'].$_core_, false)) {
+				$paths = split('_', $m['class']);
+				$file = array_pop($paths);
+				if ($paths = join(DIR_SEP, $paths)) {
+					$paths .= DIR_SEP;
+				}
+				include $paths.$file.'.php';
+			}
+
+			if (!$m['core']) {
+				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . $m['pre'].$m['class'].$_core_ . ' { }';
+
+				eval($extension);
+			}
+		}
+	}
 }
 
 ?>
