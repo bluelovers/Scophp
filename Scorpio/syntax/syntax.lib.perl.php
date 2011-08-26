@@ -23,6 +23,9 @@ if (!function_exists("uc")) {
 }
 
 if (!function_exists("length")) {
+	/**
+	 * Get string length
+	 */
 	function length($str) {
 		return is_string($str) ? scotext::strlen($str) : count($str);
 	}
