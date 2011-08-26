@@ -87,7 +87,7 @@ class Scorpio_Kenal_Core {
 
 		if ($stop) {
 			if ($spl_autoload_register) $spl_autoload_register = !spl_autoload_unregister($_loader);
-		} else {
+		} elseif (!$spl_autoload_register) {
 			$spl_autoload_register = spl_autoload_register($_loader);
 		}
 	}
