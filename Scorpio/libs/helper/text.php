@@ -765,18 +765,30 @@ class Scorpio_helper_text_Core {
 		return $r;
 	}
 
+	/**
+	 * Make a string lowercase
+	 */
 	function lc($text) {
 		return static::strtolower($text);
 	}
 
+	/**
+	 * Make a string lowercase
+	 */
 	function strtolower($text) {
 		return strtolower($text);
 	}
 
+	/**
+	 * Make a string uppercase
+	 */
 	function uc($text) {
 		return static::strtoupper($text);
 	}
 
+	/**
+	 * Make a string uppercase
+	 */
 	function strtoupper($text) {
 		return strtoupper($text);
 	}
