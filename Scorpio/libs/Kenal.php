@@ -18,6 +18,8 @@ if (0) {
 	}
 }
 
+require_once '../inc/Constants.php';
+
 class Scorpio_Kenal_Core {
 	// Server API that PHP is using. Allows testing of different APIs.
 	public static $server_api = PHP_SAPI;
