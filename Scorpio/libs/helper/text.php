@@ -781,6 +781,9 @@ class Scorpio_helper_text_Core {
 		return strtoupper($text);
 	}
 
+	/**
+	 * Get string length
+	 */
 	function strlen($text) {
 		return strlen($text);
 	}
