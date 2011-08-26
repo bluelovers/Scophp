@@ -58,11 +58,35 @@ class Scorpio_Kenal_Core {
 				include $paths.$file.'.php';
 			}
 
-			if (!$m['core']) {
+			if (!$m['core'] && !class_exists($m['pre'].$m['class'], false)) {
 				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . $m['pre'].$m['class'].$_core_ . ' { }';
 
 				eval($extension);
 			}
+
+			return true;
+		}
+	}
+
+	function _class_autoload($class) {
+		Scorpio_Kenal::_class_loader($class);
+	}
+
+	function _class_setup($stop = false) {
+		static $spl_autoload_register;
+
+		if (!class_exists('Scorpio_Kenal', false)) {
+			self::_class_loader('Scorpio_Kenal');
+		}
+
+		static $_loader = array(
+			'Scorpio_Kenal', '_class_autoload'
+		);
+
+		if ($stop) {
+			if ($spl_autoload_register) $spl_autoload_register = !spl_autoload_unregister($_loader);
+		} else {
+			$spl_autoload_register = spl_autoload_register($_loader);
 		}
 	}
 }
