@@ -27,6 +27,26 @@ class Scorpio_helper_array_Core_ {
 
 		return $array;
 	}
+
+	/**
+	 * array_search_match($needle, $haystack)
+	 * returns all the keys of the values that match $needle in $haystack
+	 *
+	 * @return array
+	 */
+	static function search_all($needle, array $haystack, $strict = false) {
+		$array = array();
+
+		foreach ($haystack as $k => $v) {
+			if (!$strict && $haystack[$k] == $needle) {
+				$array[] = $k;
+			} elseif ($strict && $haystack[$k] === $needle) {
+				$array[] = $k;
+			}
+		}
+
+		return $array;
+	}
 }
 
 ?>
