@@ -61,6 +61,10 @@ class Scorpio_helper_array_Core_ {
 
 		return $array;
 	}
+
+	function in_array_default ($needle, $haystack, $default = null, $strict = false) {
+		return in_array($needle, $haystack, $strict) ? $needle : ($default === null ? $haystack[0] : $default);
+	}
 }
 
 ?>
