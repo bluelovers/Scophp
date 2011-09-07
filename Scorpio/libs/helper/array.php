@@ -91,6 +91,19 @@ class Scorpio_helper_array_Core_ {
 
 		return $a1;
 	}
+
+	function merge(array $array1,array $array2, $strict = true) {
+		$ret = array();
+
+		if ($strict) {
+			$ret = array_merge($array1, $array2);
+		} else {
+			$ret = $array1 + $array2;
+			$ret = static::overlay($ret, $array2);
+		}
+
+		return $ret;
+	}
 }
 
 ?>
