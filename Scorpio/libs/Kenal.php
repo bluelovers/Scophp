@@ -48,6 +48,7 @@ class Scorpio_Kenal_Core_ {
 
 	function _class_loader($class) {
 		$_core_ = '_Core_';
+		$ret = false;
 
 		$m = array();
 		if (preg_match('/^(?<pre>Scorpio_)(?<class>.+)(?<core>'.$_core_.')?$/', $m)) {
@@ -66,7 +67,7 @@ class Scorpio_Kenal_Core_ {
 				eval($extension);
 			}
 
-			return true;
+			$ret = true;
 		} elseif (preg_match('/^(?<pre>sco)(?<class>[a-zA-Z].+)$/', $m)) {
 			if (
 				self::_class_loader('Scorpio_helper_'.$m['class'])
@@ -76,10 +77,10 @@ class Scorpio_Kenal_Core_ {
 				eval($extension);
 			}
 
-			return true;
+			$ret = true;
 		}
 
-		return false;
+		return $ret;
 	}
 
 	function _class_autoload($class) {
