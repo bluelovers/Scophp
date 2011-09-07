@@ -104,6 +104,18 @@ class Scorpio_helper_array_Core_ {
 
 		return $ret;
 	}
+
+	function map_all($callback, $arr1) {
+		if (is_array($arr1)) {
+			foreach ($arr1 as $_k => $_v) {
+				$arr1[$_k] = static::map_all($callback, $arr1[$_k]);
+			}
+
+			return $arr1;
+		}
+
+		return call_user_func_array($callback, array($arr1));
+	}
 }
 
 ?>
