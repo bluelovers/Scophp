@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class scoinclude extends Scorpio_helper_include_Core {
+	class scoinclude extends Scorpio_helper_include_Core_ {
 	}
 }
 
-class Scorpio_helper_include_Core {
+class Scorpio_helper_include_Core_ {
 	protected static $instances = null;
 
 	// 取得構造物件

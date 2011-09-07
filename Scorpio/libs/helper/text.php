@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class scotext extends Scorpio_helper_text_Core {
+	class scotext extends Scorpio_helper_text_Core_ {
 	}
 }
 
-class Scorpio_helper_text_Core {
+class Scorpio_helper_text_Core_ {
 
 	protected static $instances = null;
 
@@ -765,22 +765,37 @@ class Scorpio_helper_text_Core {
 		return $r;
 	}
 
+	/**
+	 * Make a string lowercase
+	 */
 	function lc($text) {
 		return static::strtolower($text);
 	}
 
+	/**
+	 * Make a string lowercase
+	 */
 	function strtolower($text) {
 		return strtolower($text);
 	}
 
+	/**
+	 * Make a string uppercase
+	 */
 	function uc($text) {
 		return static::strtoupper($text);
 	}
 
+	/**
+	 * Make a string uppercase
+	 */
 	function strtoupper($text) {
 		return strtoupper($text);
 	}
 
+	/**
+	 * Get string length
+	 */
 	function strlen($text) {
 		return strlen($text);
 	}

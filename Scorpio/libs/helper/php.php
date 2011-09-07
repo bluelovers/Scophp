@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class scophp extends Scorpio_helper_php_Core {
+	class scophp extends Scorpio_helper_php_Core_ {
 	}
 }
 
-class Scorpio_helper_php_Core {
+class Scorpio_helper_php_Core_ {
 	protected static $instances = null;
 
 	protected static $_ini_var_map = array(

@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class scoclass extends Scorpio_helper_class_Core {
+	class scoclass extends Scorpio_helper_class_Core_ {
 	}
 }
 
-class Scorpio_helper_class_Core {
+class Scorpio_helper_class_Core_ {
 	protected static $instances = null;
 
 	// 取得構造物件
