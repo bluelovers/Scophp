@@ -67,6 +67,22 @@ class Scorpio_Kenal_Core_ {
 			}
 
 			return true;
+		} elseif (preg_match('/^(?<pre>sco)(?<class>[a-zA-Z].+)$/', $m)) {
+			if (!class_exists('Scorpio_helper_'.$m['class'].$_core_, false)) {
+				$path = 'helper/';
+				$file = $m['class'];
+				include $paths.$file.'.php';
+			}
+
+			if (!class_exists('Scorpio_helper_'.$m['class'], false)) {
+				$extension = 'class ' . 'Scorpio_helper_'.$m['class'] . ' extends ' . 'Scorpio_helper_'.$m['class'].$_core_ . ' { }';
+				eval($extension);
+			}
+
+			if (!class_exists('Scorpio_helper_'.$m[0], false)) {
+				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . 'Scorpio_helper_'.$m['class'] . ' { }';
+				eval($extension);
+			}
 		}
 	}
 
