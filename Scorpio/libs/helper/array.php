@@ -99,7 +99,7 @@ class Scorpio_helper_array_Core_ {
 			$ret = array_merge($array1, $array2);
 		} else {
 			$ret = $array1 + $array2;
-			$ret = static::overlay($ret, $array2);
+			$ret = scoarray::overlay($ret, $array2);
 		}
 
 		return $ret;
@@ -108,7 +108,7 @@ class Scorpio_helper_array_Core_ {
 	function map_all($callback, $arr1) {
 		if (is_array($arr1)) {
 			foreach ($arr1 as $_k => $_v) {
-				$arr1[$_k] = static::map_all($callback, $arr1[$_k]);
+				$arr1[$_k] = scoarray::map_all($callback, $arr1[$_k]);
 			}
 
 			return $arr1;
