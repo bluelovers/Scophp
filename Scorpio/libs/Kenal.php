@@ -14,13 +14,13 @@
 
 if (0) {
 	// for IDE
-	class Scorpio_Kenal extends Scorpio_Kenal_Core {
+	class Scorpio_Kenal extends Scorpio_Kenal_Core_ {
 	}
 }
 
 require_once '../inc/Constants.php';
 
-class Scorpio_Kenal_Core {
+class Scorpio_Kenal_Core_ {
 	// Server API that PHP is using. Allows testing of different APIs.
 	public static $server_api = PHP_SAPI;
 

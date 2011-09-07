@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class scoutf8 extends Scorpio_helper_utf8_Core {
+	class scoutf8 extends Scorpio_helper_utf8_Core_ {
 	}
 }
 
-class Scorpio_helper_utf8_Core {
+class Scorpio_helper_utf8_Core_ {
 
 	protected static $instances = null;
 

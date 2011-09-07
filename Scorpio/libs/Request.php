@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scorpio_Request extends Scorpio_Request_Core {
+	class Scorpio_Request extends Scorpio_Request_Core_ {
 	}
 }
 
-class Scorpio_Request_Core {
+class Scorpio_Request_Core_ {
 
 	/**
 	 * Enable or disable automatic XSS cleaning
