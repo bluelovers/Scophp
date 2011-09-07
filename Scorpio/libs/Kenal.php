@@ -103,6 +103,8 @@ class Scorpio_Kenal_Core_ {
 		} elseif (!$spl_autoload_register) {
 			$spl_autoload_register = spl_autoload_register($_loader);
 		}
+
+		return Scorpio_Kenal::instance();
 	}
 }
 
