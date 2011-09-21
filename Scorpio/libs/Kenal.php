@@ -85,7 +85,7 @@ class Scorpio_Kenal_Core_ {
 			$ret = true;
 		} elseif (preg_match('/^(?<pre>sco)(?<class>[a-zA-Z].+)$/', $m)) {
 			if (
-				self::_class_loader('Scorpio_helper_'.$m['class'])
+				Scorpio_Kenal::_class_loader('Scorpio_helper_'.$m['class'])
 				&& !class_exists($m[0], false)
 			) {
 				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . 'Scorpio_helper_'.$m['class'] . ' { }';
