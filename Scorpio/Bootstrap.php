@@ -13,4 +13,7 @@ if (!defined('SCORPIO_SYSPATH')) {
 
 include_once(SCORPIO_SYSPATH . 'Scorpio/libs/Kenal.php');
 
+Scorpio_Kenal_Core_::_class_setup();
+
+
 ?>
