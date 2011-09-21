@@ -322,7 +322,7 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 	 * @return string the UID if available.
 	 */
 	function &getUser() {
-		return self::getSession();
+		return $this->getSession();
 	}
 
 	public function &wall($who = 'me') {
