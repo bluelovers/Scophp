@@ -58,7 +58,7 @@ class Scorpio_Kenal_Core_ {
 				if ($paths = join(DIR_SEP, $paths)) {
 					$paths .= DIR_SEP;
 				}
-				include SCORPIO_SYSPATH.'Scorpio/libs/'.$paths.$file.'.php';
+				include_once SCORPIO_SYSPATH.'Scorpio/libs/'.$paths.$file.'.php';
 			}
 
 			if (!$m['core'] && !class_exists($m['pre'].$m['class'], false)) {
