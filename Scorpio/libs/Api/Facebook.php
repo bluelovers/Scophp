@@ -290,6 +290,12 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 		return $ret;
 	}
 
+	/**
+	 * Get the UID of the connected user, or 0
+	 * if the Facebook user is not connected.
+	 *
+	 * @return string the UID if available.
+	 */
 	public function &getSession() {
 		if (version_compare(Facebook::VERSION, '3.0.0', '>=')) {
 			return parent::getUser();
