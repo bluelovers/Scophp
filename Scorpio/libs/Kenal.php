@@ -58,6 +58,9 @@ class Scorpio_Kenal_Core_ {
 		return Scorpio_Kenal::instance();
 	}
 
+	/**
+	 * @return bool
+	 */
 	function _class_loader_by_defined($class) {
 		if (array_key_exists($class, Scorpio_Kenal::$scoAutoloadClasses)) {
 			include_once Scorpio_Kenal::$scoAutoloadClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadClasses[$class]['file'];
@@ -68,6 +71,9 @@ class Scorpio_Kenal_Core_ {
 		return class_exists($class, false);
 	}
 
+	/**
+	 * @return bool
+	 */
 	function _class_loader($class) {
 		$_core_ = '_Core_';
 		$ret = false;
