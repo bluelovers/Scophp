@@ -290,8 +290,28 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 		return $ret;
 	}
 
+	/**
+	 * Get the UID of the connected user, or 0
+	 * if the Facebook user is not connected.
+	 *
+	 * @return string the UID if available.
+	 */
 	public function &getSession() {
-		return parent::getSession();
+		if (version_compare(Facebook::VERSION, '3.0.0', '>=')) {
+			return parent::getUser();
+		} else {
+			return parent::getSession();
+		}
+	}
+
+	/**
+	 * Get the UID of the connected user, or 0
+	 * if the Facebook user is not connected.
+	 *
+	 * @return string the UID if available.
+	 */
+	function &getUser() {
+		return self::getSession();
 	}
 
 	public function &wall($who = 'me') {
@@ -392,6 +412,8 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 			}
 			$session = $_session_;
 		}
+
+		//TODO:need update to v3
 
 		return parent::setSession($session, $write_cookie);
 	}
