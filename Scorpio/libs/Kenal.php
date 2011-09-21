@@ -85,7 +85,7 @@ class Scorpio_Kenal_Core_ {
 		if (!$force && isset($_cache[$class])) return $_cache[$class];
 
 		$_core_ = '_Core_';
-		$ret = false;
+		$ret = null;
 
 		$m = array();
 		if ($class != 'Scorpio_Kenal' && Scorpio_Kenal::_class_loader_by_defined($class)) {
