@@ -18,6 +18,13 @@ include_once SCORPIO_SYSPATH . 'Scorpio/libs/Kenal.php';
 
 Scorpio_Kenal_Core_::_class_setup();
 
+if (!defined('SCORPIO_SYNTAX')) {
+	/**
+	 * if true include syntax hack (ex: perl...)
+	 */
+	define('SCORPIO_SYNTAX', true);
+}
+
 if (!defined('SCORPIO_SYNTAX') || SCORPIO_SYNTAX != false) {
 	foreach (Scorpio_File_Core::scandir_ext('php', SCORPIO_SYSPATH.'Scorpio/syntax') as $_file) {
 		include_once SCORPIO_SYSPATH.'Scorpio/syntax/' . $_file;
