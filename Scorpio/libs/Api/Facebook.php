@@ -18,9 +18,9 @@ if (0) {
 	}
 }
 
-Scorpio_Loader_Core::instance()
-	->extend('Facebook', 'D:/xampp/svn/clone/facebook/php-sdk/src/facebook.php')
-	->load('Scorpio_Loader');
+if (!array_key_exists($class, Scorpio_Kenal::$scoAutoloadLocalClasses)) {
+	Scorpio_Kenal::$scoAutoloadLocalClasses['Facebook'] = 'D:/xampp/svn/clone/facebook/php-sdk/src/facebook.php';
+}
 
 class Scorpio_Api_Facebook_Core_ extends Facebook {
 	protected $_opts = array();
