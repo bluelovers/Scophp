@@ -290,6 +290,10 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 		return $ret;
 	}
 
+	/**
+	 * check php sdk version
+	 * default is 3.0.0
+	 */
 	function _version_compare($ver = '3.0.0', $operator = '>=') {
 		$ret = version_compare(Facebook::VERSION, $ver, $operator);
 
