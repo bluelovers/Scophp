@@ -77,16 +77,22 @@ class Scorpio_Kenal_Core_ {
 	/**
 	 * @return bool
 	 */
-	public static function _class_loader($class) {
+	public static function _class_loader($class, $force = false) {
+
+		static $_cache;
+
+		// 防止無限迴圈
+		if (!$force && isset($_cache[$class])) return $_cache[$class];
+
 		$_core_ = '_Core_';
-		$ret = false;
+		$ret = null;
 
 		$m = array();
 		if ($class != 'Scorpio_Kenal' && Scorpio_Kenal::_class_loader_by_defined($class)) {
-			$ret = true;
+			$ret = class_exists($class, false);
 		} elseif ($class == 'Scorpio_Kenal' && self::_class_loader_by_defined($class)) {
 			// 可利用此判斷載入 Scorpio_Kenal 的封裝類別
-			$ret = true;
+			$ret = class_exists($class, false);
 		} elseif (preg_match('/^(?<pre>Scorpio_)(?<class>.+)(?<core>'.$_core_.')?$/', $class, $m)) {
 			if (!class_exists($m['core'] ? $m[0] : $m['pre'].$m['class'].$_core_, false)) {
 				$paths = split('_', $m['class']);
@@ -97,24 +103,33 @@ class Scorpio_Kenal_Core_ {
 				include_once SCORPIO_SYSPATH.'Scorpio/libs/'.$paths.$file.'.php';
 			}
 
-			if (!$m['core'] && !class_exists($m['pre'].$m['class'], false)) {
+			if (!$m['core']
+				&& !class_exists($m['pre'].$m['class'], false)
+				// 防止無限迴圈
+				&& class_exists($m['pre'].$m['class'].$_core_, false)
+			) {
 				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . $m['pre'].$m['class'].$_core_ . ' { }';
 
 				eval($extension);
 			}
 
-			$ret = true;
+			$ret = class_exists($class, false);
 		} elseif (preg_match('/^(?<pre>sco)(?<class>[a-zA-Z].+)$/', $class, $m)) {
 			if (
 				Scorpio_Kenal::_class_loader('Scorpio_helper_'.$m['class'])
 				&& !class_exists($m[0], false)
+				// 防止無限迴圈
+				&& class_exists('Scorpio_helper_'.$m['class'], false)
 			) {
 				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . 'Scorpio_helper_'.$m['class'] . ' { }';
 				eval($extension);
 			}
 
-			$ret = true;
+			$ret = class_exists($class, false);
 		}
+
+		// 緩存是否成功載入
+		$_cache[$class] = $ret;
 
 		return $ret;
 	}
