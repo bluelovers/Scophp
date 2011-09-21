@@ -46,7 +46,7 @@ class Scorpio_Kenal_Core_ {
 	/**
 	 * @return Scorpio_Kenal
 	 */
-	function __construct() {
+	public function __construct() {
 		if (!Scorpio_Kenal::$instances) {
 			Scorpio_Kenal::$instances = $this;
 		}
