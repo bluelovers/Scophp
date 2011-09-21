@@ -64,6 +64,9 @@ class Scorpio_Kenal_Core_ {
 		$ret = false;
 
 		$m = array();
+		if (Scorpio_Kenal::_class_loader_by_defined($class)) {
+			$ret = true;
+		} else
 		if (preg_match('/^(?<pre>Scorpio_)(?<class>.+)(?<core>'.$_core_.')?$/', $m)) {
 			if (!class_exists($m['core'] ? $m[0] : $m['pre'].$m['class'].$_core_, false)) {
 				$paths = split('_', $m['class']);
