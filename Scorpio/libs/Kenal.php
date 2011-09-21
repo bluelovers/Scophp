@@ -116,7 +116,7 @@ class Scorpio_Kenal_Core_ {
 				eval($extension);
 			}
 
-			$ret = true;
+			$ret = class_exists($class, false);
 		}
 
 		return $ret;
