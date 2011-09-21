@@ -448,6 +448,9 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 		return parent::setSession($session, $write_cookie);
 	}
 
+	/**
+	 * @deprecated deprecated since facebook php-sdk v3.0
+	 */
 	function magic_quotes_gpc() {
 		if (!get_magic_quotes_gpc()) {
 			global $_REQUEST, $_COOKIE;
