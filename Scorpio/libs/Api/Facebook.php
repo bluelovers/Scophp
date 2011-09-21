@@ -406,6 +406,9 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 		return (range(0, count($array) - 1) == array_keys($array)) ? true : false;
 	}
 
+	/**
+	 * @deprecated deprecated since facebook php-sdk v3.0
+	 */
 	public function &setSession($session=null, $write_cookie=null, $decode = null) {
 
 		if ($this->_version_compare()) {
