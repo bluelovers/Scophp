@@ -31,8 +31,7 @@ if (SCORPIO_SYNTAX) {
 	foreach (Scorpio_File_Core::scandir_ext('php', SCORPIO_SYSPATH.'Scorpio/syntax') as $_file) {
 		include_once SCORPIO_SYSPATH.'Scorpio/syntax/' . $_file;
 	}
+	unset($_file);
 }
-
-unset($_file);
 
 ?>
