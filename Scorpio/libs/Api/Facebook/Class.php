@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scorpio_Api_Facebook_Class extends Scorpio_Api_Facebook_Class_Core {
+	class Scorpio_Api_Facebook_Class extends Scorpio_Api_Facebook_Class_Core_ {
 	}
 }
 
-class Scorpio_Api_Facebook_Class_Core {
+class Scorpio_Api_Facebook_Class_Core_ {
 	protected $core = null;
 	protected $_data = array();
 

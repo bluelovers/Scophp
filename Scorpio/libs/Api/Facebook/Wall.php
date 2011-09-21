@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scorpio_Api_Facebook_Wall extends Scorpio_Api_Facebook_Wall_Core {
+	class Scorpio_Api_Facebook_Wall extends Scorpio_Api_Facebook_Wall_Core_ {
 	}
 }
 
-class Scorpio_Api_Facebook_Wall_Core extends Scorpio_Api_Facebook_Class {
+class Scorpio_Api_Facebook_Wall_Core_ extends Scorpio_Api_Facebook_Class {
 	public static $fields = array(
 		/*
 <div class="UIImageBlock_Content UIImageBlock_MED_Content fsm fwn fcg">
