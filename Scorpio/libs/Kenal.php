@@ -29,6 +29,9 @@ class Scorpio_Kenal_Core_ {
 	public static $scoAutoloadLocalClasses = array();
 	public static $scoAutoloadClasses = array();
 
+	/**
+	 * @return Scorpio_Kenal
+	 */
 	public static function &instance() {
 		if (!Scorpio_Kenal::$instances) {
 			Scorpio_Kenal::$instances = new Scorpio_Kenal;
@@ -37,6 +40,9 @@ class Scorpio_Kenal_Core_ {
 		return Scorpio_Kenal::$instances;
 	}
 
+	/**
+	 * @return Scorpio_Kenal
+	 */
 	function __construct() {
 		if (!Scorpio_Kenal::$instances) {
 			Scorpio_Kenal::$instances = $this;
@@ -45,6 +51,9 @@ class Scorpio_Kenal_Core_ {
 		return Scorpio_Kenal::$instances;
 	}
 
+	/**
+	 * @return Scorpio_Kenal
+	 */
 	public static function log($type, $message, $variables = null) {
 		return Scorpio_Kenal::instance();
 	}
@@ -105,6 +114,9 @@ class Scorpio_Kenal_Core_ {
 		return Scorpio_Kenal::_class_loader($class);
 	}
 
+	/**
+	 * @return Scorpio_Kenal
+	 */
 	function _class_setup($stop = false) {
 		static $spl_autoload_register;
 
