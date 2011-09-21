@@ -118,6 +118,8 @@ class Scorpio_Kenal_Core_ {
 			if (
 				Scorpio_Kenal::_class_loader('Scorpio_helper_'.$m['class'])
 				&& !class_exists($m[0], false)
+				// 防止無限迴圈
+				&& class_exists('Scorpio_helper_'.$m['class'], false)
 			) {
 				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . 'Scorpio_helper_'.$m['class'] . ' { }';
 				eval($extension);
