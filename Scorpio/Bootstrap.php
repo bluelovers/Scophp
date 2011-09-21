@@ -15,5 +15,10 @@ include_once(SCORPIO_SYSPATH . 'Scorpio/libs/Kenal.php');
 
 Scorpio_Kenal_Core_::_class_setup();
 
+foreach (Scorpio_File_Core::scandir_ext('php', Scorpio_File_Core::dirname(SYSPATH.'Scorpio') . 'syntax') as $_file) {
+	include_once(Scorpio_File_Core::dirname(SYSPATH.'Scorpio') . 'syntax/' . $_file);
+}
+
+unset($_file);
 
 ?>
