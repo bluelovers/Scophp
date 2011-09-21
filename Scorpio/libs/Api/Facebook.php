@@ -14,7 +14,7 @@
 
 if (0) {
 	// for IDE
-	class Scorpio_Api_Facebook extends Scorpio_Api_Facebook_Core {
+	class Scorpio_Api_Facebook extends Scorpio_Api_Facebook_Core_ {
 	}
 }
 
@@ -22,7 +22,7 @@ Scorpio_Loader_Core::instance()
 	->extend('Facebook', 'D:/xampp/svn/clone/facebook/php-sdk/src/facebook.php')
 	->load('Scorpio_Loader');
 
-class Scorpio_Api_Facebook_Core extends Facebook {
+class Scorpio_Api_Facebook_Core_ extends Facebook {
 	protected $_opts = array();
 	public static $req_perms = array(
 		/* Publishing Permissions */
