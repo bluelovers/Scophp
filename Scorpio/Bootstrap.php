@@ -11,12 +11,12 @@ if (!defined('SCORPIO_SYSPATH')) {
 	define('SCORPIO_SYSPATH', Scorpio_File_Core::dirname(__FILE__, '..', 1));
 }
 
-include_once(SCORPIO_SYSPATH . 'Scorpio/libs/Kenal.php');
+include_once SCORPIO_SYSPATH . 'Scorpio/libs/Kenal.php';
 
 Scorpio_Kenal_Core_::_class_setup();
 
-foreach (Scorpio_File_Core::scandir_ext('php', SCORPIO_SYSPATH.'Scorpio/' . 'syntax') as $_file) {
-	include_once(SCORPIO_SYSPATH.'Scorpio/' . 'syntax/' . $_file);
+foreach (Scorpio_File_Core::scandir_ext('php', SCORPIO_SYSPATH.'Scorpio/syntax') as $_file) {
+	include_once SCORPIO_SYSPATH.'Scorpio/syntax/' . $_file;
 }
 
 unset($_file);
