@@ -13,7 +13,7 @@ if (!defined('SCORPIO_SYSPATH')) {
 	/**
 	 * define Scorpio PHP Framework root path
 	 */
-	define('SCORPIO_SYSPATH', Scorpio_helper_file_Core_::dirname(__FILE__, '..', 1));
+	define('SCORPIO_SYSPATH', Scorpio_File_Core_::dirname(__FILE__, '..', 1));
 }
 
 include_once SCORPIO_SYSPATH . 'Scorpio/libs/Kenal.php';
@@ -28,7 +28,7 @@ if (!defined('SCORPIO_SYNTAX')) {
 }
 
 if (SCORPIO_SYNTAX) {
-	foreach (Scorpio_helper_file_Core_::scandir_ext('php', SCORPIO_SYSPATH.'Scorpio/syntax') as $_file) {
+	foreach (Scorpio_File_Core_::scandir_ext('php', SCORPIO_SYSPATH.'Scorpio/syntax') as $_file) {
 		include_once SCORPIO_SYSPATH.'Scorpio/syntax/' . $_file;
 	}
 	unset($_file);
