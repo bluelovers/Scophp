@@ -407,6 +407,22 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 	}
 
 	public function &setSession($session=null, $write_cookie=null, $decode = null) {
+
+		if ($this->_version_compare()) {
+			/**
+			 * 假性相容舊版 v2 的 setSession
+			 */
+			if (isset($session['access_token'])) {
+				$this->setAccessToken($session['access_token']);
+			} elseif (!is_array($session)) {
+				$this->setAccessToken($session);
+			} else {
+				//TODO:do something
+			}
+
+			return $this;
+		}
+
 		if ($write_cookie === null || $write_cookie == -1) $write_cookie = $this->useCookieSupport();
 
 //		$this->magic_quotes_gpc();
