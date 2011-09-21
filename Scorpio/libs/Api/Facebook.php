@@ -19,7 +19,11 @@ if (0) {
 }
 
 if (!array_key_exists($class, Scorpio_Kenal::$scoAutoloadLocalClasses)) {
-	Scorpio_Kenal::$scoAutoloadLocalClasses['Facebook'] = 'D:/xampp/svn/clone/facebook/php-sdk/src/facebook.php';
+	Scorpio_Kenal::$scoAutoloadLocalClasses['Facebook'] = array(
+		'root'	=> 'D:/xampp/svn/clone/facebook/',
+		'path'	=> 'php-sdk/src/',
+		'file'	=> 'facebook.php',
+	);
 }
 
 class Scorpio_Api_Facebook_Core_ extends Facebook {
