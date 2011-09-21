@@ -80,6 +80,8 @@ class Scorpio_Kenal_Core_ {
 			}
 
 			$ret = true;
+		} elseif (array_key_exists($class, Scorpio_Kenal::$scoAutoloadLocalClasses)) {
+			include_once Scorpio_Kenal::$scoAutoloadLocalClasses[$class];
 		}
 
 		return $ret;
