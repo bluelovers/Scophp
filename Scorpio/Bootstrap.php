@@ -3,6 +3,8 @@
 /**
  * @author bluelovers
  * @copyright 2011
+ *
+ * @example include_once {path}.'Scorpio/Bootstrap.php';
  */
 
 if (!defined('SCORPIO_SYSPATH')) {
