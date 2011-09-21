@@ -103,7 +103,9 @@ class Scorpio_Kenal_Core_ {
 				include_once SCORPIO_SYSPATH.'Scorpio/libs/'.$paths.$file.'.php';
 			}
 
-			if (!$m['core'] && !class_exists($m['pre'].$m['class'], false)) {
+			if (!$m['core']
+				&& !class_exists($m['pre'].$m['class'], false)
+			) {
 				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . $m['pre'].$m['class'].$_core_ . ' { }';
 
 				eval($extension);
