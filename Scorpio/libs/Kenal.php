@@ -105,6 +105,7 @@ class Scorpio_Kenal_Core_ {
 
 			if (!$m['core']
 				&& !class_exists($m['pre'].$m['class'], false)
+				// 防止無限迴圈
 				&& class_exists($m['pre'].$m['class'].$_core_, false)
 			) {
 				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . $m['pre'].$m['class'].$_core_ . ' { }';
