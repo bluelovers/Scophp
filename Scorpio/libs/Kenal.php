@@ -98,8 +98,11 @@ class Scorpio_Kenal_Core_ {
 		return $ret;
 	}
 
+	/**
+	 * @return bool
+	 */
 	function _class_autoload($class) {
-		Scorpio_Kenal::_class_loader($class);
+		return Scorpio_Kenal::_class_loader($class);
 	}
 
 	function _class_setup($stop = false) {
