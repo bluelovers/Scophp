@@ -20,6 +20,9 @@ if (0) {
 
 require_once SCORPIO_SYSPATH.'Scorpio/inc/Constants.php';
 
+/**
+ * Kenal class for Scorpio PHP Framework
+ */
 class Scorpio_Kenal_Core_ {
 	// Server API that PHP is using. Allows testing of different APIs.
 	public static $server_api = PHP_SAPI;
