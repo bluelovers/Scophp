@@ -18,7 +18,7 @@ if (0) {
 	}
 }
 
-require_once '../inc/Constants.php';
+require_once SCORPIO_SYSPATH.'Scorpio/inc/Constants.php';
 
 class Scorpio_Kenal_Core_ {
 	// Server API that PHP is using. Allows testing of different APIs.
@@ -58,7 +58,7 @@ class Scorpio_Kenal_Core_ {
 				if ($paths = join(DIR_SEP, $paths)) {
 					$paths .= DIR_SEP;
 				}
-				include $paths.$file.'.php';
+				include_once SCORPIO_SYSPATH.'Scorpio/libs/'.$paths.$file.'.php';
 			}
 
 			if (!$m['core'] && !class_exists($m['pre'].$m['class'], false)) {
