@@ -305,6 +305,7 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 	 * if the Facebook user is not connected.
 	 *
 	 * @return string the UID if available.
+	 * @deprecated deprecated since facebook php-sdk v3.0
 	 */
 	public function &getSession() {
 		if ($this->_version_compare()) {
