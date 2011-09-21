@@ -8,6 +8,9 @@
 if (!defined('SCORPIO_SYSPATH')) {
 	include_once dirname(__FILE__).'/libs/File.php';
 
+	/**
+	 * define Scorpio PHP Framework root path
+	 */
 	define('SCORPIO_SYSPATH', Scorpio_File_Core::dirname(__FILE__, '..', 1));
 }
 
