@@ -20,6 +20,9 @@ if (0) {
 
 require_once SCORPIO_SYSPATH.'Scorpio/inc/Constants.php';
 
+/**
+ * Kenal class for Scorpio PHP Framework
+ */
 class Scorpio_Kenal_Core_ {
 	// Server API that PHP is using. Allows testing of different APIs.
 	public static $server_api = PHP_SAPI;
@@ -29,6 +32,9 @@ class Scorpio_Kenal_Core_ {
 	public static $scoAutoloadLocalClasses = array();
 	public static $scoAutoloadClasses = array();
 
+	/**
+	 * @return Scorpio_Kenal
+	 */
 	public static function &instance() {
 		if (!Scorpio_Kenal::$instances) {
 			Scorpio_Kenal::$instances = new Scorpio_Kenal;
@@ -37,6 +43,9 @@ class Scorpio_Kenal_Core_ {
 		return Scorpio_Kenal::$instances;
 	}
 
+	/**
+	 * @return Scorpio_Kenal
+	 */
 	function __construct() {
 		if (!Scorpio_Kenal::$instances) {
 			Scorpio_Kenal::$instances = $this;
@@ -45,16 +54,37 @@ class Scorpio_Kenal_Core_ {
 		return Scorpio_Kenal::$instances;
 	}
 
+	/**
+	 * @return Scorpio_Kenal
+	 */
 	public static function log($type, $message, $variables = null) {
 		return Scorpio_Kenal::instance();
 	}
 
+	/**
+	 * @return bool
+	 */
+	function _class_loader_by_defined($class) {
+		if (array_key_exists($class, Scorpio_Kenal::$scoAutoloadClasses)) {
+			include_once Scorpio_Kenal::$scoAutoloadClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadClasses[$class]['file'];
+		} elseif (array_key_exists($class, Scorpio_Kenal::$scoAutoloadLocalClasses)) {
+			include_once Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['file'];
+		}
+
+		return class_exists($class, false);
+	}
+
+	/**
+	 * @return bool
+	 */
 	function _class_loader($class) {
 		$_core_ = '_Core_';
 		$ret = false;
 
 		$m = array();
-		if (preg_match('/^(?<pre>Scorpio_)(?<class>.+)(?<core>'.$_core_.')?$/', $m)) {
+		if (Scorpio_Kenal::_class_loader_by_defined($class)) {
+			$ret = true;
+		} elseif (preg_match('/^(?<pre>Scorpio_)(?<class>.+)(?<core>'.$_core_.')?$/', $m)) {
 			if (!class_exists($m['core'] ? $m[0] : $m['pre'].$m['class'].$_core_, false)) {
 				$paths = split('_', $m['class']);
 				$file = array_pop($paths);
@@ -73,7 +103,7 @@ class Scorpio_Kenal_Core_ {
 			$ret = true;
 		} elseif (preg_match('/^(?<pre>sco)(?<class>[a-zA-Z].+)$/', $m)) {
 			if (
-				self::_class_loader('Scorpio_helper_'.$m['class'])
+				Scorpio_Kenal::_class_loader('Scorpio_helper_'.$m['class'])
 				&& !class_exists($m[0], false)
 			) {
 				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . 'Scorpio_helper_'.$m['class'] . ' { }';
@@ -81,19 +111,21 @@ class Scorpio_Kenal_Core_ {
 			}
 
 			$ret = true;
-		} elseif (array_key_exists($class, Scorpio_Kenal::$scoAutoloadClasses)) {
-			include_once Scorpio_Kenal::$scoAutoloadClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadClasses[$class]['file'];
-		} elseif (array_key_exists($class, Scorpio_Kenal::$scoAutoloadLocalClasses)) {
-			include_once Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['file'];
 		}
 
 		return $ret;
 	}
 
+	/**
+	 * @return bool
+	 */
 	function _class_autoload($class) {
-		Scorpio_Kenal::_class_loader($class);
+		return Scorpio_Kenal::_class_loader($class);
 	}
 
+	/**
+	 * @return Scorpio_Kenal
+	 */
 	function _class_setup($stop = false) {
 		static $spl_autoload_register;
 
