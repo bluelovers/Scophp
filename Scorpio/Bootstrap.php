@@ -25,7 +25,7 @@ if (!defined('SCORPIO_SYNTAX')) {
 	define('SCORPIO_SYNTAX', true);
 }
 
-if (!defined('SCORPIO_SYNTAX') || SCORPIO_SYNTAX != false) {
+if (SCORPIO_SYNTAX) {
 	foreach (Scorpio_File_Core::scandir_ext('php', SCORPIO_SYSPATH.'Scorpio/syntax') as $_file) {
 		include_once SCORPIO_SYSPATH.'Scorpio/syntax/' . $_file;
 	}
