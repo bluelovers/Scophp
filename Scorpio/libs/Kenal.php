@@ -65,10 +65,10 @@ class Scorpio_Kenal_Core_ {
 	 * @return bool
 	 */
 	public static function _class_loader_by_defined($class) {
-		if (array_key_exists($class, Scorpio_Kenal::$scoAutoloadClasses)) {
-			include_once Scorpio_Kenal::$scoAutoloadClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadClasses[$class]['file'];
-		} elseif (array_key_exists($class, Scorpio_Kenal::$scoAutoloadLocalClasses)) {
-			include_once Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['file'];
+		if (array_key_exists($class, self::$scoAutoloadClasses)) {
+			include_once self::$scoAutoloadClasses[$class]['root'].self::$scoAutoloadClasses[$class]['path'].self::$scoAutoloadClasses[$class]['file'];
+		} elseif (array_key_exists($class, self::$scoAutoloadLocalClasses)) {
+			include_once self::$scoAutoloadLocalClasses[$class]['root'].self::$scoAutoloadLocalClasses[$class]['path'].self::$scoAutoloadLocalClasses[$class]['file'];
 		}
 
 		return class_exists($class, false);
