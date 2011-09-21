@@ -18,7 +18,7 @@ if (0) {
 	}
 }
 
-require_once '../inc/Constants.php';
+require_once SCORPIO_SYSPATH.'Scorpio/inc/Constants.php';
 
 class Scorpio_Kenal_Core_ {
 	// Server API that PHP is using. Allows testing of different APIs.
