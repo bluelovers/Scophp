@@ -20,8 +20,8 @@ if (0) {
 
 if (!array_key_exists($class, Scorpio_Kenal::$scoAutoloadLocalClasses)) {
 	Scorpio_Kenal::$scoAutoloadLocalClasses['Facebook'] = array(
-		'root'	=> 'D:/xampp/svn/clone/facebook/',
-		'path'	=> 'php-sdk/src/',
+		'root'	=> 'D:/xampp/svn/clone/',
+		'path'	=> 'facebook/php-sdk/src/',
 		'file'	=> 'facebook.php',
 	);
 }
