@@ -11,4 +11,6 @@ if (!defined('SCORPIO_SYSPATH')) {
 	define('SCORPIO_SYSPATH', Scorpio_File_Core::dirname(__FILE__, '..', 1));
 }
 
+include_once(SCORPIO_SYSPATH . 'Scorpio/libs/Kenal.php');
+
 ?>
