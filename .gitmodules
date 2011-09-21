@@ -1,0 +1,3 @@
+[submodule "Scorpio/vendor/facebook/php-sdk"]
+	path = Scorpio/vendor/facebook/php-sdk
+	url = https://github.com/facebook/php-sdk.git
