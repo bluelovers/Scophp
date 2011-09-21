@@ -266,7 +266,7 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 	public function &instance($config) {
 		$args = func_get_args();
 
-		$ref = new ReflectionClass(get_called_class());
+		$ref = new ReflectionClass(function_exists('get_called_class') ? get_called_class() : 'Scorpio_Api_Facebook');
 		$instances =& $ref->newInstanceArgs((array)$args);
 
 		return $instances;
@@ -291,13 +291,24 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 	}
 
 	/**
+	 * check php sdk version
+	 * default is 3.0.0
+	 */
+	function _version_compare($ver = '3.0.0', $operator = '>=') {
+		$ret = version_compare(Facebook::VERSION, $ver, $operator);
+
+		return $ver;
+	}
+
+	/**
 	 * Get the UID of the connected user, or 0
 	 * if the Facebook user is not connected.
 	 *
 	 * @return string the UID if available.
+	 * @deprecated deprecated since facebook php-sdk v3.0
 	 */
 	public function &getSession() {
-		if (version_compare(Facebook::VERSION, '3.0.0', '>=')) {
+		if ($this->_version_compare()) {
 			return parent::getUser();
 		} else {
 			return parent::getSession();
@@ -311,7 +322,7 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 	 * @return string the UID if available.
 	 */
 	function &getUser() {
-		return self::getSession();
+		return $this->getSession();
 	}
 
 	public function &wall($who = 'me') {
@@ -396,7 +407,26 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 		return (range(0, count($array) - 1) == array_keys($array)) ? true : false;
 	}
 
+	/**
+	 * @deprecated deprecated since facebook php-sdk v3.0
+	 */
 	public function &setSession($session=null, $write_cookie=null, $decode = null) {
+
+		if ($this->_version_compare()) {
+			/**
+			 * 假性相容舊版 v2 的 setSession
+			 */
+			if (isset($session['access_token'])) {
+				$this->setAccessToken($session['access_token']);
+			} elseif (!is_array($session)) {
+				$this->setAccessToken($session);
+			} else {
+				//TODO:do something
+			}
+
+			return $this;
+		}
+
 		if ($write_cookie === null || $write_cookie == -1) $write_cookie = $this->useCookieSupport();
 
 //		$this->magic_quotes_gpc();
@@ -418,6 +448,9 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 		return parent::setSession($session, $write_cookie);
 	}
 
+	/**
+	 * @deprecated deprecated since facebook php-sdk v3.0
+	 */
 	function magic_quotes_gpc() {
 		if (!get_magic_quotes_gpc()) {
 			global $_REQUEST, $_COOKIE;
