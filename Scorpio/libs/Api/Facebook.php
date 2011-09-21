@@ -290,7 +290,7 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 		return $ret;
 	}
 
-	function _version_compare($ver, $operator = '>=') {
+	function _version_compare($ver = '3.0.0', $operator = '>=') {
 		$ret = version_compare(Facebook::VERSION, $ver, $operator);
 
 		return $ver;
@@ -303,7 +303,7 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 	 * @return string the UID if available.
 	 */
 	public function &getSession() {
-		if (version_compare(Facebook::VERSION, '3.0.0', '>=')) {
+		if ($this->_version_compare()) {
 			return parent::getUser();
 		} else {
 			return parent::getSession();
