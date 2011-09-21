@@ -46,7 +46,7 @@ class Scorpio_Kenal_Core_ {
 	/**
 	 * @return Scorpio_Kenal
 	 */
-	function __construct() {
+	public function __construct() {
 		if (!Scorpio_Kenal::$instances) {
 			Scorpio_Kenal::$instances = $this;
 		}
@@ -64,11 +64,11 @@ class Scorpio_Kenal_Core_ {
 	/**
 	 * @return bool
 	 */
-	function _class_loader_by_defined($class) {
-		if (array_key_exists($class, Scorpio_Kenal::$scoAutoloadClasses)) {
-			include_once Scorpio_Kenal::$scoAutoloadClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadClasses[$class]['file'];
-		} elseif (array_key_exists($class, Scorpio_Kenal::$scoAutoloadLocalClasses)) {
-			include_once Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['file'];
+	public static function _class_loader_by_defined($class) {
+		if (array_key_exists($class, self::$scoAutoloadClasses)) {
+			include_once self::$scoAutoloadClasses[$class]['root'].self::$scoAutoloadClasses[$class]['path'].self::$scoAutoloadClasses[$class]['file'];
+		} elseif (array_key_exists($class, self::$scoAutoloadLocalClasses)) {
+			include_once self::$scoAutoloadLocalClasses[$class]['root'].self::$scoAutoloadLocalClasses[$class]['path'].self::$scoAutoloadLocalClasses[$class]['file'];
 		}
 
 		return class_exists($class, false);
@@ -77,14 +77,17 @@ class Scorpio_Kenal_Core_ {
 	/**
 	 * @return bool
 	 */
-	function _class_loader($class) {
+	public static function _class_loader($class) {
 		$_core_ = '_Core_';
 		$ret = false;
 
 		$m = array();
-		if (Scorpio_Kenal::_class_loader_by_defined($class)) {
+		if ($class != 'Scorpio_Kenal' && Scorpio_Kenal::_class_loader_by_defined($class)) {
 			$ret = true;
-		} elseif (preg_match('/^(?<pre>Scorpio_)(?<class>.+)(?<core>'.$_core_.')?$/', $m)) {
+		} elseif ($class == 'Scorpio_Kenal' && self::_class_loader_by_defined($class)) {
+			// 可利用此判斷載入 Scorpio_Kenal 的封裝類別
+			$ret = true;
+		} elseif (preg_match('/^(?<pre>Scorpio_)(?<class>.+)(?<core>'.$_core_.')?$/', $class, $m)) {
 			if (!class_exists($m['core'] ? $m[0] : $m['pre'].$m['class'].$_core_, false)) {
 				$paths = split('_', $m['class']);
 				$file = array_pop($paths);
@@ -101,7 +104,7 @@ class Scorpio_Kenal_Core_ {
 			}
 
 			$ret = true;
-		} elseif (preg_match('/^(?<pre>sco)(?<class>[a-zA-Z].+)$/', $m)) {
+		} elseif (preg_match('/^(?<pre>sco)(?<class>[a-zA-Z].+)$/', $class, $m)) {
 			if (
 				Scorpio_Kenal::_class_loader('Scorpio_helper_'.$m['class'])
 				&& !class_exists($m[0], false)
@@ -119,14 +122,14 @@ class Scorpio_Kenal_Core_ {
 	/**
 	 * @return bool
 	 */
-	function _class_autoload($class) {
+	public static function _class_autoload($class) {
 		return Scorpio_Kenal::_class_loader($class);
 	}
 
 	/**
 	 * @return Scorpio_Kenal
 	 */
-	function _class_setup($stop = false) {
+	public static function _class_setup($stop = false) {
 		static $spl_autoload_register;
 
 		if (!class_exists('Scorpio_Kenal', false)) {
