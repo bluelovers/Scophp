@@ -119,6 +119,9 @@ class Scorpio_Kenal_Core_ {
 			$ret = class_exists($class, false);
 		}
 
+		// 緩存是否成功載入
+		$_cache[$class] = $ret;
+
 		return $ret;
 	}
 
