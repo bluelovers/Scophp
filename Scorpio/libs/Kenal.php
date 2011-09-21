@@ -119,7 +119,7 @@ class Scorpio_Kenal_Core_ {
 	/**
 	 * @return bool
 	 */
-	function _class_autoload($class) {
+	public static function _class_autoload($class) {
 		return Scorpio_Kenal::_class_loader($class);
 	}
 
