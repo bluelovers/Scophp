@@ -266,7 +266,7 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 	public function &instance($config) {
 		$args = func_get_args();
 
-		$ref = new ReflectionClass(get_called_class());
+		$ref = new ReflectionClass(function_exists('get_called_class') ? get_called_class() : 'Scorpio_Api_Facebook');
 		$instances =& $ref->newInstanceArgs((array)$args);
 
 		return $instances;
