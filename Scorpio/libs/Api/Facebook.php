@@ -291,7 +291,12 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 	}
 
 	public function &getSession() {
+
+		if (version_compare(Facebook::VERSION, '3.0.0', '>=')) {
+			return parent::getUser();
+		} else {
 		return parent::getSession();
+		}
 	}
 
 	public function &wall($who = 'me') {
