@@ -89,7 +89,7 @@ class Scorpio_Kenal_Core_ {
 			$ret = true;
 		} elseif ($class == 'Scorpio_Kenal' && self::_class_loader_by_defined($class)) {
 			// 可利用此判斷載入 Scorpio_Kenal 的封裝類別
-			$ret = true;
+			$ret = class_exists($class, false);
 		} elseif (preg_match('/^(?<pre>Scorpio_)(?<class>.+)(?<core>'.$_core_.')?$/', $class, $m)) {
 			if (!class_exists($m['core'] ? $m[0] : $m['pre'].$m['class'].$_core_, false)) {
 				$paths = split('_', $m['class']);
