@@ -314,7 +314,7 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 		if ($key == 'friends') {
 			return $this->friends();
 		} elseif ($key == 'curl_opt') {
-			return static::$CURL_OPTS;
+			return self::$CURL_OPTS;
 		} elseif ($key == 'wall') {
 			return $this->wall();
 		} else {
@@ -331,7 +331,7 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 
 		if (!empty($req_perms)) {
 			if ($req_perms == 'all') {
-				$req_perms = array_filter(array_values(static::$req_perms));
+				$req_perms = array_filter(array_values(self::$req_perms));
 			} elseif (is_string($req_perms)) {
 				$req_perms = explode($req_perms, ',');
 			} elseif ($this->_is_numkey_array($req_perms)) {
