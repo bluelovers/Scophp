@@ -49,6 +49,16 @@ class Scorpio_Kenal_Core_ {
 		return Scorpio_Kenal::instance();
 	}
 
+	function _class_loader_by_defined($class) {
+		if (array_key_exists($class, Scorpio_Kenal::$scoAutoloadClasses)) {
+			include_once Scorpio_Kenal::$scoAutoloadClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadClasses[$class]['file'];
+		} elseif (array_key_exists($class, Scorpio_Kenal::$scoAutoloadLocalClasses)) {
+			include_once Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['file'];
+		}
+
+		return class_exists($class, false);
+	}
+
 	function _class_loader($class) {
 		$_core_ = '_Core_';
 		$ret = false;
