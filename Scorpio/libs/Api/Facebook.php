@@ -413,6 +413,8 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 			$session = $_session_;
 		}
 
+		//TODO:need update to v3
+
 		return parent::setSession($session, $write_cookie);
 	}
 
