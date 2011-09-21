@@ -78,6 +78,9 @@ class Scorpio_Kenal_Core_ {
 	 * @return bool
 	 */
 	public static function _class_loader($class) {
+
+		static $_cache;
+
 		$_core_ = '_Core_';
 		$ret = false;
 
