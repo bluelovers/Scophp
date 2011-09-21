@@ -17,7 +17,7 @@ if (0) {
 	class scofile extends Scorpio_helper_file_Core_ {}
 }
 
-class Scorpio_helper_file_Core_ {
+class Scorpio_helper_file_Core_ extends Scorpio_File {
 
 	static $temp;
 
