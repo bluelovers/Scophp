@@ -81,6 +81,9 @@ class Scorpio_Kenal_Core_ {
 
 		static $_cache;
 
+		// 防止無限迴圈
+		if (isset($_cache[$class])) return $_cache[$class];
+
 		$_core_ = '_Core_';
 		$ret = false;
 
