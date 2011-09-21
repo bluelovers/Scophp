@@ -26,6 +26,8 @@ class Scorpio_Kenal_Core_ {
 
 	protected static $instances = null;
 
+	public static $scoAutoloadLocalClasses = array();
+
 	public static function &instance() {
 		if (!Scorpio_Kenal::$instances) {
 			Scorpio_Kenal::$instances = new Scorpio_Kenal;
