@@ -81,6 +81,8 @@ class Scorpio_Kenal_Core_ {
 			}
 
 			$ret = true;
+		} elseif (array_key_exists($class, Scorpio_Kenal::$scoAutoloadClasses)) {
+			include_once Scorpio_Kenal::$scoAutoloadClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadClasses[$class]['file'];
 		} elseif (array_key_exists($class, Scorpio_Kenal::$scoAutoloadLocalClasses)) {
 			include_once Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['root'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['path'].Scorpio_Kenal::$scoAutoloadLocalClasses[$class]['file'];
 		}
