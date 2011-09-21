@@ -290,6 +290,12 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 		return $ret;
 	}
 
+	function _version_compare($ver, $operator = '>=') {
+		$ret = version_compare(Facebook::VERSION, $ver, $operator);
+
+		return $ver;
+	}
+
 	/**
 	 * Get the UID of the connected user, or 0
 	 * if the Facebook user is not connected.
