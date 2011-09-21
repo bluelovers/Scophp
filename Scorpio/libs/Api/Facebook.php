@@ -298,6 +298,10 @@ class Scorpio_Api_Facebook_Core_ extends Facebook {
 		}
 	}
 
+	function &getUser() {
+		return self::getSession();
+	}
+
 	public function &wall($who = 'me') {
 		static $ret = array();
 
