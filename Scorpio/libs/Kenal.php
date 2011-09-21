@@ -126,7 +126,7 @@ class Scorpio_Kenal_Core_ {
 	/**
 	 * @return Scorpio_Kenal
 	 */
-	function _class_setup($stop = false) {
+	public static function _class_setup($stop = false) {
 		static $spl_autoload_register;
 
 		if (!class_exists('Scorpio_Kenal', false)) {
