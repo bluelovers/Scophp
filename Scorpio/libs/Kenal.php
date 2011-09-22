@@ -168,6 +168,18 @@ class Scorpio_Kenal_Core_ {
 
 		return Scorpio_Kenal::instance();
 	}
+
+	/**
+	 * Call a user function given with an array of parameters
+	 * Call a user defined function with the parameters in param_arr .
+	 *
+	 * @param callback $function
+	 * @param array $param_arr
+	 * @return mixed
+	 */
+	function _call_func_array($function, $param_arr = array()) {
+		return call_user_func_array(self::$func[$function], $param_arr);
+	}
 }
 
 ?>
