@@ -184,6 +184,29 @@ class Scorpio_helper_array_Core_ {
 			return (is_object($value) AND $value instanceof Traversable);
 		}
 	}
+
+	/**
+	 * Retrieves multiple keys from an array. If the key does not exist in the
+	 * array, the default value will be added instead.
+	 *
+	 *     // Get the values "username", "password" from $_POST
+	 *     $auth = Arr::extract($_POST, array('username', 'password'));
+	 *
+	 * @param   array   array to extract keys from
+	 * @param   array   list of key names
+	 * @param   mixed   default value
+	 * @return  array
+	 */
+	public static function extract($array, array $keys, $default = NULL)
+	{
+		$found = array();
+		foreach ($keys as $key)
+		{
+			$found[$key] = isset($array[$key]) ? $array[$key] : $default;
+		}
+
+		return $found;
+	}
 }
 
 ?>
