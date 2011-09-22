@@ -116,6 +116,15 @@ class Scorpio_helper_array_Core_ {
 
 		return call_user_func_array($callback, array($arr1));
 	}
+
+	/**
+	 * Count all elements in an array, or properties in an object
+	 *
+	 * @param array|object $array
+	 */
+	function length($array) {
+		return count($array);
+	}
 }
 
 ?>
