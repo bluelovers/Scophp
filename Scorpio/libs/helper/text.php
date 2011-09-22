@@ -832,6 +832,15 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 		}
 	}
 
+	/**
+	 * Returns a string with the first character of str capitalized, if that character is alphabetic.
+	 *
+	 * @param string $str
+	 */
+	function ucfirst($str) {
+		return ucfirst($str);
+	}
+
 }
 
 ?>
