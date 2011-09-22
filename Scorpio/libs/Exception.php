@@ -195,7 +195,7 @@ class Scorpio_Exception_Core_ extends Exception {
 				header('Content-Type: text/html; charset='.Kohana::$charset, TRUE, $http_header_status);
 			}
 
-			if (Request::$current !== NULL AND Request::current()->is_ajax() === TRUE)
+			if (Scorpio_Request::$current !== NULL AND Scorpio_Request::current()->is_ajax() === TRUE)
 			{
 				// Just display the text of the exception
 				echo "\n{$error}\n";
