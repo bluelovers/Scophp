@@ -37,16 +37,9 @@ class Scorpio_helper_text_Core_ {
 
 	// 建立構造
 	function __construct() {
-
-		// make sure self::$instances is newer
-		// 當未建立 self::$instances 時 會以當前 class 作為構造類別
-		// 當已建立 self::$instances 時 如果呼叫的 class 不屬於當前 self::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
-		if (!self::$instances || !in_array(get_called_class(), class_parents(self::$instances))) {
+		if (!isset(self::$instances)) {
 			self::$instances = $this;
 		}
-
-//		print_r(array(get_called_class(), class_parents(static ::$instances), class_parents(self ::$instances), class_parents(get_called_class())));
-
 		return self::$instances;
 	}
 
