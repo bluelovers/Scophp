@@ -848,6 +848,17 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 		return $str;
 	}
 
+	/**
+	 * Returns a string with the first character of each word in str capitalized, if that character is alphabetic.
+	 * The definition of a word is any string of characters that is immediately after a whitespace
+	 * (These are: space, form-feed, newline, carriage return, horizontal tab, and vertical tab).
+	 *
+	 * @param string $str
+	 */
+	function ucwords($str) {
+		return ucwords($str);
+	}
+
 }
 
 ?>
