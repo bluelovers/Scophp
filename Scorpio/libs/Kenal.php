@@ -33,6 +33,11 @@ class Scorpio_Kenal_Core_ {
 	public static $scoAutoloadClasses = array();
 
 	/**
+	 * 仿製 javascript set function
+	 */
+	public static $func = array();
+
+	/**
 	 * @return Scorpio_Kenal
 	 */
 	public static function &instance() {
