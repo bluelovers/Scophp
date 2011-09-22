@@ -50,6 +50,11 @@ class Scorpio_Exception_Core_ extends Exception {
 	public function __construct($message, $variables = null, $code = 0) {
 		$this->instance_identifier = uniqid();
 
+		if (defined('E_DEPRECATED')) {
+			// E_DEPRECATED only exists in PHP >= 5.3.0
+			Scorpio_Exception::$php_errors[E_DEPRECATED] = 'Deprecated';
+		}
+
 		$variables !== null && $message = scotext::sprintf($message, $variables);
 
 		// Sets $this->message the proper way
