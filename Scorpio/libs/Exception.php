@@ -179,10 +179,7 @@ class Scorpio_Exception_Core_ extends Exception {
 			}
 
 			if (!headers_sent()) {
-				// Make sure the proper http header is sent
-				$http_header_status = ($e instanceof Scorpio_Exception_HTTP) ? $code : 500;
-
-				header('Content-Type: text/html; charset=' . Scorpio_Kenal::$charset, TRUE, $http_header_status);
+				Scorpio_Exception::sendHeaders($e, $code);
 			}
 
 			if (Scorpio_Request::$current !== NULL AND Scorpio_Request::current()->is_ajax() === TRUE) {
