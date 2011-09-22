@@ -19,6 +19,10 @@ if (0) {
 }
 
 class Scorpio_helper_date_Core_ {
+
+	/**
+	 * @return scodate
+	 */
 	protected static $instances = null;
 
 	protected $_scorpio_attr = array();
