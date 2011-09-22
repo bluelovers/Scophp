@@ -445,9 +445,9 @@ class Scorpio_Exception_Core_ extends Exception {
 		{
 			$file = 'APPPATH/'.substr($file, strlen(APPPATH));
 		}
-		elseif (strpos($file, SYSPATH) === 0)
+		elseif (strpos($file, SCORPIO_SYSPATH) === 0)
 		{
-			$file = 'SYSPATH/'.substr($file, strlen(SYSPATH));
+			$file = 'SYSPATH/'.substr($file, strlen(SCORPIO_SYSPATH));
 		}
 		elseif (strpos($file, MODPATH) === 0)
 		{
