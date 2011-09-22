@@ -225,8 +225,10 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @return  void
 	 */
 	public function sendHeaders($e, $code) {
+		/*
 		// Send the 500 header
 		header('HTTP/1.1 500 Internal Server Error');
+		*/
 
 		/**
 		 * Make sure the proper http header is sent
