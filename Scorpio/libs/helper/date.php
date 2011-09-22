@@ -55,7 +55,7 @@ class Scorpio_helper_date_Core_ {
 		if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
 			return get_called_class();
 		} else {
-			return 'scodate';
+			return self::$_scorpio_get_called_class;
 		}
 	}
 
