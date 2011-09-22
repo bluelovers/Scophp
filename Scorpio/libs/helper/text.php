@@ -22,7 +22,11 @@ class Scorpio_helper_text_Core_ {
 
 	protected static $instances = null;
 
-	// 取得構造物件
+	/**
+	 * 取得構造物件
+	 *
+	 * @return scotext
+	 */
 	public static function &instance($overwrite = false) {
 		$_class_ = 'scotext';
 
@@ -39,7 +43,11 @@ class Scorpio_helper_text_Core_ {
 		return scotext::$instances;
 	}
 
-	// 建立構造
+	/**
+	 * 建立構造
+	 *
+	 * @return scotext
+	 */
 	function __construct() {
 		if (!isset(scotext::$instances)) {
 			scotext::$instances = $this;
