@@ -26,25 +26,25 @@ class Scorpio_helper_text_Core_ {
 	public static function &instance($overwrite = false) {
 		$_class_ = 'scotext';
 
-		if (!isset(self::$instances)) {
+		if (!isset(scotext::$instances)) {
 			$ref = new ReflectionClass($_class_);
-			self::$instances = $ref->newInstance();
+			scotext::$instances = $ref->newInstance();
 		/*
 		} elseif ($overwrite) {
 			$ref = new ReflectionClass($_class_);
-			self::$instances = $ref->newInstance();
+			scotext::$instances = $ref->newInstance();
 		*/
 		}
 
-		return self::$instances;
+		return scotext::$instances;
 	}
 
 	// 建立構造
 	function __construct() {
-		if (!isset(self::$instances)) {
-			self::$instances = $this;
+		if (!isset(scotext::$instances)) {
+			scotext::$instances = $this;
 		}
-		return self::$instances;
+		return scotext::$instances;
 	}
 
 	/**
@@ -178,15 +178,15 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 							$matchs['fultext']));
 
 						//$replace = sprintf($search, $_args[$varname]);
-						$replace = self::sprintf_hack($search, $_args[$varname]);
+						$replace = scotext::sprintf_hack($search, $_args[$varname]);
 					} elseif ($varname == 'LF') {
-						$replace = self::sprintf_hack($search, LF);
+						$replace = scotext::sprintf_hack($search, LF);
 					} else {
 						//echo 'undef: ' . $varname . ":";
 						$replace = sprintf($search, null);
 					}
 
-					$replace = self::sprintf_quote($replace);
+					$replace = scotext::sprintf_quote($replace);
 
 					$format = preg_replace('/(?<!%)' . preg_quote($fultext, '/') . '/s', $replace, $format);
 					//echo  $replace."\n";
@@ -199,11 +199,11 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 					//$replace = '%';
 					//					$format = preg_replace('/(?<!%)'.preg_quote($fultext, '/').'\b/s', $replace, $format);
 				} else {
-					//$replace = self::mb_encode(sprintf(self::mb_decode($fultext), self::mb_decode(array_shift($args))));
+					//$replace = scotext::mb_encode(sprintf(scotext::mb_decode($fultext), scotext::mb_decode(array_shift($args))));
 
-					$replace = self::sprintf_hack($fultext, array_shift($args));
+					$replace = scotext::sprintf_hack($fultext, array_shift($args));
 
-					$replace = self::sprintf_quote($replace);
+					$replace = scotext::sprintf_quote($replace);
 					$format = preg_replace('/(?<!%)' . preg_quote($fultext, '/') . '/s', $replace, $format,
 						1);
 
@@ -216,7 +216,7 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 			//$format = sprintf($format, null);
 
 			//echo $format."\n";
-			$format = self::sprintf_quote($format, 1);
+			$format = scotext::sprintf_quote($format, 1);
 			//echo $format."\n";
 			//
 			//var_dump($matchs);
@@ -240,7 +240,7 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 	}
 
 	protected function sprintf_hack($format, $string) {
-		$parse = self::sprintf_parse($format);
+		$parse = scotext::sprintf_parse($format);
 
 		//echo var_dump($parse);
 		//		exit();
@@ -249,7 +249,7 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 			$pad = (!empty($parse['pad2']) || $parse['pad3'] !== '') ? (!empty($parse['pad2']) ?
 				$parse['pad2'] : (string )$parse['pad3']) : ' ';
 
-			$ret = $parse['pre'] . self::str_pad($parse['size2'] ? mb_substr($string, 0, $parse['size2']) :
+			$ret = $parse['pre'] . scotext::str_pad($parse['size2'] ? mb_substr($string, 0, $parse['size2']) :
 				$string, $parse['size'], $pad, $parse['sign'] == '-' ? STR_PAD_RIGHT :
 				STR_PAD_LEFT);
 
@@ -500,14 +500,14 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 					$iPos++;
 					$unicodeHexVal = substr ($strIn, $iPos, 4);
 					$unicode = hexdec ($unicodeHexVal);
-					$strOut .= self::code2utf($unicode);
+					$strOut .= scotext::code2utf($unicode);
 					$iPos += 4;
 				} else {
 					// Escaped ascii character
 					$hexVal = substr ($strIn, $iPos, 2);
 					if (hexdec($hexVal) > 127) {
 						// Convert to Unicode
-						$strOut .= self::code2utf(hexdec ($hexVal));
+						$strOut .= scotext::code2utf(hexdec ($hexVal));
 					} else {
 						$strOut .= chr (hexdec ($hexVal));
 					}
@@ -656,7 +656,7 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 	 * @see parse_uri()
 	 **/
 	function uri_parse($url, $retkey = '') {
-		return self::parse_uri($url, $retkey);
+		return scotext::parse_uri($url, $retkey);
 	}
 
 	function uri_build($parse_uri, $notparse = false) {
@@ -786,7 +786,7 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 	 * Make a string lowercase
 	 */
 	function lc($text) {
-		return self::strtolower($text);
+		return scotext::strtolower($text);
 	}
 
 	/**
@@ -800,7 +800,7 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 	 * Make a string uppercase
 	 */
 	function uc($text) {
-		return self::strtoupper($text);
+		return scotext::strtoupper($text);
 	}
 
 	/**
