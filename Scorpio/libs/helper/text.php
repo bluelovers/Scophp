@@ -817,6 +817,21 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 		return strlen($text);
 	}
 
+	/**
+	 * if $var is array, Count all elements in an array, or properties in an object
+	 * if $var is string, Returns the length of the given string
+	 *
+	 * @param string|array $var
+	 * @return int
+	 */
+	function length($var) {
+		if (is_array($var)) {
+			return scoarray::count($var);
+		} else {
+			return scotext::strlen($var);
+		}
+	}
+
 }
 
 ?>
