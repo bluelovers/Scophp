@@ -1,5 +1,8 @@
 <?php
 
+include_once './_include_header.php';
+
+/*
 include_once '../../Scorpio/libs/Hook.php';
 include_once '../../Scorpio/libs/Event.php';
 
@@ -7,6 +10,7 @@ if (!class_exists('Scorpio_Hook')) {
 	class Scorpio_Hook extends Scorpio_Hook_Core_ {}
 	class Scorpio_Event extends Scorpio_Event_Core_ {}
 }
+*/
 
 echo '
 <style>
