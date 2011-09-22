@@ -284,6 +284,9 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 	 * @param   string   the return string format
 	 * @param   boolean  whether to use SI prefixes or IEC
 	 * @return  string
+	 *
+	 * @author     Kohana Team
+	 * @copyright  (c) 2007-2011 Kohana Team
 	 */
 	public static function bytes($bytes, $force_unit = NULL, $format = NULL, $si = TRUE)
 	{
