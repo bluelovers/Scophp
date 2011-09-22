@@ -196,7 +196,7 @@ class Scorpio_Exception_Core_ extends Exception {
 			if ($view_file = Scorpio_Kenal::find_file('views', Scorpio_Exception::$error_view)) {
 				include $view_file;
 			} else {
-				throw new Scorpio_Exception('Error view file does not exist: views/:file', array('file' => Scorpio_Exception::$error_view, ));
+				throw new Scorpio_Exception('Error view file does not exist: views/%file', array('file' => Scorpio_Exception::$error_view, ));
 			}
 
 			// Display the contents of the output buffer
