@@ -1,5 +1,7 @@
 <?php
 
+include_once './_include_header.php';
+
 include_once '../../Scorpio/libs/Hook.php';
 include_once '../../Scorpio/libs/Event.php';
 
