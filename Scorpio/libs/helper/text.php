@@ -24,12 +24,16 @@ class Scorpio_helper_text_Core_ {
 
 	// 取得構造物件
 	public static function &instance($overwrite = false) {
-		if (!self::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
+		$_class_ = 'scotext';
+
+		if (!isset(self::$instances)) {
+			$ref = new ReflectionClass($_class_);
 			self::$instances = $ref->newInstance();
+		/*
 		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite:get_called_class());
+			$ref = new ReflectionClass($_class_);
 			self::$instances = $ref->newInstance();
+		*/
 		}
 
 		return self::$instances;
