@@ -170,16 +170,16 @@ class Scorpio_Exception_Core_ extends Exception {
 			// Create a text version of the exception
 			$error = Scorpio_Exception::text($e);
 
-			if (is_object(Kohana::$log))
+			if (is_object(Scorpio_Kenal::$log))
 			{
 				// Add this exception to the log
-				Kohana::$log->add(Log::ERROR, $error);
+				Scorpio_Kenal::$log->add(Log::ERROR, $error);
 
 				// Make sure the logs are written
-				Kohana::$log->write();
+				Scorpio_Kenal::$log->write();
 			}
 
-			if (Kohana::$is_cli)
+			if (Scorpio_Kenal::$is_cli)
 			{
 				// Just display the text of the exception
 				echo "\n{$error}\n";
@@ -192,7 +192,7 @@ class Scorpio_Exception_Core_ extends Exception {
 				// Make sure the proper http header is sent
 				$http_header_status = ($e instanceof Scorpio_Exception_HTTP) ? $code : 500;
 
-				header('Content-Type: text/html; charset='.Kohana::$charset, TRUE, $http_header_status);
+				header('Content-Type: text/html; charset='.Scorpio_Kenal::$charset, TRUE, $http_header_status);
 			}
 
 			if (Scorpio_Request::$current !== NULL AND Scorpio_Request::current()->is_ajax() === TRUE)
@@ -207,7 +207,7 @@ class Scorpio_Exception_Core_ extends Exception {
 			ob_start();
 
 			// Include the exception HTML
-			if ($view_file = Kohana::find_file('views', Scorpio_Exception::$error_view))
+			if ($view_file = Scorpio_Kenal::find_file('views', Scorpio_Exception::$error_view))
 			{
 				include $view_file;
 			}
