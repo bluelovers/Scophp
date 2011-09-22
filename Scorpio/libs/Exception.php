@@ -47,7 +47,7 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @param array translation variables
 	 * @return void
 	 */
-	public function __construct($message, $variables = null, $code = 0) {
+	public function __construct($message, array $variables = null, $code = 0) {
 		$this->instance_identifier = uniqid();
 
 		if (defined('E_DEPRECATED')) {
