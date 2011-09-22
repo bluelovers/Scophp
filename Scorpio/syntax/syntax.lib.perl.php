@@ -15,7 +15,13 @@ if (!function_exists("lc")) {
 	 * Make a string lowercase
 	 */
 	function lc($str) {
-		return scotext::strtolower($str);
+		if (!isset(Scorpio_Kenal::$func[__FUNCTION__])) {
+			Scorpio_Kenal::$func[__FUNCTION__] = array(
+				'scotext', 'strtolower'
+			);
+		}
+
+		return Scorpio_Kenal::_call_func(__FUNCTION__, $str);
 	}
 }
 
@@ -24,7 +30,13 @@ if (!function_exists("uc")) {
 	 * Make a string uppercase
 	 */
 	function uc($str) {
-		return scotext::strtoupper($str);
+		if (!isset(Scorpio_Kenal::$func[__FUNCTION__])) {
+			Scorpio_Kenal::$func[__FUNCTION__] = array(
+				'scotext', 'strtoupper'
+			);
+		}
+
+		return Scorpio_Kenal::_call_func(__FUNCTION__, $str);
 	}
 }
 

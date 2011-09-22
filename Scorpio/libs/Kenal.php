@@ -33,6 +33,11 @@ class Scorpio_Kenal_Core_ {
 	public static $scoAutoloadClasses = array();
 
 	/**
+	 * 仿製 javascript set function
+	 */
+	public static $func = array();
+
+	/**
 	 * @return Scorpio_Kenal
 	 */
 	public static function &instance() {
@@ -162,6 +167,33 @@ class Scorpio_Kenal_Core_ {
 		}
 
 		return Scorpio_Kenal::instance();
+	}
+
+	/**
+	 * Call a user function given with an array of parameters
+	 * Call a user defined function with the parameters in param_arr .
+	 *
+	 * @param callback $function
+	 * @param array $param_arr
+	 * @return mixed
+	 */
+	function _call_func_array($function, $param_arr = array()) {
+		return call_user_func_array(self::$func[$function], $param_arr);
+	}
+
+	/**
+	 * call_user_func — Call a user function given by the first parameter
+	 * Call a user defined function given by the function parameter.
+	 *
+	 * @param callback $function
+	 * @param [mixed $parameter]
+	 * @param [mixed $...]
+	 * @return mixed
+	 */
+	function _call_func($function) {
+		$param_arr = func_get_args();
+		$function = array_shift($param_arr);
+		return self::_call_func_array($function, $param_arr);
 	}
 }
 
