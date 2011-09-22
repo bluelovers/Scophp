@@ -20,6 +20,9 @@ if (0) {
 
 class Scorpio_helper_text_Core_ {
 
+	/**
+	 * @return @return scotext
+	 */
 	protected static $instances = null;
 
 	/**
