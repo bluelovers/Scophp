@@ -30,14 +30,14 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @var  array  PHP error code => human readable name
 	 */
 	public static $php_errors = array(
-		E_ERROR              => 'Fatal Error',
-		E_USER_ERROR         => 'User Error',
-		E_PARSE              => 'Parse Error',
-		E_WARNING            => 'Warning',
-		E_USER_WARNING       => 'User Warning',
-		E_STRICT             => 'Strict',
-		E_NOTICE             => 'Notice',
-		E_RECOVERABLE_ERROR  => 'Recoverable Error',
+		E_ERROR					=> 'Fatal Error',
+		E_USER_ERROR			=> 'User Error',
+		E_PARSE					=> 'Parse Error',
+		E_WARNING				=> 'Warning',
+		E_USER_WARNING			=> 'User Warning',
+		E_STRICT				=> 'Strict',
+		E_NOTICE				=> 'Notice',
+		E_RECOVERABLE_ERROR		=> 'Recoverable Error',
 	);
 
 	/**
@@ -113,10 +113,8 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @param   object  Exception
 	 * @return  string
 	 */
-	public static function text($e)
-	{
-		return sprintf('%s [ %s ]: %s ~ %s [ %d ]',
-			get_class($e), $e->getCode(), strip_tags($e->getMessage()), Scorpio_Exception::debug_path($e->getFile()), $e->getLine());
+	public static function text($e) {
+		return sprintf('%s [ %s ]: %s ~ %s [ %d ]', get_class($e), $e->getCode(), strip_tags($e->getMessage()), Scorpio_Exception::debug_path($e->getFile()), $e->getLine());
 	}
 
 	/**
@@ -128,13 +126,11 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @param   object   exception object
 	 * @return  void
 	 */
-	public static function handle(Exception $e)
-	{
-		try
-		{
+	public static function handle(Exception $e) {
+		try {
 			// Get the exception information
-			$type    = get_class($e);
-			$code    = $e->getCode();
+			$type = get_class($e);
+			$code = $e->getCode();
 			$message = $e->getMessage();
 
 			// Create a text version of the exception
@@ -146,16 +142,13 @@ class Scorpio_Exception_Core_ extends Exception {
 			// Manually save logs after exceptions
 			Scorpio_Log::save();
 
-			if (Scorpio_Kenal::config('kohana/core.display_errors') === FALSE)
-			{
+			if (Scorpio_Kenal::config('kohana/core.display_errors') === false) {
 				// Do not show the details
-				$file = $line = NULL;
+				$file = $line = null;
 				$trace = array();
 
 				$template = '_disabled';
-			}
-			else
-			{
+			} else {
 				$file = $e->getFile();
 				$line = $e->getLine();
 				$trace = $e->getTrace();
@@ -163,40 +156,31 @@ class Scorpio_Exception_Core_ extends Exception {
 				$template = '';
 			}
 
-			if ($e instanceof Scorpio_Exception)
-			{
-				$template = $e->getTemplate().$template;
+			if ($e instanceof Scorpio_Exception) {
+				$template = $e->getTemplate() . $template;
 
-				if ( ! headers_sent())
-				{
+				if (!headers_sent()) {
 					$e->sendHeaders();
 				}
 
 				// Use the human-readable error name
-				$code = Scorpio_Kenal::message('kohana/core.errors.'.$code);
-			}
-			else
-			{
-				$template = Scorpio_Exception::$template.$template;
+				$code = Scorpio_Kenal::message('kohana/core.errors.' . $code);
+			} else {
+				$template = Scorpio_Exception::$template . $template;
 
-				if ( ! headers_sent())
-				{
+				if (!headers_sent()) {
 					header('HTTP/1.1 500 Internal Server Error');
 				}
 
-				if ($e instanceof ErrorException)
-				{
+				if ($e instanceof ErrorException) {
 					// Use the human-readable error name
-					$code = Scorpio_Kenal::message('kohana/core.errors.'.$e->getSeverity());
+					$code = Scorpio_Kenal::message('kohana/core.errors.' . $e->getSeverity());
 
-					if (version_compare(PHP_VERSION, '5.3', '<'))
-					{
+					if (version_compare(PHP_VERSION, '5.3', '<')) {
 						// Workaround for a bug in ErrorException::getTrace() that exists in
 						// all PHP 5.2 versions. @see http://bugs.php.net/45895
-						for ($i = count($trace) - 1; $i > 0; --$i)
-						{
-							if (isset($trace[$i - 1]['args']))
-							{
+						for ($i = count($trace) - 1; $i > 0; --$i) {
+							if (isset($trace[$i - 1]['args'])) {
 								// Re-position the arguments
 								$trace[$i]['args'] = $trace[$i - 1]['args'];
 
@@ -210,8 +194,7 @@ class Scorpio_Exception_Core_ extends Exception {
 			// Clean the output buffer if one exists
 			ob_get_level() and ob_clean();
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			// Clean the output buffer if one exists
 			ob_get_level() and ob_clean();
 
@@ -219,8 +202,7 @@ class Scorpio_Exception_Core_ extends Exception {
 			echo Scorpio_Exception::text($e), LF;
 		}
 
-		if (Scorpio_Kenal::$server_api === 'cli')
-		{
+		if (Scorpio_Kenal::$server_api === 'cli') {
 			// Exit with an error status
 			exit(1);
 		}
@@ -231,8 +213,7 @@ class Scorpio_Exception_Core_ extends Exception {
 	 *
 	 * @return  void
 	 */
-	public function sendHeaders()
-	{
+	public function sendHeaders() {
 		// Send the 500 header
 		header('HTTP/1.1 500 Internal Server Error');
 	}
@@ -247,8 +228,7 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @param   integer  maximum levels of recursion
 	 * @return  string
 	 */
-	public static function dump($value, $length = 128, $max_level = 5)
-	{
+	public static function dump($value, $length = 128, $max_level = 5) {
 		return Scorpio_Exception::_dump($value, $length, $max_level);
 	}
 
@@ -261,64 +241,43 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @param   integer  current recursion level (internal)
 	 * @return  string
 	 */
-	private static function _dump( & $var, $length = 128, $max_level = 5, $level = 0)
-	{
-		if ($var === NULL)
-		{
+	private static function _dump(&$var, $length = 128, $max_level = 5, $level = 0) {
+		if ($var === null) {
 			return '<small>NULL</small>';
-		}
-		elseif (is_bool($var))
-		{
-			return '<small>bool</small> '.($var ? 'TRUE' : 'FALSE');
-		}
-		elseif (is_float($var))
-		{
-			return '<small>float</small> '.$var;
-		}
-		elseif (is_resource($var))
-		{
-			if (($type = get_resource_type($var)) === 'stream' AND $meta = stream_get_meta_data($var))
-			{
+		} elseif (is_bool($var)) {
+			return '<small>bool</small> ' . ($var ? 'TRUE' : 'FALSE');
+		} elseif (is_float($var)) {
+			return '<small>float</small> ' . $var;
+		} elseif (is_resource($var)) {
+			if (($type = get_resource_type($var)) === 'stream' and $meta = stream_get_meta_data($var)) {
 				$meta = stream_get_meta_data($var);
 
-				if (isset($meta['uri']))
-				{
+				if (isset($meta['uri'])) {
 					$file = $meta['uri'];
 
-					if (function_exists('stream_is_local'))
-					{
+					if (function_exists('stream_is_local')) {
 						// Only exists on PHP >= 5.2.4
-						if (stream_is_local($file))
-						{
+						if (stream_is_local($file)) {
 							$file = Scorpio_Exception::debug_path($file);
 						}
 					}
 
-					return '<small>resource</small><span>('.$type.')</span> '.htmlspecialchars($file, ENT_NOQUOTES, Scorpio_Kenal::CHARSET);
+					return '<small>resource</small><span>(' . $type . ')</span> ' . htmlspecialchars($file, ENT_NOQUOTES, Scorpio_Kenal::CHARSET);
 				}
+			} else {
+				return '<small>resource</small><span>(' . $type . ')</span>';
 			}
-			else
-			{
-				return '<small>resource</small><span>('.$type.')</span>';
-			}
-		}
-		elseif (is_string($var))
-		{
-			if (strlen($var) > $length)
-			{
+		} elseif (is_string($var)) {
+			if (strlen($var) > $length) {
 				// Encode the truncated string
-				$str = htmlspecialchars(substr($var, 0, $length), ENT_NOQUOTES, Scorpio_Kenal::CHARSET).'&nbsp;&hellip;';
-			}
-			else
-			{
+				$str = htmlspecialchars(substr($var, 0, $length), ENT_NOQUOTES, Scorpio_Kenal::CHARSET) . '&nbsp;&hellip;';
+			} else {
 				// Encode the string
 				$str = htmlspecialchars($var, ENT_NOQUOTES, Scorpio_Kenal::CHARSET);
 			}
 
-			return '<small>string</small><span>('.strlen($var).')</span> "'.$str.'"';
-		}
-		elseif (is_array($var))
-		{
+			return '<small>string</small><span>(' . strlen($var) . ')</span> "' . $str . '"';
+		} elseif (is_array($var)) {
 			$output = array();
 
 			// Indentation for this variable
@@ -326,51 +285,39 @@ class Scorpio_Exception_Core_ extends Exception {
 
 			static $marker;
 
-			if ($marker === NULL)
-			{
+			if ($marker === null) {
 				// Make a unique marker
 				$marker = uniqid("\x00");
 			}
 
-			if (empty($var))
-			{
+			if (empty($var)) {
 				// Do nothing
-			}
-			elseif (isset($var[$marker]))
-			{
+			} elseif (isset($var[$marker])) {
 				$output[] = "(\n$space$s*RECURSION*\n$space)";
-			}
-			elseif ($level <= $max_level)
-			{
+			} elseif ($level <= $max_level) {
 				$output[] = "<span>(";
 
-				$var[$marker] = TRUE;
-				foreach ($var as $key => & $val)
-				{
+				$var[$marker] = true;
+				foreach ($var as $key => &$val) {
 					if ($key === $marker) continue;
-					if ( ! is_int($key))
-					{
-						$key = '"'.$key.'"';
+					if (!is_int($key)) {
+						$key = '"' . $key . '"';
 					}
 
-					$output[] = "$space$s$key => ".Scorpio_Exception::_dump($val, $length, $max_level, $level + 1);
+					$output[] = "$space$s$key => " . Scorpio_Exception::_dump($val, $length, $max_level, $level + 1);
 				}
 				unset($var[$marker]);
 
 				$output[] = "$space)</span>";
-			}
-			else
-			{
+			} else {
 				// Depth too great
 				$output[] = "(\n$space$s...\n$space)";
 			}
 
-			return '<small>array</small><span>('.count($var).')</span> '.implode("\n", $output);
-		}
-		elseif (is_object($var))
-		{
+			return '<small>array</small><span>(' . count($var) . ')</span> ' . implode("\n", $output);
+		} elseif (is_object($var)) {
 			// Copy the object as an array
-			$array = (array) $var;
+			$array = (array )$var;
 
 			$output = array();
 
@@ -382,51 +329,38 @@ class Scorpio_Exception_Core_ extends Exception {
 			// Objects that are being dumped
 			static $objects = array();
 
-			if (empty($var))
-			{
+			if (empty($var)) {
 				// Do nothing
-			}
-			elseif (isset($objects[$hash]))
-			{
+			} elseif (isset($objects[$hash])) {
 				$output[] = "{\n$space$s*RECURSION*\n$space}";
-			}
-			elseif ($level <= $max_level)
-			{
+			} elseif ($level <= $max_level) {
 				$output[] = "<code>{";
 
-				$objects[$hash] = TRUE;
-				foreach ($array as $key => & $val)
-				{
-					if ($key[0] === "\x00")
-					{
+				$objects[$hash] = true;
+				foreach ($array as $key => &$val) {
+					if ($key[0] === "\x00") {
 						// Determine if the access is private or protected
-						$access = '<small>'.($key[1] === '*' ? 'protected' : 'private').'</small>';
+						$access = '<small>' . ($key[1] === '*' ? 'protected' : 'private') . '</small>';
 
 						// Remove the access level from the variable name
 						$key = substr($key, strrpos($key, "\x00") + 1);
-					}
-					else
-					{
+					} else {
 						$access = '<small>public</small>';
 					}
 
-					$output[] = "$space$s$access $key => ".Scorpio_Exception::_dump($val, $length, $max_level, $level + 1);
+					$output[] = "$space$s$access $key => " . Scorpio_Exception::_dump($val, $length, $max_level, $level + 1);
 				}
 				unset($objects[$hash]);
 
 				$output[] = "$space}</code>";
-			}
-			else
-			{
+			} else {
 				// Depth too great
 				$output[] = "{\n$space$s...\n$space}";
 			}
 
-			return '<small>object</small> <span>'.get_class($var).'('.count($array).')</span> '.implode("\n", $output);
-		}
-		else
-		{
-			return '<small>'.gettype($var).'</small> '.htmlspecialchars(print_r($var, TRUE), ENT_NOQUOTES, Kohana::CHARSET);
+			return '<small>object</small> <span>' . get_class($var) . '(' . count($array) . ')</span> ' . implode("\n", $output);
+		} else {
+			return '<small>' . gettype($var) . '</small> ' . htmlspecialchars(print_r($var, true), ENT_NOQUOTES, Kohana::CHARSET);
 		}
 	}
 
@@ -437,25 +371,17 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @param   string  path to sanitize
 	 * @return  string
 	 */
-	public static function debug_path($file)
-	{
+	public static function debug_path($file) {
 		$file = str_replace('\\', '/', $file);
 
-		if (strpos($file, SCORPIO_APPPATH) === 0)
-		{
-			$file = 'APPPATH/'.substr($file, strlen(SCORPIO_APPPATH));
-		}
-		elseif (strpos($file, SCORPIO_SYSPATH) === 0)
-		{
-			$file = 'SYSPATH/'.substr($file, strlen(SCORPIO_SYSPATH));
-		}
-		elseif (strpos($file, SCORPIO_MODPATH) === 0)
-		{
-			$file = 'MODPATH/'.substr($file, strlen(SCORPIO_MODPATH));
-		}
-		elseif (strpos($file, SCORPIO_DOCROOT) === 0)
-		{
-			$file = 'DOCROOT/'.substr($file, strlen(SCORPIO_DOCROOT));
+		if (strpos($file, SCORPIO_APPPATH) === 0) {
+			$file = 'APPPATH/' . substr($file, strlen(SCORPIO_APPPATH));
+		} elseif (strpos($file, SCORPIO_SYSPATH) === 0) {
+			$file = 'SYSPATH/' . substr($file, strlen(SCORPIO_SYSPATH));
+		} elseif (strpos($file, SCORPIO_MODPATH) === 0) {
+			$file = 'MODPATH/' . substr($file, strlen(SCORPIO_MODPATH));
+		} elseif (strpos($file, SCORPIO_DOCROOT) === 0) {
+			$file = 'DOCROOT/' . substr($file, strlen(SCORPIO_DOCROOT));
 		}
 
 		return $file;
@@ -472,11 +398,9 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @param   integer  number of padding lines
 	 * @return  array
 	 */
-	public static function debug_source($file, $line_number, $padding = 5)
-	{
+	public static function debug_source($file, $line_number, $padding = 5) {
 		// Make sure we can read the source file
-		if ( ! is_readable($file))
-			return array();
+		if (!is_readable($file)) return array();
 
 		// Open the file and set the line position
 		$file = fopen($file, 'r');
@@ -486,17 +410,14 @@ class Scorpio_Exception_Core_ extends Exception {
 		$range = array('start' => $line_number - $padding, 'end' => $line_number + $padding);
 
 		// Set the zero-padding amount for line numbers
-		$format = '% '.strlen($range['end']).'d';
+		$format = '% ' . strlen($range['end']) . 'd';
 
 		$source = array();
-		while (($row = fgets($file)) !== FALSE)
-		{
+		while (($row = fgets($file)) !== false) {
 			// Increment the line number
-			if (++$line > $range['end'])
-				break;
+			if (++$line > $range['end']) break;
 
-			if ($line >= $range['start'])
-			{
+			if ($line >= $range['start']) {
 				$source[sprintf($format, $line)] = $row;
 			}
 		}
@@ -513,10 +434,8 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @param   array  trace to analyze
 	 * @return  array
 	 */
-	public static function trace($trace = NULL)
-	{
-		if ($trace === NULL)
-		{
+	public static function trace($trace = null) {
+		if ($trace === null) {
 			// Start a new trace
 			$trace = debug_backtrace();
 		}
@@ -525,26 +444,21 @@ class Scorpio_Exception_Core_ extends Exception {
 		$statements = array('include', 'include_once', 'require', 'require_once');
 
 		$output = array();
-		foreach ($trace as $step)
-		{
-			if ( ! isset($step['function']))
-			{
+		foreach ($trace as $step) {
+			if (!isset($step['function'])) {
 				// Invalid trace step
 				continue;
 			}
 
-			if (isset($step['file']) AND isset($step['line']))
-			{
+			if (isset($step['file']) and isset($step['line'])) {
 				// Include the source of this step
 				$source = Scorpio_Exception::debug_source($step['file'], $step['line']);
 			}
 
-			if (isset($step['file']))
-			{
+			if (isset($step['file'])) {
 				$file = $step['file'];
 
-				if (isset($step['line']))
-				{
+				if (isset($step['line'])) {
 					$line = $step['line'];
 				}
 			}
@@ -552,41 +466,26 @@ class Scorpio_Exception_Core_ extends Exception {
 			// function()
 			$function = $step['function'];
 
-			if (in_array($step['function'], $statements))
-			{
-				if (empty($step['args']))
-				{
+			if (in_array($step['function'], $statements)) {
+				if (empty($step['args'])) {
 					// No arguments
 					$args = array();
-				}
-				else
-				{
+				} else {
 					// Sanitize the file path
 					$args = array($step['args'][0]);
 				}
-			}
-			elseif (isset($step['args']))
-			{
-				if ($step['function'] === '{closure}')
-				{
+			} elseif (isset($step['args'])) {
+				if ($step['function'] === '{closure}') {
 					// Introspection on closures in a stack trace is impossible
-					$params = NULL;
-				}
-				else
-				{
-					if (isset($step['class']))
-					{
-						if (method_exists($step['class'], $step['function']))
-						{
+					$params = null;
+				} else {
+					if (isset($step['class'])) {
+						if (method_exists($step['class'], $step['function'])) {
 							$reflection = new ReflectionMethod($step['class'], $step['function']);
-						}
-						else
-						{
+						} else {
 							$reflection = new ReflectionMethod($step['class'], '__call');
 						}
-					}
-					else
-					{
+					} else {
 						$reflection = new ReflectionFunction($step['function']);
 					}
 
@@ -596,33 +495,28 @@ class Scorpio_Exception_Core_ extends Exception {
 
 				$args = array();
 
-				foreach ($step['args'] as $i => $arg)
-				{
-					if (isset($params[$i]))
-					{
+				foreach ($step['args'] as $i => $arg) {
+					if (isset($params[$i])) {
 						// Assign the argument by the parameter name
 						$args[$params[$i]->name] = $arg;
-					}
-					else
-					{
+					} else {
 						// Assign the argument by number
 						$args[$i] = $arg;
 					}
 				}
 			}
 
-			if (isset($step['class']))
-			{
+			if (isset($step['class'])) {
 				// Class->method() or Class::method()
-				$function = $step['class'].$step['type'].$step['function'];
+				$function = $step['class'] . $step['type'] . $step['function'];
 			}
 
 			$output[] = array(
 				'function' => $function,
-				'args'     => isset($args)   ? $args : NULL,
-				'file'     => isset($file)   ? $file : NULL,
-				'line'     => isset($line)   ? $line : NULL,
-				'source'   => isset($source) ? $source : NULL,
+				'args' => isset($args) ? $args : null,
+				'file' => isset($file) ? $file : null,
+				'line' => isset($line) ? $line : null,
+				'source' => isset($source) ? $source : null,
 			);
 
 			unset($function, $args, $file, $line, $source);
