@@ -78,6 +78,9 @@ class Scorpio_helper_date_Core_ {
 		return $this->_scorpio_attr[$k];
 	}
 
+	/**
+	 * @return scodate
+	 */
 	public function __set($k, $v) {
 		$this->_scorpio_attr[$k] = $v;
 
@@ -88,6 +91,9 @@ class Scorpio_helper_date_Core_ {
 		return isset($this->_scorpio_attr[$k]);
 	}
 
+	/**
+	 * @return scodate
+	 */
 	public function __unset($k) {
 		unset($this->_scorpio_attr[$k]);
 
@@ -102,6 +108,9 @@ class Scorpio_helper_date_Core_ {
 		return $this->__get($k);
 	}
 
+	/**
+	 * @return scodate
+	 */
 	public function set($k, $v) {
 		return $this->__set($k, $v);
 	}
