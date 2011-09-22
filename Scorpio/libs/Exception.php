@@ -43,6 +43,8 @@ class Scorpio_Exception_Core_ extends Exception {
 	/**
 	 * Creates a new translated exception.
 	 *
+	 * @example throw new Scorpio_Exception('Something went terrible wrong, %user', array('user' => $user));
+	 *
 	 * @param string error message
 	 * @param array translation variables
 	 * @return void
