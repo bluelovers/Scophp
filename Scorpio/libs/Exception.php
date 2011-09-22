@@ -59,6 +59,12 @@ class Scorpio_Exception_Core_ extends Exception {
 
 		// Sets $this->message the proper way
 		parent::__construct($message, (int)$code);
+
+		/**
+		 * Save the unmodified code
+		 * @link http://bugs.php.net/39615
+		 */
+		$this->code = $code;
 	}
 
 	protected static function _self($name = null, $val = null) {
