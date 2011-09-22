@@ -27,6 +27,8 @@ class Scorpio_helper_date_Core_ {
 
 	protected $_scorpio_attr = array();
 
+	protected static $_scorpio_get_called_class = 'scodate';
+
 	/**
 	 * @return scodate
 	 */
