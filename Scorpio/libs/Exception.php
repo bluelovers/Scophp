@@ -91,19 +91,19 @@ class Scorpio_Exception_Core_ extends Exception {
 
 	/*
 	public static function enable() {
-		if (!self::_self('enabled')) {
-			set_exception_handler(array(self::_self(), 'handle'));
+	if (!self::_self('enabled')) {
+	set_exception_handler(array(self::_self(), 'handle'));
 
-			self::_self('enabled', true);
-		}
+	self::_self('enabled', true);
+	}
 	}
 
 	public static function disable() {
-		if (self::_self('enabled')) {
-			restore_exception_handler();
+	if (self::_self('enabled')) {
+	restore_exception_handler();
 
-			self::_self('enabled', false);
-		}
+	self::_self('enabled', false);
+	}
 	}
 	*/
 
@@ -127,36 +127,29 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @param   object   exception object
 	 * @return  boolean
 	 */
-	public static function handler(Exception $e)
-	{
-		try
-		{
+	public static function handler(Exception $e) {
+		try {
 			// Get the exception information
-			$type    = get_class($e);
-			$code    = $e->getCode();
+			$type = get_class($e);
+			$code = $e->getCode();
 			$message = $e->getMessage();
-			$file    = $e->getFile();
-			$line    = $e->getLine();
+			$file = $e->getFile();
+			$line = $e->getLine();
 
 			// Get the exception backtrace
 			$trace = $e->getTrace();
 
-			if ($e instanceof ErrorException)
-			{
-				if (isset(Scorpio_Exception::$php_errors[$code]))
-				{
+			if ($e instanceof ErrorException) {
+				if (isset(Scorpio_Exception::$php_errors[$code])) {
 					// Use the human-readable error name
 					$code = Scorpio_Exception::$php_errors[$code];
 				}
 
-				if (version_compare(PHP_VERSION, '5.3', '<'))
-				{
+				if (version_compare(PHP_VERSION, '5.3', '<')) {
 					// Workaround for a bug in ErrorException::getTrace() that exists in
 					// all PHP 5.2 versions. @see http://bugs.php.net/bug.php?id=45895
-					for ($i = count($trace) - 1; $i > 0; --$i)
-					{
-						if (isset($trace[$i - 1]['args']))
-						{
+					for ($i = count($trace) - 1; $i > 0; --$i) {
+						if (isset($trace[$i - 1]['args'])) {
 							// Re-position the args
 							$trace[$i]['args'] = $trace[$i - 1]['args'];
 
@@ -170,8 +163,7 @@ class Scorpio_Exception_Core_ extends Exception {
 			// Create a text version of the exception
 			$error = Scorpio_Exception::text($e);
 
-			if (is_object(Scorpio_Kenal::$log))
-			{
+			if (is_object(Scorpio_Kenal::$log)) {
 				// Add this exception to the log
 				Scorpio_Kenal::$log->add(Log::ERROR, $error);
 
@@ -179,24 +171,21 @@ class Scorpio_Exception_Core_ extends Exception {
 				Scorpio_Kenal::$log->write();
 			}
 
-			if (Scorpio_Kenal::$is_cli)
-			{
+			if (Scorpio_Kenal::$is_cli) {
 				// Just display the text of the exception
 				echo "\n{$error}\n";
 
 				exit(1);
 			}
 
-			if ( ! headers_sent())
-			{
+			if (!headers_sent()) {
 				// Make sure the proper http header is sent
 				$http_header_status = ($e instanceof Scorpio_Exception_HTTP) ? $code : 500;
 
-				header('Content-Type: text/html; charset='.Scorpio_Kenal::$charset, TRUE, $http_header_status);
+				header('Content-Type: text/html; charset=' . Scorpio_Kenal::$charset, TRUE, $http_header_status);
 			}
 
-			if (Scorpio_Request::$current !== NULL AND Scorpio_Request::current()->is_ajax() === TRUE)
-			{
+			if (Scorpio_Request::$current !== NULL AND Scorpio_Request::current()->is_ajax() === TRUE) {
 				// Just display the text of the exception
 				echo "\n{$error}\n";
 
@@ -207,15 +196,10 @@ class Scorpio_Exception_Core_ extends Exception {
 			ob_start();
 
 			// Include the exception HTML
-			if ($view_file = Scorpio_Kenal::find_file('views', Scorpio_Exception::$error_view))
-			{
+			if ($view_file = Scorpio_Kenal::find_file('views', Scorpio_Exception::$error_view)) {
 				include $view_file;
-			}
-			else
-			{
-				throw new Scorpio_Exception('Error view file does not exist: views/:file', array(
-					':file' => Scorpio_Exception::$error_view,
-				));
+			} else {
+				throw new Scorpio_Exception('Error view file does not exist: views/:file', array(':file' => Scorpio_Exception::$error_view, ));
 			}
 
 			// Display the contents of the output buffer
@@ -223,8 +207,7 @@ class Scorpio_Exception_Core_ extends Exception {
 
 			exit(1);
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			// Clean the output buffer if one exists
 			ob_get_level() and ob_clean();
 
