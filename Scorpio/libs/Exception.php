@@ -453,9 +453,9 @@ class Scorpio_Exception_Core_ extends Exception {
 		{
 			$file = 'MODPATH/'.substr($file, strlen(SCORPIO_MODPATH));
 		}
-		elseif (strpos($file, DOCROOT) === 0)
+		elseif (strpos($file, SCORPIO_DOCROOT) === 0)
 		{
-			$file = 'DOCROOT/'.substr($file, strlen(DOCROOT));
+			$file = 'DOCROOT/'.substr($file, strlen(SCORPIO_DOCROOT));
 		}
 
 		return $file;
