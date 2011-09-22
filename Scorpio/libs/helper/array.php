@@ -12,6 +12,7 @@ if (0) {
 }
 
 class Scorpio_helper_array_Core_ {
+
 	static function remove_keys($haystack, $needle) {
 		if (is_array($needle)) {
 			$array = array();
