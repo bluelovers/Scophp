@@ -129,47 +129,43 @@ class Scorpio_Exception_Core_ extends Exception {
 	 */
 	public static function handler(Exception $e) {
 		try {
+			$_e = array();
+
 			// Get the exception information
-			$type = get_class($e);
-			$code = $e->getCode();
-			$message = $e->getMessage();
-			$file = $e->getFile();
-			$line = $e->getLine();
+			$_e['type']		= get_class($e);
+			$_e['code']		= $e->getCode();
+			$_e['message']	= $e->getMessage();
+			$_e['file']		= $e->getFile();
+			$_e['line']		= $e->getLine();
 
 			// Get the exception backtrace
-			$trace = $e->getTrace();
+			$_e['trace']	= $e->getTrace();
 
 			if ($e instanceof ErrorException) {
 				if (isset(Scorpio_Exception::$php_errors[$code])) {
 					// Use the human-readable error name
-					$code = Scorpio_Exception::$php_errors[$code];
+					$_e['code'] = Scorpio_Exception::$php_errors[$code];
 				}
 
 				if (version_compare(PHP_VERSION, '5.3', '<')) {
 					// Workaround for a bug in ErrorException::getTrace() that exists in
 					// all PHP 5.2 versions. @see http://bugs.php.net/bug.php?id=45895
-					for ($i = count($trace) - 1; $i > 0; --$i) {
-						if (isset($trace[$i - 1]['args'])) {
+					for ($i = count($_e['trace']) - 1; $i > 0; --$i) {
+						if (isset($_e['trace'][$i - 1]['args'])) {
 							// Re-position the args
-							$trace[$i]['args'] = $trace[$i - 1]['args'];
+							$_e['trace'][$i]['args'] = $_e['trace'][$i - 1]['args'];
 
 							// Remove the args
-							unset($trace[$i - 1]['args']);
+							unset($_e['trace'][$i - 1]['args']);
 						}
 					}
 				}
 			}
 
 			// Create a text version of the exception
-			$error = Scorpio_Exception::text($e);
+			$_e['error'] = Scorpio_Exception::text($e);
 
-			if (is_object(Scorpio_Kenal::$log)) {
-				// Add this exception to the log
-				Scorpio_Kenal::$log->add(Log::ERROR, $error);
-
-				// Make sure the logs are written
-				Scorpio_Kenal::$log->write();
-			}
+			Scorpio_Exception::_view_log($e, $_e);
 
 			if (Scorpio_Kenal::$is_cli) {
 				// Just display the text of the exception
@@ -213,6 +209,16 @@ class Scorpio_Exception_Core_ extends Exception {
 
 			// Exit with an error status
 			exit(1);
+		}
+	}
+
+	function _view_log($e, $_e) {
+		if (is_object(Scorpio_Kenal::$log)) {
+			// Add this exception to the log
+			Scorpio_Kenal::$log->add(Log::ERROR, $_e['error']);
+
+			// Make sure the logs are written
+			Scorpio_Kenal::$log->write();
 		}
 	}
 
