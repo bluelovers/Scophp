@@ -24,30 +24,30 @@ class Scorpio_helper_text_Core_ {
 
 	// 取得構造物件
 	public static function &instance($overwrite = false) {
-		if (!static::$instances) {
+		if (!self::$instances) {
 			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
-			static::$instances = $ref->newInstance();
+			self::$instances = $ref->newInstance();
 		} elseif ($overwrite) {
 			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite:get_called_class());
-			static::$instances = $ref->newInstance();
+			self::$instances = $ref->newInstance();
 		}
 
-		return static::$instances;
+		return self::$instances;
 	}
 
 	// 建立構造
 	function __construct() {
 
-		// make sure static::$instances is newer
-		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
-		// 當已建立 static::$instances 時 如果呼叫的 class 不屬於當前 static::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
-		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {
-			static::$instances = $this;
+		// make sure self::$instances is newer
+		// 當未建立 self::$instances 時 會以當前 class 作為構造類別
+		// 當已建立 self::$instances 時 如果呼叫的 class 不屬於當前 self::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
+		if (!self::$instances || !in_array(get_called_class(), class_parents(self::$instances))) {
+			self::$instances = $this;
 		}
 
 //		print_r(array(get_called_class(), class_parents(static ::$instances), class_parents(self ::$instances), class_parents(get_called_class())));
 
-		return static::$instances;
+		return self::$instances;
 	}
 
 	/**
@@ -161,15 +161,15 @@ class Scorpio_helper_text_Core_ {
 							$matchs['fultext']));
 
 						//$replace = sprintf($search, $_args[$varname]);
-						$replace = static::sprintf_hack($search, $_args[$varname]);
+						$replace = self::sprintf_hack($search, $_args[$varname]);
 					} elseif ($varname == 'LF') {
-						$replace = static::sprintf_hack($search, LF);
+						$replace = self::sprintf_hack($search, LF);
 					} else {
 						//echo 'undef: ' . $varname . ":";
 						$replace = sprintf($search, null);
 					}
 
-					$replace = static::sprintf_quote($replace);
+					$replace = self::sprintf_quote($replace);
 
 					$format = preg_replace('/(?<!%)' . preg_quote($fultext, '/') . '/s', $replace, $format);
 					//echo  $replace."\n";
@@ -182,11 +182,11 @@ class Scorpio_helper_text_Core_ {
 					//$replace = '%';
 					//					$format = preg_replace('/(?<!%)'.preg_quote($fultext, '/').'\b/s', $replace, $format);
 				} else {
-					//$replace = static::mb_encode(sprintf(static::mb_decode($fultext), static::mb_decode(array_shift($args))));
+					//$replace = self::mb_encode(sprintf(self::mb_decode($fultext), self::mb_decode(array_shift($args))));
 
-					$replace = static::sprintf_hack($fultext, array_shift($args));
+					$replace = self::sprintf_hack($fultext, array_shift($args));
 
-					$replace = static::sprintf_quote($replace);
+					$replace = self::sprintf_quote($replace);
 					$format = preg_replace('/(?<!%)' . preg_quote($fultext, '/') . '/s', $replace, $format,
 						1);
 
@@ -199,7 +199,7 @@ class Scorpio_helper_text_Core_ {
 			//$format = sprintf($format, null);
 
 			//echo $format."\n";
-			$format = static::sprintf_quote($format, 1);
+			$format = self::sprintf_quote($format, 1);
 			//echo $format."\n";
 			//
 			//var_dump($matchs);
@@ -223,7 +223,7 @@ class Scorpio_helper_text_Core_ {
 	}
 
 	protected function sprintf_hack($format, $string) {
-		$parse = static::sprintf_parse($format);
+		$parse = self::sprintf_parse($format);
 
 		//echo var_dump($parse);
 		//		exit();
@@ -232,7 +232,7 @@ class Scorpio_helper_text_Core_ {
 			$pad = (!empty($parse['pad2']) || $parse['pad3'] !== '') ? (!empty($parse['pad2']) ?
 				$parse['pad2'] : (string )$parse['pad3']) : ' ';
 
-			$ret = $parse['pre'] . static::str_pad($parse['size2'] ? mb_substr($string, 0, $parse['size2']) :
+			$ret = $parse['pre'] . self::str_pad($parse['size2'] ? mb_substr($string, 0, $parse['size2']) :
 				$string, $parse['size'], $pad, $parse['sign'] == '-' ? STR_PAD_RIGHT :
 				STR_PAD_LEFT);
 
@@ -483,14 +483,14 @@ class Scorpio_helper_text_Core_ {
 					$iPos++;
 					$unicodeHexVal = substr ($strIn, $iPos, 4);
 					$unicode = hexdec ($unicodeHexVal);
-					$strOut .= static::code2utf($unicode);
+					$strOut .= self::code2utf($unicode);
 					$iPos += 4;
 				} else {
 					// Escaped ascii character
 					$hexVal = substr ($strIn, $iPos, 2);
 					if (hexdec($hexVal) > 127) {
 						// Convert to Unicode
-						$strOut .= static::code2utf(hexdec ($hexVal));
+						$strOut .= self::code2utf(hexdec ($hexVal));
 					} else {
 						$strOut .= chr (hexdec ($hexVal));
 					}
@@ -639,7 +639,7 @@ class Scorpio_helper_text_Core_ {
 	 * @see parse_uri()
 	 **/
 	function uri_parse($url, $retkey = '') {
-		return static::parse_uri($url, $retkey);
+		return self::parse_uri($url, $retkey);
 	}
 
 	function uri_build($parse_uri, $notparse = false) {
@@ -769,7 +769,7 @@ class Scorpio_helper_text_Core_ {
 	 * Make a string lowercase
 	 */
 	function lc($text) {
-		return static::strtolower($text);
+		return self::strtolower($text);
 	}
 
 	/**
@@ -783,7 +783,7 @@ class Scorpio_helper_text_Core_ {
 	 * Make a string uppercase
 	 */
 	function uc($text) {
-		return static::strtoupper($text);
+		return self::strtoupper($text);
 	}
 
 	/**
