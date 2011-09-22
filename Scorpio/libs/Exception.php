@@ -58,7 +58,7 @@ class Scorpio_Exception_Core_ extends Exception {
 		$variables !== null && $message = scotext::sprintf($message, $variables);
 
 		// Sets $this->message the proper way
-		parent::__construct($message, $code);
+		parent::__construct($message, (int)$code);
 	}
 
 	protected static function _self($name = null, $val = null) {
