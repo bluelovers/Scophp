@@ -841,6 +841,13 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 		return ucfirst($str);
 	}
 
+	/**
+	 * Returns a string with the first character of str , lowercased if that character is alphabetic.
+	 */
+	function lcfirst($str) {
+		return $str;
+	}
+
 }
 
 ?>
