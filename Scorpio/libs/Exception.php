@@ -69,6 +69,18 @@ class Scorpio_Exception_Core_ extends Exception {
 		$this->code = $code;
 	}
 
+	/**
+	 * Magic object-to-string method.
+	 *
+	 *     echo $exception;
+	 *
+	 * @uses    Scorpio_Exception::text
+	 * @return  string
+	 */
+	public function __toString() {
+		return Scorpio_Exception::text($this);
+	}
+
 	protected static function _self($name = null, $val = null) {
 		if ($name) {
 			return $val !== null ? scophp::set_static_value(self::$_scorpio_self_classname_, $name, $val) : scophp::get_static_value(self::$_scorpio_self_classname_, $name);
