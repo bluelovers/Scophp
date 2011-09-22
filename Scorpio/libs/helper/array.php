@@ -62,7 +62,7 @@ class Scorpio_helper_array_Core_ {
 		return $array;
 	}
 
-	function in_array_default ($needle, $haystack, $default = null, $strict = false) {
+	function in_array_default($needle, $haystack, $default = null, $strict = false) {
 		return in_array($needle, $haystack, $strict) ? $needle : ($default === null ? $haystack[0] : $default);
 	}
 
@@ -75,16 +75,16 @@ class Scorpio_helper_array_Core_ {
 	 */
 	function overlay($a1, $a2) {
 		/*
-		    $table = tableDescription();
-		    // created an array of the table structure
-   			$table = array_overlay($table,$_POST);
-   			// writes the values submitted from the array into the table using array names in the form like <input type="text" name="column[Value]" value="" />
-    	*/
-		foreach($a1 as $k => $v) {
-			if(!array_key_exists($k,$a2)) continue;
-			if(is_array($v) && is_array($a2[$k])){
-				$a1[$k] = scoarray::overlay($v,$a2[$k]);
-			}else{
+		$table = tableDescription();
+		// created an array of the table structure
+		$table = array_overlay($table,$_POST);
+		// writes the values submitted from the array into the table using array names in the form like <input type="text" name="column[Value]" value="" />
+		*/
+		foreach ($a1 as $k => $v) {
+			if (!array_key_exists($k, $a2)) continue;
+			if (is_array($v) && is_array($a2[$k])) {
+				$a1[$k] = scoarray::overlay($v, $a2[$k]);
+			} else {
 				$a1[$k] = $a2[$k];
 			}
 		}
@@ -92,7 +92,7 @@ class Scorpio_helper_array_Core_ {
 		return $a1;
 	}
 
-	function merge(array $array1,array $array2, $strict = true) {
+	function merge(array $array1, array $array2, $strict = true) {
 		$ret = array();
 
 		if ($strict) {
@@ -146,8 +146,7 @@ class Scorpio_helper_array_Core_ {
 	 * @param   array   array to check
 	 * @return  boolean
 	 */
-	public static function is_assoc(array $array)
-	{
+	public static function is_assoc(array $array) {
 		// Keys of the array
 		$keys = array_keys($array);
 
@@ -171,17 +170,13 @@ class Scorpio_helper_array_Core_ {
 	 * @param   mixed    value to check
 	 * @return  boolean
 	 */
-	public static function is_array($value)
-	{
-		if (is_array($value))
-		{
+	public static function is_array($value) {
+		if (is_array($value)) {
 			// Definitely an array
-			return TRUE;
-		}
-		else
-		{
+			return true;
+		} else {
 			// Possibly a Traversable object, functionally the same as an array
-			return (is_object($value) AND $value instanceof Traversable);
+			return (is_object($value) and $value instanceof Traversable);
 		}
 	}
 
@@ -197,11 +192,9 @@ class Scorpio_helper_array_Core_ {
 	 * @param   mixed   default value
 	 * @return  array
 	 */
-	public static function extract($array, array $keys, $default = NULL)
-	{
+	public static function extract($array, array $keys, $default = null) {
 		$found = array();
-		foreach ($keys as $key)
-		{
+		foreach ($keys as $key) {
 			$found[$key] = isset($array[$key]) ? $array[$key] : $default;
 		}
 
@@ -219,11 +212,10 @@ class Scorpio_helper_array_Core_ {
 	 * @param   mixed   array value
 	 * @return  array
 	 */
-	public static function unshift( array & $array, $key, $val)
-	{
-		$array = array_reverse($array, TRUE);
+	public static function unshift(array & $array, $key, $val) {
+		$array = array_reverse($array, true);
 		$array[$key] = $val;
-		$array = array_reverse($array, TRUE);
+		$array = array_reverse($array, true);
 
 		return $array;
 	}
