@@ -20,34 +20,42 @@ if (0) {
 
 class Scorpio_helper_text_Core_ {
 
+	/**
+	 * @return @return scotext
+	 */
 	protected static $instances = null;
 
-	// 取得構造物件
+	/**
+	 * 取得構造物件
+	 *
+	 * @return scotext
+	 */
 	public static function &instance($overwrite = false) {
-		if (!static::$instances) {
-			$ref = new ReflectionClass(($overwrite && !in_array($overwrite, array(true, 1), true)) ? $overwrite:get_called_class());
-			static::$instances = $ref->newInstance();
+		$_class_ = 'scotext';
+
+		if (!isset(scotext::$instances)) {
+			$ref = new ReflectionClass($_class_);
+			scotext::$instances = $ref->newInstance();
+		/*
 		} elseif ($overwrite) {
-			$ref = new ReflectionClass(!in_array($overwrite, array(true, 1), true) ? $overwrite:get_called_class());
-			static::$instances = $ref->newInstance();
+			$ref = new ReflectionClass($_class_);
+			scotext::$instances = $ref->newInstance();
+		*/
 		}
 
-		return static::$instances;
+		return scotext::$instances;
 	}
 
-	// 建立構造
+	/**
+	 * 建立構造
+	 *
+	 * @return scotext
+	 */
 	function __construct() {
-
-		// make sure static::$instances is newer
-		// 當未建立 static::$instances 時 會以當前 class 作為構造類別
-		// 當已建立 static::$instances 時 如果呼叫的 class 不屬於當前 static::$instances 的父類別時 則會自動取代; 反之則 不做任何動作
-		if (!static::$instances || !in_array(get_called_class(), class_parents(static::$instances))) {
-			static::$instances = $this;
+		if (!isset(scotext::$instances)) {
+			scotext::$instances = $this;
 		}
-
-//		print_r(array(get_called_class(), class_parents(static ::$instances), class_parents(self ::$instances), class_parents(get_called_class())));
-
-		return static::$instances;
+		return scotext::$instances;
 	}
 
 	/**
@@ -60,6 +68,26 @@ class Scorpio_helper_text_Core_ {
 	 *
 	 * @see http://tw2.php.net/manual/en/function.sprintf.php#94608
 	 * @see http://tw2.php.net/manual/en/function.vsprintf.php#89349
+	 *
+	 * @example test script
+echo '<pre>';
+
+echo vsprintf('[%-20s] [%20s] %.3f %(num).3f %%s %%%s %%%s%% Hello, %(place)s, how is it hanning at %(place)s? %s works just as well %(name)s: %(value)d %s %d%% %.3f',
+array('place' => 'world333', 'sprintf', 'not used', 'num' => 'world666',
+'sprintf', 'not used', 'name' => 'world999', 'sprintf', 'not used', 'value' =>
+'world', 'sprintf', 'not used', 'sprintf', 'not used', 'sprintf', 'not used',
+'sprintf', 'not used', ));
+echo "\n";
+echo scotext::sprintf("[%(test1)-20s] [%(test1)20s] [%(test1)020s] [%(test1)'#20s] [%(test1)20.20s]
+[%(test2)-20s] [%(test2)20s] [%(test2)020s] [%(test2)'#20s] [%(test2)20.20s]
+[%(test3)-20s] [%(test3)20s] [%(test3)020s] [%(test3)'#20s] [%(test3)20.20s]
+
+[%(test3)20.3s] [%(test3)20.1s] [%(test3)20.5s]
+
+\n%.3f %(num).3f %%s %%(value)s %(value)s %%%s %%%s%%  %%%%%s%%%% Hello, %(place)s, how is it hanning at %(place)s? %s works just as well %(name)s: %(value)d %s %d%% %.3f",
+array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫とボイン',
+'place' => 'world', 'sprintf', 'not used', 'name' => 9999, 'num' =>
+645321.123456));
 	 */
 	static function sprintf() {
 		$args = func_get_args();
@@ -161,15 +189,15 @@ class Scorpio_helper_text_Core_ {
 							$matchs['fultext']));
 
 						//$replace = sprintf($search, $_args[$varname]);
-						$replace = static::sprintf_hack($search, $_args[$varname]);
+						$replace = scotext::sprintf_hack($search, $_args[$varname]);
 					} elseif ($varname == 'LF') {
-						$replace = static::sprintf_hack($search, LF);
+						$replace = scotext::sprintf_hack($search, LF);
 					} else {
 						//echo 'undef: ' . $varname . ":";
 						$replace = sprintf($search, null);
 					}
 
-					$replace = static::sprintf_quote($replace);
+					$replace = scotext::sprintf_quote($replace);
 
 					$format = preg_replace('/(?<!%)' . preg_quote($fultext, '/') . '/s', $replace, $format);
 					//echo  $replace."\n";
@@ -182,11 +210,11 @@ class Scorpio_helper_text_Core_ {
 					//$replace = '%';
 					//					$format = preg_replace('/(?<!%)'.preg_quote($fultext, '/').'\b/s', $replace, $format);
 				} else {
-					//$replace = static::mb_encode(sprintf(static::mb_decode($fultext), static::mb_decode(array_shift($args))));
+					//$replace = scotext::mb_encode(sprintf(scotext::mb_decode($fultext), scotext::mb_decode(array_shift($args))));
 
-					$replace = static::sprintf_hack($fultext, array_shift($args));
+					$replace = scotext::sprintf_hack($fultext, array_shift($args));
 
-					$replace = static::sprintf_quote($replace);
+					$replace = scotext::sprintf_quote($replace);
 					$format = preg_replace('/(?<!%)' . preg_quote($fultext, '/') . '/s', $replace, $format,
 						1);
 
@@ -199,7 +227,7 @@ class Scorpio_helper_text_Core_ {
 			//$format = sprintf($format, null);
 
 			//echo $format."\n";
-			$format = static::sprintf_quote($format, 1);
+			$format = scotext::sprintf_quote($format, 1);
 			//echo $format."\n";
 			//
 			//var_dump($matchs);
@@ -223,7 +251,7 @@ class Scorpio_helper_text_Core_ {
 	}
 
 	protected function sprintf_hack($format, $string) {
-		$parse = static::sprintf_parse($format);
+		$parse = scotext::sprintf_parse($format);
 
 		//echo var_dump($parse);
 		//		exit();
@@ -232,7 +260,7 @@ class Scorpio_helper_text_Core_ {
 			$pad = (!empty($parse['pad2']) || $parse['pad3'] !== '') ? (!empty($parse['pad2']) ?
 				$parse['pad2'] : (string )$parse['pad3']) : ' ';
 
-			$ret = $parse['pre'] . static::str_pad($parse['size2'] ? mb_substr($string, 0, $parse['size2']) :
+			$ret = $parse['pre'] . scotext::str_pad($parse['size2'] ? mb_substr($string, 0, $parse['size2']) :
 				$string, $parse['size'], $pad, $parse['sign'] == '-' ? STR_PAD_RIGHT :
 				STR_PAD_LEFT);
 
@@ -256,38 +284,42 @@ class Scorpio_helper_text_Core_ {
 	}
 
 	/**
-	 * Returns human readable sizes.
-	 * @see  Based on original functions written by:
-	 * @see  Aidan Lister: http://aidanlister.com/repos/v/function.size_readable.php
-	 * @see  Quentin Zervaas: http://www.phpriot.com/d/code/strings/filesize-format/
+	 * Returns human readable sizes. Based on original functions written by
+	 * [Aidan Lister](http://aidanlister.com/repos/v/function.size_readable.php)
+	 * and [Quentin Zervaas](http://www.phpriot.com/d/code/strings/filesize-format/).
 	 *
-	 * @param   integer  size in bytes
-	 * @param   string   a definitive unit
-	 * @param   string   the return string format
-	 * @param   boolean  whether to use SI prefixes or IEC
-	 * @return  string
+	 *		echo scotext::bytes(filesize($file));
+	 *
+	 * @param		integer  size in bytes
+	 * @param		string   a definitive unit
+	 * @param		string   the return string format
+	 * @param		boolean  whether to use SI prefixes or IEC
+	 * @return		string
+	 *
+	 * @author		Kohana Team
+	 * @copyright	(c) 2007-2011 Kohana Team
 	 */
-	public static function bytes($bytes, $force_unit = null, $format = null, $si = true) {
+	public static function bytes($bytes, $force_unit = NULL, $format = NULL, $si = TRUE)
+	{
 		// Format string
-		$format = ($format === null) ? '%01.2f %s' : (string )$format;
-
-		static $units = array();
+		$format = ($format === NULL) ? '%01.2f %s' : (string) $format;
 
 		// IEC prefixes (binary)
-		if ($si == false or strpos($force_unit, 'i') !== false) {
-			!$units[0] && $units[0] = array(__('B'), __('KiB'), __('MiB'), __('GiB'), __('TiB'),
-				__('PiB'));
-			$mod = 1024;
+		if ($si == FALSE OR strpos($force_unit, 'i') !== FALSE)
+		{
+			$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
+			$mod   = 1024;
 		}
 		// SI prefixes (decimal)
-		else {
-			!$units[1] && $units[1] = array(__('B'), __('kB'), __('MB'), __('GB'), __('TB'),
-				__('PB'));
-			$mod = 1000;
+		else
+		{
+			$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
+			$mod   = 1000;
 		}
 
 		// Determine unit to use
-		if (($power = array_search((string )$force_unit, $units[$mod == 1000])) === false) {
+		if (($power = array_search( (string) $force_unit, $units)) === FALSE)
+		{
 			$power = ($bytes > 0) ? floor(log($bytes, $mod)) : 0;
 		}
 
@@ -483,14 +515,14 @@ class Scorpio_helper_text_Core_ {
 					$iPos++;
 					$unicodeHexVal = substr ($strIn, $iPos, 4);
 					$unicode = hexdec ($unicodeHexVal);
-					$strOut .= static::code2utf($unicode);
+					$strOut .= scotext::code2utf($unicode);
 					$iPos += 4;
 				} else {
 					// Escaped ascii character
 					$hexVal = substr ($strIn, $iPos, 2);
 					if (hexdec($hexVal) > 127) {
 						// Convert to Unicode
-						$strOut .= static::code2utf(hexdec ($hexVal));
+						$strOut .= scotext::code2utf(hexdec ($hexVal));
 					} else {
 						$strOut .= chr (hexdec ($hexVal));
 					}
@@ -639,7 +671,7 @@ class Scorpio_helper_text_Core_ {
 	 * @see parse_uri()
 	 **/
 	function uri_parse($url, $retkey = '') {
-		return static::parse_uri($url, $retkey);
+		return scotext::parse_uri($url, $retkey);
 	}
 
 	function uri_build($parse_uri, $notparse = false) {
@@ -769,7 +801,7 @@ class Scorpio_helper_text_Core_ {
 	 * Make a string lowercase
 	 */
 	function lc($text) {
-		return static::strtolower($text);
+		return scotext::strtolower($text);
 	}
 
 	/**
@@ -783,7 +815,7 @@ class Scorpio_helper_text_Core_ {
 	 * Make a string uppercase
 	 */
 	function uc($text) {
-		return static::strtoupper($text);
+		return scotext::strtoupper($text);
 	}
 
 	/**
@@ -800,28 +832,50 @@ class Scorpio_helper_text_Core_ {
 		return strlen($text);
 	}
 
+	/**
+	 * if $var is array, Count all elements in an array, or properties in an object
+	 * if $var is string, Returns the length of the given string
+	 *
+	 * @param string|array $var
+	 * @return int
+	 */
+	function length($var) {
+		if (is_array($var)) {
+			return scoarray::count($var);
+		} else {
+			return scotext::strlen($var);
+		}
+	}
+
+	/**
+	 * Returns a string with the first character of str capitalized, if that character is alphabetic.
+	 *
+	 * @param string $str
+	 */
+	function ucfirst($str) {
+		return ucfirst($str);
+	}
+
+	/**
+	 * Returns a string with the first character of str , lowercased if that character is alphabetic.
+	 *
+	 * @param string $str
+	 */
+	function lcfirst($str) {
+		return $str;
+	}
+
+	/**
+	 * Returns a string with the first character of each word in str capitalized, if that character is alphabetic.
+	 * The definition of a word is any string of characters that is immediately after a whitespace
+	 * (These are: space, form-feed, newline, carriage return, horizontal tab, and vertical tab).
+	 *
+	 * @param string $str
+	 */
+	function ucwords($str) {
+		return ucwords($str);
+	}
+
 }
-
-/*
-echo '<pre>';
-
-echo vsprintf('[%-20s] [%20s] %.3f %(num).3f %%s %%%s %%%s%% Hello, %(place)s, how is it hanning at %(place)s? %s works just as well %(name)s: %(value)d %s %d%% %.3f',
-array('place' => 'world333', 'sprintf', 'not used', 'num' => 'world666',
-'sprintf', 'not used', 'name' => 'world999', 'sprintf', 'not used', 'value' =>
-'world', 'sprintf', 'not used', 'sprintf', 'not used', 'sprintf', 'not used',
-'sprintf', 'not used', ));
-echo "\n";
-echo scotext::sprintf("[%(test1)-20s] [%(test1)20s] [%(test1)020s] [%(test1)'#20s] [%(test1)20.20s]
-[%(test2)-20s] [%(test2)20s] [%(test2)020s] [%(test2)'#20s] [%(test2)20.20s]
-[%(test3)-20s] [%(test3)20s] [%(test3)020s] [%(test3)'#20s] [%(test3)20.20s]
-
-[%(test3)20.3s] [%(test3)20.1s] [%(test3)20.5s]
-
-\n%.3f %(num).3f %%s %%(value)s %(value)s %%%s %%%s%%  %%%%%s%%%% Hello, %(place)s, how is it hanning at %(place)s? %s works just as well %(name)s: %(value)d %s %d%% %.3f",
-array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫とボイン',
-'place' => 'world', 'sprintf', 'not used', 'name' => 9999, 'num' =>
-645321.123456));
-
-*/
 
 ?>
