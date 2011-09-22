@@ -23,7 +23,9 @@ class Scorpio_helper_date_Core_ {
 
 	protected $_scorpio_attr = array();
 
-	// 取得構造物件
+	/**
+	 * @return scodate
+	 */
 	public static function &instance($overwrite = false) {
 
 		if ($overwrite && !in_array($overwrite, array(true, 1), true)) {
@@ -40,6 +42,9 @@ class Scorpio_helper_date_Core_ {
 		return self::$instances;
 	}
 
+	/**
+	 * like get_called_class — the "Late Static Binding" class name
+	 */
 	protected static function _scorpio_get_called_class() {
 		if (version_compare(PHP_VERSION, '5.3.0', '>=')) {
 			return get_called_class();
@@ -48,7 +53,9 @@ class Scorpio_helper_date_Core_ {
 		}
 	}
 
-	// 建立構造
+	/**
+	 * @return scodate
+	 */
 	public function __construct() {
 
 		if (!self::$instances) {
