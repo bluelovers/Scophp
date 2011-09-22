@@ -89,6 +89,7 @@ class Scorpio_Exception_Core_ extends Exception {
 		}
 	}
 
+	/*
 	public static function enable() {
 		if (!self::_self('enabled')) {
 			set_exception_handler(array(self::_self(), 'handle'));
@@ -104,6 +105,7 @@ class Scorpio_Exception_Core_ extends Exception {
 			self::_self('enabled', false);
 		}
 	}
+	*/
 
 	/**
 	 * Get a single line of text representing the exception:
