@@ -123,7 +123,7 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * Inline exception handler, displays the error message, source of the
 	 * exception, and the stack trace of the error.
 	 *
-	 * @uses    Kohana_Exception::text
+	 * @uses    Scorpio_Exception::text
 	 * @param   object   exception object
 	 * @return  boolean
 	 */
@@ -143,10 +143,10 @@ class Scorpio_Exception_Core_ extends Exception {
 
 			if ($e instanceof ErrorException)
 			{
-				if (isset(Kohana_Exception::$php_errors[$code]))
+				if (isset(Scorpio_Exception::$php_errors[$code]))
 				{
 					// Use the human-readable error name
-					$code = Kohana_Exception::$php_errors[$code];
+					$code = Scorpio_Exception::$php_errors[$code];
 				}
 
 				if (version_compare(PHP_VERSION, '5.3', '<'))
@@ -168,7 +168,7 @@ class Scorpio_Exception_Core_ extends Exception {
 			}
 
 			// Create a text version of the exception
-			$error = Kohana_Exception::text($e);
+			$error = Scorpio_Exception::text($e);
 
 			if (is_object(Kohana::$log))
 			{
@@ -207,14 +207,14 @@ class Scorpio_Exception_Core_ extends Exception {
 			ob_start();
 
 			// Include the exception HTML
-			if ($view_file = Kohana::find_file('views', Kohana_Exception::$error_view))
+			if ($view_file = Kohana::find_file('views', Scorpio_Exception::$error_view))
 			{
 				include $view_file;
 			}
 			else
 			{
-				throw new Kohana_Exception('Error view file does not exist: views/:file', array(
-					':file' => Kohana_Exception::$error_view,
+				throw new Scorpio_Exception('Error view file does not exist: views/:file', array(
+					':file' => Scorpio_Exception::$error_view,
 				));
 			}
 
@@ -229,7 +229,7 @@ class Scorpio_Exception_Core_ extends Exception {
 			ob_get_level() and ob_clean();
 
 			// Display the exception text
-			echo Kohana_Exception::text($e), "\n";
+			echo Scorpio_Exception::text($e), "\n";
 
 			// Exit with an error status
 			exit(1);
