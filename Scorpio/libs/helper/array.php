@@ -12,6 +12,7 @@ if (0) {
 }
 
 class Scorpio_helper_array_Core_ {
+
 	static function remove_keys($haystack, $needle) {
 		if (is_array($needle)) {
 			$array = array();
@@ -62,7 +63,7 @@ class Scorpio_helper_array_Core_ {
 		return $array;
 	}
 
-	function in_array_default ($needle, $haystack, $default = null, $strict = false) {
+	function in_array_default($needle, $haystack, $default = null, $strict = false) {
 		return in_array($needle, $haystack, $strict) ? $needle : ($default === null ? $haystack[0] : $default);
 	}
 
@@ -75,16 +76,16 @@ class Scorpio_helper_array_Core_ {
 	 */
 	function overlay($a1, $a2) {
 		/*
-		    $table = tableDescription();
-		    // created an array of the table structure
-   			$table = array_overlay($table,$_POST);
-   			// writes the values submitted from the array into the table using array names in the form like <input type="text" name="column[Value]" value="" />
-    	*/
-		foreach($a1 as $k => $v) {
-			if(!array_key_exists($k,$a2)) continue;
-			if(is_array($v) && is_array($a2[$k])){
-				$a1[$k] = scoarray::overlay($v,$a2[$k]);
-			}else{
+		$table = tableDescription();
+		// created an array of the table structure
+		$table = array_overlay($table,$_POST);
+		// writes the values submitted from the array into the table using array names in the form like <input type="text" name="column[Value]" value="" />
+		*/
+		foreach ($a1 as $k => $v) {
+			if (!array_key_exists($k, $a2)) continue;
+			if (is_array($v) && is_array($a2[$k])) {
+				$a1[$k] = scoarray::overlay($v, $a2[$k]);
+			} else {
 				$a1[$k] = $a2[$k];
 			}
 		}
@@ -92,7 +93,7 @@ class Scorpio_helper_array_Core_ {
 		return $a1;
 	}
 
-	function merge(array $array1,array $array2, $strict = true) {
+	function merge(array $array1, array $array2, $strict = true) {
 		$ret = array();
 
 		if ($strict) {
@@ -115,6 +116,109 @@ class Scorpio_helper_array_Core_ {
 		}
 
 		return call_user_func_array($callback, array($arr1));
+	}
+
+	/**
+	 * Count all elements in an array, or properties in an object
+	 *
+	 * @param array|object $array
+	 * @param int $mode = COUNT_NORMAL|COUNT_RECURSIVE
+	 *
+	 * If the optional mode parameter is set to COUNT_RECURSIVE (or 1), count() will recursively count the array.
+	 * This is particularly useful for counting all the elements of a multidimensional array.
+	 * The default value for mode is 0. count() does not detect infinite recursion.
+	 *
+	 * 		COUNT_NORMAL = 0
+	 * 		COUNT_RECURSIVE = 1
+	 */
+	function length($array, $mode = COUNT_NORMAL) {
+		return count($array, $mode);
+	}
+
+	/**
+	 * Tests if an array is associative or not.
+	 *
+	 *     // Returns TRUE
+	 *     Arr::is_assoc(array('username' => 'john.doe'));
+	 *
+	 *     // Returns FALSE
+	 *     Arr::is_assoc('foo', 'bar');
+	 *
+	 * @param   array   array to check
+	 * @return  boolean
+	 */
+	public static function is_assoc(array $array) {
+		// Keys of the array
+		$keys = array_keys($array);
+
+		// If the array keys of the keys match the keys, then the array must
+		// not be associative (e.g. the keys array looked like {0:0, 1:1...}).
+		return array_keys($keys) !== $keys;
+	}
+
+	/**
+	 * Test if a value is an array with an additional check for array-like objects.
+	 *
+	 *     // Returns TRUE
+	 *     Arr::is_array(array());
+	 *     Arr::is_array(new ArrayObject);
+	 *
+	 *     // Returns FALSE
+	 *     Arr::is_array(FALSE);
+	 *     Arr::is_array('not an array!');
+	 *     Arr::is_array(Database::instance());
+	 *
+	 * @param   mixed    value to check
+	 * @return  boolean
+	 */
+	public static function is_array($value) {
+		if (is_array($value)) {
+			// Definitely an array
+			return true;
+		} else {
+			// Possibly a Traversable object, functionally the same as an array
+			return (is_object($value) and $value instanceof Traversable);
+		}
+	}
+
+	/**
+	 * Retrieves multiple keys from an array. If the key does not exist in the
+	 * array, the default value will be added instead.
+	 *
+	 *     // Get the values "username", "password" from $_POST
+	 *     $auth = Arr::extract($_POST, array('username', 'password'));
+	 *
+	 * @param   array   array to extract keys from
+	 * @param   array   list of key names
+	 * @param   mixed   default value
+	 * @return  array
+	 */
+	public static function extract($array, array $keys, $default = null) {
+		$found = array();
+		foreach ($keys as $key) {
+			$found[$key] = isset($array[$key]) ? $array[$key] : $default;
+		}
+
+		return $found;
+	}
+
+	/**
+	 * Adds a value to the beginning of an associative array.
+	 *
+	 *     // Add an empty value to the start of a select list
+	 *     Arr::unshift($array, 'none', 'Select a value');
+	 *
+	 * @param   array   array to modify
+	 * @param   string  array key name
+	 * @param   mixed   array value
+	 * @return  array
+	 */
+	public static function unshift(array & $array, $key, $val) {
+		$array = array_reverse($array, true);
+		$array[$key] = $val;
+		$array = array_reverse($array, true);
+
+		return $array;
 	}
 }
 
