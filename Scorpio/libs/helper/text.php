@@ -273,10 +273,11 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 	}
 
 	/**
-	 * Returns human readable sizes.
-	 * @see  Based on original functions written by:
-	 * @see  Aidan Lister: http://aidanlister.com/repos/v/function.size_readable.php
-	 * @see  Quentin Zervaas: http://www.phpriot.com/d/code/strings/filesize-format/
+	 * Returns human readable sizes. Based on original functions written by
+	 * [Aidan Lister](http://aidanlister.com/repos/v/function.size_readable.php)
+	 * and [Quentin Zervaas](http://www.phpriot.com/d/code/strings/filesize-format/).
+	 *
+	 *     echo Text::bytes(filesize($file));
 	 *
 	 * @param   integer  size in bytes
 	 * @param   string   a definitive unit
@@ -284,27 +285,27 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 	 * @param   boolean  whether to use SI prefixes or IEC
 	 * @return  string
 	 */
-	public static function bytes($bytes, $force_unit = null, $format = null, $si = true) {
+	public static function bytes($bytes, $force_unit = NULL, $format = NULL, $si = TRUE)
+	{
 		// Format string
-		$format = ($format === null) ? '%01.2f %s' : (string )$format;
-
-		static $units = array();
+		$format = ($format === NULL) ? '%01.2f %s' : (string) $format;
 
 		// IEC prefixes (binary)
-		if ($si == false or strpos($force_unit, 'i') !== false) {
-			!$units[0] && $units[0] = array(__('B'), __('KiB'), __('MiB'), __('GiB'), __('TiB'),
-				__('PiB'));
-			$mod = 1024;
+		if ($si == FALSE OR strpos($force_unit, 'i') !== FALSE)
+		{
+			$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
+			$mod   = 1024;
 		}
 		// SI prefixes (decimal)
-		else {
-			!$units[1] && $units[1] = array(__('B'), __('kB'), __('MB'), __('GB'), __('TB'),
-				__('PB'));
-			$mod = 1000;
+		else
+		{
+			$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
+			$mod   = 1000;
 		}
 
 		// Determine unit to use
-		if (($power = array_search((string )$force_unit, $units[$mod == 1000])) === false) {
+		if (($power = array_search( (string) $force_unit, $units)) === FALSE)
+		{
 			$power = ($bytes > 0) ? floor(log($bytes, $mod)) : 0;
 		}
 
