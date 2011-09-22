@@ -277,7 +277,7 @@ array('test1' => 'escrzyaie', 'test2' => 'ěščřžýáíé', 'test3' => '姫�
 	 * [Aidan Lister](http://aidanlister.com/repos/v/function.size_readable.php)
 	 * and [Quentin Zervaas](http://www.phpriot.com/d/code/strings/filesize-format/).
 	 *
-	 *     echo Text::bytes(filesize($file));
+	 *     echo scotext::bytes(filesize($file));
 	 *
 	 * @param   integer  size in bytes
 	 * @param   string   a definitive unit
