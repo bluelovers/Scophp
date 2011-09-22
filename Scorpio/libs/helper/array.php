@@ -126,6 +126,9 @@ class Scorpio_helper_array_Core_ {
 	 * If the optional mode parameter is set to COUNT_RECURSIVE (or 1), count() will recursively count the array.
 	 * This is particularly useful for counting all the elements of a multidimensional array.
 	 * The default value for mode is 0. count() does not detect infinite recursion.
+	 *
+	 * 		COUNT_NORMAL = 0
+	 * 		COUNT_RECURSIVE = 1
 	 */
 	function length($array, $mode = COUNT_NORMAL) {
 		return count($array, $mode);
