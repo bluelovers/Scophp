@@ -133,6 +133,28 @@ class Scorpio_helper_array_Core_ {
 	function length($array, $mode = COUNT_NORMAL) {
 		return count($array, $mode);
 	}
+
+	/**
+	 * Tests if an array is associative or not.
+	 *
+	 *     // Returns TRUE
+	 *     Arr::is_assoc(array('username' => 'john.doe'));
+	 *
+	 *     // Returns FALSE
+	 *     Arr::is_assoc('foo', 'bar');
+	 *
+	 * @param   array   array to check
+	 * @return  boolean
+	 */
+	public static function is_assoc(array $array)
+	{
+		// Keys of the array
+		$keys = array_keys($array);
+
+		// If the array keys of the keys match the keys, then the array must
+		// not be associative (e.g. the keys array looked like {0:0, 1:1...}).
+		return array_keys($keys) !== $keys;
+	}
 }
 
 ?>
