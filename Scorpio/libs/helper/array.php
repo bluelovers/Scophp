@@ -207,6 +207,26 @@ class Scorpio_helper_array_Core_ {
 
 		return $found;
 	}
+
+	/**
+	 * Adds a value to the beginning of an associative array.
+	 *
+	 *     // Add an empty value to the start of a select list
+	 *     Arr::unshift($array, 'none', 'Select a value');
+	 *
+	 * @param   array   array to modify
+	 * @param   string  array key name
+	 * @param   mixed   array value
+	 * @return  array
+	 */
+	public static function unshift( array & $array, $key, $val)
+	{
+		$array = array_reverse($array, TRUE);
+		$array[$key] = $val;
+		$array = array_reverse($array, TRUE);
+
+		return $array;
+	}
 }
 
 ?>
