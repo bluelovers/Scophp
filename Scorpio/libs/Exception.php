@@ -14,11 +14,11 @@
 
 if (0) {
 	// for IDE
-	class Scorpio_Exception extends Scorpio_Exception_Core {
+	class Scorpio_Exception extends Scorpio_Exception_Core_ {
 	}
 }
 
-class Scorpio_Exception_Core extends Exception {
+class Scorpio_Exception_Core_ extends Exception {
 
 	public static $enabled = false;
 	protected static $_scorpio_self_classname_ = 'Scorpio_Exception';
