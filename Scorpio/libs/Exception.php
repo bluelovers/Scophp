@@ -116,7 +116,7 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @return  string
 	 */
 	public static function text($e) {
-		return sprintf('%s [ %s ]: %s ~ %s [ %d ]', get_class($e), $e->getCode(), strip_tags($e->getMessage()), Scorpio_Exception::debug_path($e->getFile()), $e->getLine());
+		return sprintf('%s [ %s ]: %s ~ %s [ %d ]', get_class($e), $e->getCode(), strip_tags($e->getMessage()), Scorpio_Exception::_debug_path($e->getFile()), $e->getLine());
 	}
 
 	/**
@@ -242,7 +242,7 @@ class Scorpio_Exception_Core_ extends Exception {
 	 * @param   string  path to sanitize
 	 * @return  string
 	 */
-	public static function debug_path($file) {
+	public static function _debug_path($file) {
 		$file = str_replace('\\', '/', $file);
 
 		if (strpos($file, SCORPIO_APPPATH) === 0) {
