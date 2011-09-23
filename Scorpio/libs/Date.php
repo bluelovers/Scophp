@@ -45,6 +45,10 @@ class Scorpio_Date_Core_ extends DateTime {
 			$_o = new scodate();
 			$this->_date[0] = $_o->timestamp($time);
 			$this->_date[1] = $_o->microsecond();
+
+			unset($_o);
+
+			$time = date(Scorpio_Date::SCO_ISO8601, $this->_date[0]);
 		}
 
 		parent::__construct($time, $timezone);
