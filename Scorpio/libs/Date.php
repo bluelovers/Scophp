@@ -252,6 +252,20 @@ class Scorpio_Date_Core_ extends DateTime {
 		return parent::diff($datetime2, $absolute);
 	}
 
+	/**
+	 * DateTime::createFromFormat -- date_create_from_format —
+	 * Returns new DateTime object formatted according to the specified format
+	 *
+	 * @return Scorpio_Date
+	 */
+	public static function createFromFormat($format, $time, $timezone = null) {
+
+		$dt = call_user_func_array('parent::createFromFormat', func_get_args());
+
+		$idt = new Scorpio_Date($dt::format(Scorpio_Date::SCO_ISO8601), new DateTimeZone($dt->timezone));
+		return $idt;
+	}
+
 }
 
 ?>
