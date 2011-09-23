@@ -260,6 +260,8 @@ class Scorpio_Date_Core_ extends DateTime {
 	 */
 	public static function createFromFormat($format, $time, $timezone = null) {
 
+		if (is_string($timezone)) $timezone = new DateTimeZone($timezone);
+
 		$dt = call_user_func_array('parent::createFromFormat', func_get_args());
 
 		$idt = new Scorpio_Date($dt::format(Scorpio_Date::SCO_ISO8601), $dt->timezone);
