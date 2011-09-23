@@ -37,7 +37,7 @@ class Scorpio_Date_Core_ extends DateTime {
 	const S_MINUTE = 60;
 
 	const B_TIMEZONE = 'GMT';
-	const D_TIMEZONE = 'Asia/Taipei';
+	static $D_TIMEZONE = 'Asia/Taipei';
 
 	public function __construct($time = 'now', $timezone = null) {
 		if (!isset($time)) $time = 'now';
@@ -46,7 +46,7 @@ class Scorpio_Date_Core_ extends DateTime {
 			/*
 			$timezone_default = date_default_timezone_get();
 			*/
-			$timezone_default = Scorpio_Date::D_TIMEZONE;
+			$timezone_default = Scorpio_Date::$D_TIMEZONE;
 			$timezone = new DateTimeZone($timezone_default);
 		} elseif (
 			is_string($timezone)
