@@ -101,7 +101,7 @@ class Scorpio_Date_Core_ extends DateTime {
 	 * DateTime::format -- date_format —
 	 * Returns date formatted according to given format
 	 */
-	public function format($format) {
+	public function format($format = Scorpio_Date::SCO_ISO8601) {
 		if (strpos($format, 'u') !== false) {
 			$format = preg_replace('`(?<!\\\\)u`', sprintf('%06d', $this->getMicrosecond() * 1000000), $format);
 		}
