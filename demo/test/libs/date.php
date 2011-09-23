@@ -53,6 +53,8 @@ foreach (array(
 	echo $_o;
 
 	var_dump($_o);
+
+	echo '<hr>';
 }
 
 $_o = new DateTime($d, new DateTimeZone('Asia/Taipei'));
