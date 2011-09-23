@@ -172,6 +172,17 @@ class Scorpio_Date_Core_ extends DateTime {
 		return $this;
 	}
 
+	/**
+	 * DateTime::setISODate -- date_isodate_set — Sets the ISO date
+	 *
+	 * @return Scorpio_Date
+	 */
+	public function setISODate($year, $month, $day = 1) {
+		parent::setISODate($year, $month, $day);
+
+		return $this;
+	}
+
 }
 
 ?>
