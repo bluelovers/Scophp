@@ -303,6 +303,19 @@ class Scorpio_Date_Core_ extends DateTime {
 		return $idt;
 	}
 
+	public function __sleep() {
+		$this->_sleep = array(
+			$this->getMicrotime(),
+			$this->getTimezone()->getName(),
+		);
+
+		return array('_sleep');
+	}
+
+	public function __wakeup() {
+		$this->__construct($this->_sleep[0], $this->_sleep[1]);
+	}
+
 }
 
 ?>
