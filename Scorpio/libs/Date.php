@@ -233,6 +233,15 @@ class Scorpio_Date_Core_ extends DateTime {
 		return $this->_date[0];
 	}
 
+	/**
+	 * DateTime::getOffset -- date_offset_get — Returns the timezone offset
+	 *
+	 * @return int
+	 */
+	public function getOffset() {
+		return parent::getOffset();
+	}
+
 }
 
 ?>
