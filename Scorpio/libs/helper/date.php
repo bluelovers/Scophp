@@ -122,7 +122,14 @@ class Scorpio_helper_date_Core_ {
 		if ($update === true) {
 			$this->timestamp(true);
 		} elseif ($update !== true && $update > 0) {
-			$microsecond = $update;
+			if ($microsecond > 1) {
+				list($timestamp) = explode('.', (string)$update);
+
+				$microsecond = $update - (int)$timestamp;
+			} else {
+				$microsecond = $update;
+			}
+
 			$microsecond = substr($microsecond, 0, 10);
 
 			$this->set('microsecond', (string)$microsecond);
