@@ -38,9 +38,13 @@ class Scorpio_Date_Core_ extends DateTime {
 	public function __construct($time = 'now', $timezone = null) {
 		if (!isset($time)) $time = 'now';
 
-		if (is_float($time)) {
+		if (
+			is_float($time)
+			|| preg_match('/(?|(\d{10})|(\d{10})?(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time)
+		) {
 			$_o = new scodate();
-			$_o->timestamp($time);
+			$this->_date[0] = $_o->timestamp($time);
+			$this->_date[1] = $_o->microsecond();
 		}
 
 		parent::__construct($time, $timezone);
