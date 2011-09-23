@@ -15,21 +15,12 @@ class Scorpio_Date_Zone_Core_ extends DateTimeZone {
 	/**
 	 * @return int
 	 */
-	public function getOffsetByZone($timezone) {
+	public function getOffset($datetime = null) {
 		if (!isset($timezone)) {
-			$timezone = new DateTimeZone(Scorpio_Date::B_TIMEZONE);
-		} elseif (
-			is_string($timezone)
-			|| !is_a($timezone, 'DateTimeZone')
-		) {
-			$timezone = new DateTimeZone($timezone);
+			$datetime = new DateTime('now', $this);
 		}
 
-		$_o = new DateTime('now', $timezone);
-
-		$offset = $this->getOffset($_o);
-
-		return $offset;
+		return parent::getOffset($datetime);
 	}
 
 }
