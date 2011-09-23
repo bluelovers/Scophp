@@ -117,13 +117,53 @@ class Scorpio_helper_date_Core_ {
 		return $this->__set($k, $v);
 	}
 
+	public function microsecond($update = false) {
+
+		if ($update === true) {
+			$this->timestamp(true);
+		} elseif ($update !== true && $update > 0) {
+			if ($update > 1) {
+				list($timestamp) = explode('.', (string)$update);
+
+				$microsecond = $update - (int)$timestamp;
+			} else {
+				$microsecond = $update;
+			}
+
+			$microsecond = substr($microsecond, 0, 10);
+
+			$this->set('microsecond', (string)$microsecond);
+		} elseif ($update !== false && empty($update)) {
+			$this->set('microsecond', '0');
+		}
+
+		return $this->get('microsecond');
+	}
+
 	public function timestamp($update = false) {
 		if ($update === true) {
-			// 更新 timestamp
-			$this->set('timestamp', microtime(true));
+			list($microsecond, $timestamp) = explode(' ', microtime());
+
+			$microsecond = $this->microsecond((string)$microsecond);
+
+			$microsecond = substr($microsecond, 1);
+			$this->set('timestamp', (string)$timestamp . (string)$microsecond);
+
 		} elseif ($update !== true && $update > 0) {
-			// 以指定的 timestamp 來更新
-			$this->set('timestamp', $update);
+
+			if (strpos($update, ' ') === false) {
+				list($timestamp, $microsecond) = explode('.', $update);
+
+				$microsecond = $this->microsecond($update);
+			} else {
+				list($microsecond, $timestamp) = explode(' ', $update);
+
+				$microsecond = $this->microsecond((string)$microsecond);
+			}
+
+			$microsecond = substr($microsecond, 1);
+
+			$this->set('timestamp', (int)$timestamp . (string)$microsecond);
 		}
 
 		return $this->get('timestamp');
