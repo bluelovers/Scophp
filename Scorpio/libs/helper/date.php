@@ -147,9 +147,7 @@ class Scorpio_helper_date_Core_ {
 			if (strpos($update, ' ') === false) {
 				list($timestamp, $microsecond) = explode('.', $update);
 
-				$microsecond = $update - $timestamp;
-
-				$microsecond = $this->microsecond((string)$microsecond);
+				$microsecond = $this->microsecond($update - $timestamp);
 
 				$microsecond = substr($microsecond, 1);
 			} elseif (strpos($update, ' ') !== false) {
