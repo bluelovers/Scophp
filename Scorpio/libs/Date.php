@@ -39,7 +39,9 @@ class Scorpio_Date_Core_ extends DateTime {
 		if (!isset($time)) $time = 'now';
 
 		if (!isset($timezone)) {
-			$timezone = new DateTimeZone(date_default_timezone_get());
+			$timezone_default = date_default_timezone_get();
+			$timezone_default = 'Asia/Taipei';
+			$timezone = new DateTimeZone($timezone_default);
 		}
 
 		if (
@@ -52,7 +54,13 @@ class Scorpio_Date_Core_ extends DateTime {
 
 			unset($_o);
 
-			$time = date(Scorpio_Date::SCO_ISO8601, $this->_date[0]);
+			$_o = new DateTime(gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0] + $this->_date[1]), new DateTimeZone('GMT'));
+
+			$offset = $timezone->getOffset($_o);
+
+			unset($_o);
+
+			$time = date(Scorpio_Date::SCO_ISO8601, $this->_date[0] + $this->_date[1] + $offset);
 		}
 
 		parent::__construct($time, $timezone);
