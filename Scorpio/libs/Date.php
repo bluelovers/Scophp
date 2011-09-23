@@ -132,6 +132,8 @@ class Scorpio_Date_Core_ extends DateTime {
 	 * @return Scorpio_Date
 	 */
 	public function setMicrosecond($microsecond) {
+		if ($microsecond > 1) $microsecond = (int)$microsecond - (float)$microsecond;
+
 		$this->_date[1] = $microsecond;
 
 		return $this;
