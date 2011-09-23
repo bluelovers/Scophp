@@ -110,12 +110,22 @@ class Scorpio_Date_Core_ extends DateTime {
 	}
 
 	/**
+	 * DateTime::getTimestamp -- date_timestamp_get —
+	 * Gets the Unix timestamp
+	 *
+	 * @return int
+	 */
+	public function getTimestamp() {
+		return parent::getTimestamp();
+	}
+
+	/**
 	 * DateTime::setTimestamp -- date_timestamp_set —
 	 * Sets the date and time based on an Unix timestamp
 	 *
 	 * @return Scorpio_Date
 	 */
-	function setTimestamp($unixtimestamp) {
+	public function setTimestamp($unixtimestamp) {
 
 		$_o = new scodate();
 		$this->_date[0] = $_o->timestamp($unixtimestamp);
