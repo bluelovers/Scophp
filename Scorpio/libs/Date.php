@@ -67,7 +67,7 @@ class Scorpio_Date_Core_ extends DateTime {
 
 			unset($_o);
 
-			$time = date(Scorpio_Date::SCO_ISO8601, $this->_date[0] + $offset);
+			$time = gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0] + $offset);
 		}
 
 		parent::__construct($time, $timezone);
