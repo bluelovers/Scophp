@@ -23,6 +23,8 @@ if (0) {
  **/
 class Scorpio_Date_Core_ extends DateTime {
 
+	protected $_date = array();
+
 	const SCO_ISO8601 = 'Y-m-d H:i:s';
 
 	// Second amounts for various time increments
@@ -35,6 +37,11 @@ class Scorpio_Date_Core_ extends DateTime {
 
 	public function __construct($time = 'now', $timezone = null) {
 		if (!isset($time)) $time = 'now';
+
+		if (is_float($time)) {
+			$_o = new scodate();
+			$_o->timestamp($time);
+		}
 
 		parent::__construct($time, $timezone);
 
