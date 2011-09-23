@@ -105,6 +105,10 @@ class Scorpio_Date_Core_ extends DateTime {
 		return parent::format($format);
 	}
 
+	function getMicrosecond() {
+		return isset($this->_date[1]) ? $this->_date[1] : 0;
+	}
+
 }
 
 ?>
