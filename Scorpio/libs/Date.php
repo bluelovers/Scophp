@@ -23,21 +23,21 @@ if (0) {
  **/
 class Scorpio_Date_Core_ extends DateTime {
 
-	protected $_date = null;
+	protected $_date	= null;
 
-	const SCO_ISO8601 = 'Y-m-d H:i:s';
-	const SCO_ISO8601_U = 'Y-m-d H:i:s u';
+	const SCO_ISO8601	= 'Y-m-d H:i:s';
+	const SCO_ISO8601_U	= 'Y-m-d H:i:s u';
 
 	// Second amounts for various time increments
-	const S_YEAR   = 31556926;
-	const S_MONTH  = 2629744;
-	const S_WEEK   = 604800;
-	const S_DAY    = 86400;
-	const S_HOUR   = 3600;
-	const S_MINUTE = 60;
+	const S_YEAR		= 31556926;
+	const S_MONTH		= 2629744;
+	const S_WEEK		= 604800;
+	const S_DAY			= 86400;
+	const S_HOUR		= 3600;
+	const S_MINUTE		= 60;
 
-	const B_TIMEZONE = 'GMT';
-	static $D_TIMEZONE = 'Asia/Taipei';
+	const B_TIMEZONE	= 'GMT';
+	static $D_TIMEZONE	= 'Asia/Taipei';
 
 	public function __construct($time = 'now', $timezone = null) {
 		if (!isset($time)) $time = 'now';
