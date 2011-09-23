@@ -167,12 +167,7 @@ class Scorpio_Exception_Core_ extends Exception {
 
 			Scorpio_Exception::_view_log($e, $_e);
 
-			if (Scorpio_Kenal::$is_cli) {
-				// Just display the text of the exception
-				echo "\n{$error}\n";
-
-				exit(1);
-			}
+			Scorpio_Exception::_view_cli($e, $_e);
 
 			if (!headers_sent()) {
 				Scorpio_Exception::sendHeaders($e, $code);
@@ -219,6 +214,15 @@ class Scorpio_Exception_Core_ extends Exception {
 
 			// Make sure the logs are written
 			Scorpio_Kenal::$log->write();
+		}
+	}
+
+	function _view_cli($e, $_e) {
+		if (Scorpio_Kenal::$is_cli) {
+			// Just display the text of the exception
+			echo "\n{$_e[error]}\n";
+
+			exit(1);
 		}
 	}
 
