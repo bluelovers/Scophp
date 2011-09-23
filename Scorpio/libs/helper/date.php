@@ -157,7 +157,7 @@ class Scorpio_helper_date_Core_ {
 				$microsecond = $this->microsecond($update);
 
 				$microsecond = substr($microsecond, 1);
-			} elseif (strpos($update, ' ') !== false) {
+			} else {
 				list($microsecond, $timestamp) = explode(' ', $update);
 
 				$microsecond = $this->microsecond((string)$microsecond);
