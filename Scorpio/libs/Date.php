@@ -137,7 +137,7 @@ class Scorpio_Date_Core_ extends DateTime {
   		if ((string)$this->_date[0] !== (string)$timestamp) {
   			$this->_date[1] = $_o->microsecond();
 		} else {
-			$this->_date[0] .= substr($this->_date[1], 1);
+			$this->_date[0] = $this->getMicrotime();
 		}
 
   		return $this;
