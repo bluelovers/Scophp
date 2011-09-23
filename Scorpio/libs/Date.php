@@ -70,10 +70,6 @@ class Scorpio_Date_Core_ extends DateTime {
 	}
 
 	public function format($format) {
-		/*
-		return parent::format($format);
-		*/
-
 		if (strpos($format, 'u') !== false) {
 			$format = preg_replace('`(?<!\\\\)u`', sprintf('%06d', $this->_date[1] * 1000000), $format);
 		}
