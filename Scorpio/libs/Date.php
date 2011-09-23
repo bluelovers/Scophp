@@ -109,6 +109,12 @@ class Scorpio_Date_Core_ extends DateTime {
 		return parent::format($format);
 	}
 
+	/**
+	 * DateTime::setTimestamp -- date_timestamp_set —
+	 * Sets the date and time based on an Unix timestamp
+	 *
+	 * @return Scorpio_Date
+	 */
 	function setTimestamp($unixtimestamp) {
   		parent::setTimestamp($unixtimestamp);
 
@@ -120,6 +126,15 @@ class Scorpio_Date_Core_ extends DateTime {
 	 */
 	public function getMicrosecond() {
 		return isset($this->_date[1]) ? $this->_date[1] : 0;
+	}
+
+	/**
+	 * @return Scorpio_Date
+	 */
+	public function setMicrosecond($microsecond) {
+		$this->_date[1] = $microsecond;
+
+		return $this;
 	}
 
 }
