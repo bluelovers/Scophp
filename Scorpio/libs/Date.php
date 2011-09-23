@@ -183,6 +183,26 @@ class Scorpio_Date_Core_ extends DateTime {
 		return $this;
 	}
 
+	/**
+	 * DateTime::getTimezone -- date_timezone_get — Return time zone relative to given DateTime
+	 *
+	 * @return DateTimeZone
+	 */
+	public function getTimezone() {
+		return parent::getTimezone();
+	}
+
+	/**
+	 * DateTime::setTimezone -- date_timezone_set — Sets the time zone for the DateTime object
+	 *
+	 * @return Scorpio_Date
+	 */
+	public function setTimezone(DateTimeZone $timezone) {
+		parent::setTimezone($timezone);
+
+		return $this;
+	}
+
 }
 
 ?>
