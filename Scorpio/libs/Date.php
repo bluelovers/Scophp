@@ -26,6 +26,7 @@ class Scorpio_Date_Core_ extends DateTime {
 	protected $_date = null;
 
 	const SCO_ISO8601 = 'Y-m-d H:i:s';
+	const SCO_ISO8601_U = 'Y-m-d H:i:s u';
 
 	// Second amounts for various time increments
 	const S_YEAR   = 31556926;
