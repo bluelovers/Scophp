@@ -175,18 +175,7 @@ class Scorpio_Exception_Core_ extends Exception {
 
 			Scorpio_Exception::_view_ajax($e, $_e);
 
-			// Start an output buffer
-			ob_start();
-
-			// Include the exception HTML
-			if ($view_file = Scorpio_Kenal::find_file('views', Scorpio_Exception::$error_view)) {
-				include $view_file;
-			} else {
-				throw new Scorpio_Exception('Error view file does not exist: views/%file', array('file' => Scorpio_Exception::$error_view, ));
-			}
-
-			// Display the contents of the output buffer
-			echo ob_get_clean();
+			Scorpio_Exception::_view_default($e, $_e);
 
 			exit(1);
 		}
@@ -230,30 +219,19 @@ class Scorpio_Exception_Core_ extends Exception {
 		}
 	}
 
-	function _view($e, $mode = 'default') {
-		/**
-		 * Create a text version of the exception
-		 */
-		$error = Scorpio_Exception::text($e);
+	function _view_default($e, $_e) {
+		// Start an output buffer
+		ob_start();
 
-		switch ($mode) {
-			case 'default':
-				// Start an output buffer
-				ob_start();
-
-				// Include the exception HTML
-				if ($view_file = Scorpio_Kenal::find_file('views', Scorpio_Exception::$error_view)) {
-					include $view_file;
-				} else {
-					throw new Scorpio_Exception('Error view file does not exist: views/%file', array('file' => Scorpio_Exception::$error_view, ));
-				}
-
-				// Display the contents of the output buffer
-				echo ob_get_clean();
-
-				exit(1);
-				break;
+		// Include the exception HTML
+		if ($view_file = Scorpio_Kenal::find_file('views', Scorpio_Exception::$error_view)) {
+			include $view_file;
+		} else {
+			throw new Scorpio_Exception('Error view file does not exist: views/%file', array('file' => Scorpio_Exception::$error_view, ));
 		}
+
+		// Display the contents of the output buffer
+		echo ob_get_clean();
 	}
 
 	/**
