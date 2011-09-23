@@ -80,7 +80,7 @@ class Scorpio_Date_Core_ extends DateTime {
 
 		if (!isset($this->_date)) {
 			$this->_date = array(
-				$this->getTimestamp(),
+				$this->getMicrotime(),
 				$this->getMicrosecond(),
 			);
 		}
