@@ -37,6 +37,8 @@ class Scorpio_Date_Core_ extends DateTime {
 		if (!isset($time)) $time = 'now';
 
 		parent::__construct($time, $timezone);
+
+		return $this;
 	}
 
 }
