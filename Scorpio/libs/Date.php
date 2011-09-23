@@ -109,6 +109,12 @@ class Scorpio_Date_Core_ extends DateTime {
 		return parent::format($format);
 	}
 
+	function setTimestamp($unixtimestamp) {
+  		parent::setTimestamp($unixtimestamp);
+
+  		return $this;
+	}
+
 	/**
 	 * @return float
 	 */
