@@ -118,6 +118,11 @@ class Scorpio_Date_Core_ extends DateTime {
 	function setTimestamp($unixtimestamp) {
   		parent::setTimestamp($unixtimestamp);
 
+  		$timestamp = parent::getTimestamp();
+  		if ((int)$timestamp !== (float)$unixtimestamp) {
+  			$this->setMicrosecond($unixtimestamp);
+		}
+
   		return $this;
 	}
 
