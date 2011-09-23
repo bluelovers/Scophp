@@ -242,6 +242,16 @@ class Scorpio_Date_Core_ extends DateTime {
 		return parent::getOffset();
 	}
 
+	/**
+	 * DateTime::diff -- date_diff —
+	 * Returns the difference between two DateTime objects
+	 *
+	 * @return DateInterval
+	 */
+	public function diff($datetime2, $absolute = false) {
+		return parent::diff($datetime2, $absolute);
+	}
+
 }
 
 ?>
