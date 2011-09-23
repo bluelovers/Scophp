@@ -155,15 +155,14 @@ class Scorpio_helper_date_Core_ {
 				list($timestamp, $microsecond) = explode('.', $update);
 
 				$microsecond = $this->microsecond($update);
-
-				$microsecond = substr($microsecond, 1);
 			} else {
 				list($microsecond, $timestamp) = explode(' ', $update);
 
 				$microsecond = $this->microsecond((string)$microsecond);
-
-				$microsecond = substr($microsecond, 1);
 			}
+
+			$microsecond = substr($microsecond, 1);
+
 			$this->set('timestamp', (int)$timestamp . (string)$microsecond);
 		}
 
