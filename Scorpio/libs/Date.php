@@ -34,6 +34,8 @@ class Scorpio_Date_Core_ extends DateTime {
 	const S_MINUTE = 60;
 
 	public function __construct($time = 'now', $timezone = null) {
+		if (!isset($time)) $time = 'now';
+
 		parent::__construct($time, $timezone);
 	}
 
