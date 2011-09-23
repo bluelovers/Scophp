@@ -116,11 +116,14 @@ class Scorpio_Date_Core_ extends DateTime {
 	 * @return Scorpio_Date
 	 */
 	function setTimestamp($unixtimestamp) {
-  		parent::setTimestamp($unixtimestamp);
 
-  		$timestamp = parent::getTimestamp();
-  		if ((string)$timestamp !== (string)$unixtimestamp) {
-  			$this->setMicrosecond($unixtimestamp);
+		$_o = new scodate();
+		$timestamp = $_o->timestamp($unixtimestamp);
+
+  		parent::setTimestamp($this->_date[0]);
+
+  		if ((string)$timestamp !== (string)parent::getTimestamp()) {
+  			$this->setMicrosecond($timestamp);
 		}
 
   		return $this;
@@ -137,9 +140,9 @@ class Scorpio_Date_Core_ extends DateTime {
 	 * @return Scorpio_Date
 	 */
 	public function setMicrosecond($microsecond) {
-		if ($microsecond > 1) $microsecond = (int)$microsecond - (float)$microsecond;
-
-		$this->_date[1] = $microsecond;
+		$_o = new scodate();
+		$_o->timestamp($microsecond);
+		$this->_date[1] = $_o->microsecond();;
 
 		return $this;
 	}
