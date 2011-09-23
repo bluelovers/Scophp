@@ -170,7 +170,7 @@ class Scorpio_Exception_Core_ extends Exception {
 			Scorpio_Exception::_view_cli($e, $_e);
 
 			if (!headers_sent()) {
-				Scorpio_Exception::sendHeaders($e, $code);
+				Scorpio_Exception::sendHeaders($e, $_e);
 			}
 
 			Scorpio_Exception::_view_ajax($e, $_e);
@@ -261,7 +261,7 @@ class Scorpio_Exception_Core_ extends Exception {
 	 *
 	 * @return  void
 	 */
-	public function sendHeaders($e, $code) {
+	public function sendHeaders($e, $_e) {
 		/*
 		// Send the 500 header
 		header('HTTP/1.1 500 Internal Server Error');
@@ -270,9 +270,9 @@ class Scorpio_Exception_Core_ extends Exception {
 		/**
 		 * Make sure the proper http header is sent
 		 */
-		$http_header_status = ($e instanceof Scorpio_Exception_HTTP) ? $code : 500;
+		$_e['http_header_status'] = ($e instanceof Scorpio_Exception_HTTP) ? $_e['code'] : 500;
 
-		header('Content-Type: text/html; charset=' . Scorpio_Kenal::$charset, TRUE, $http_header_status);
+		header('Content-Type: text/html; charset=' . Scorpio_Kenal::$charset, TRUE, $_e['http_header_status']);
 	}
 
 	/**
