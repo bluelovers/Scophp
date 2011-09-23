@@ -214,6 +214,18 @@ class Scorpio_Date_Core_ extends DateTime {
 		return $this;
 	}
 
+	/**
+	 * Return current Unix timestamp with microseconds
+	 *
+	 * @return float
+	 */
+	public function getMicrotime() {
+		$this->_date[0] = $this->getTimestamp();
+		$this->_date[0] .= substr($this->_date[1], 1);
+
+		return $this->_date[0];
+	}
+
 }
 
 ?>
