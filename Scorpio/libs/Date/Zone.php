@@ -16,6 +16,7 @@ class Scorpio_Date_Zone_Core_ extends DateTimeZone {
 	 * i don't know why need $datetime
 	 * didn't see any from diff value by $datetime
 	 *
+	 * @param DateTime $datetime
 	 * @return int
 	 */
 	public function getOffset($datetime = null) {
