@@ -211,6 +211,9 @@ class Scorpio_Exception_Core_ extends Exception {
 	}
 
 	function _view_ajax(&$e, &$_e) {
+
+		return;
+
 		if (Scorpio_Request::$current !== NULL AND Scorpio_Request::current()->is_ajax() === TRUE) {
 			// Just display the text of the exception
 			echo "\n{$_e[error]}\n";
