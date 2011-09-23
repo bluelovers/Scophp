@@ -81,7 +81,7 @@ class Scorpio_Date_Core_ extends DateTime {
 		if (!isset($this->_date)) {
 			$this->_date = array(
 				$this->getTimestamp(),
-				0,
+				$this->getMicrosecond(),
 			);
 		}
 
@@ -97,15 +97,22 @@ class Scorpio_Date_Core_ extends DateTime {
 		return $this->format(Scorpio_Date::SCO_ISO8601.' u');
 	}
 
+	/**
+	 * DateTime::format -- date_format —
+	 * Returns date formatted according to given format
+	 */
 	public function format($format) {
 		if (strpos($format, 'u') !== false) {
-			$format = preg_replace('`(?<!\\\\)u`', sprintf('%06d', $this->_date[1] * 1000000), $format);
+			$format = preg_replace('`(?<!\\\\)u`', sprintf('%06d', $this->getMicrosecond() * 1000000), $format);
 		}
 
 		return parent::format($format);
 	}
 
-	function getMicrosecond() {
+	/**
+	 * @return float
+	 */
+	public function getMicrosecond() {
 		return isset($this->_date[1]) ? $this->_date[1] : 0;
 	}
 
