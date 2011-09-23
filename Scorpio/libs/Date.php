@@ -261,7 +261,10 @@ class Scorpio_Date_Core_ extends DateTime {
 	public static function createFromFormat($format, $time, $timezone = null) {
 		if (!isset($timezone)) $timezone = Scorpio_Date::B_TIMEZONE;
 
-		if (is_string($timezone)) {
+		if (
+			is_string($timezone)
+			|| !is_a($timezone, 'DateTimeZone')
+		) {
 			$timezone = new DateTimeZone($timezone);
 		}
 
