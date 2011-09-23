@@ -117,7 +117,7 @@ class Scorpio_helper_date_Core_ {
 		return $this->__set($k, $v);
 	}
 
-	public function microsecond() {
+	public function microsecond($update = false) {
 		return $this->get('microsecond');
 	}
 
