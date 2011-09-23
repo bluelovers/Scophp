@@ -51,6 +51,10 @@ class Scorpio_Date_Core_ extends DateTime {
 			$time = date(Scorpio_Date::SCO_ISO8601, $this->_date[0]);
 		}
 
+		if (!isset($timezone)) {
+			$timezone = new DateTimeZone('Asia/Taipei');
+		}
+
 		parent::__construct($time, $timezone);
 
 		return $this;
