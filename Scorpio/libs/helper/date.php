@@ -117,6 +117,10 @@ class Scorpio_helper_date_Core_ {
 		return $this->__set($k, $v);
 	}
 
+	public function microsecond() {
+		return $this->get('microsecond');
+	}
+
 	public function timestamp($update = false) {
 		if ($update === true) {
 			list($microsecond, $timestamp) = explode(' ', microtime());
