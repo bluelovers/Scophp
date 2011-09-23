@@ -51,6 +51,8 @@ class Scorpio_Date_Core_ extends DateTime {
 			$timezone = new DateTimeZone($timezone);
 		}
 
+		if ($time == 'now') $time = microtime(true);
+
 		if (
 			is_float($time)
 			|| (
