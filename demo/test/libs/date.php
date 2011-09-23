@@ -41,6 +41,18 @@ foreach (array(
 	echo $_o;
 
 	var_dump($_o);
+
+	$_o->setTimestamp(microtime(true) + 3600);
+
+	echo $_o;
+
+	var_dump($_o);
+
+	$_o->setTimestamp(time() + 3600 * 2);
+
+	echo $_o;
+
+	var_dump($_o);
 }
 
 $_o = new DateTime($d, new DateTimeZone('Asia/Taipei'));
