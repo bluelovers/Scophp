@@ -121,6 +121,13 @@ class Scorpio_helper_date_Core_ {
 
 		if ($update === true) {
 			$this->timestamp(true);
+		} elseif ($update !== true && $update > 0) {
+			$microsecond = $update;
+			$microsecond = substr($microsecond, 0, 10);
+
+			$this->set('microsecond', (string)$microsecond);
+		} elseif ($update !== false && empty($update)) {
+			$this->set('microsecond', '0');
 		}
 
 		return $this->get('microsecond');
@@ -130,9 +137,7 @@ class Scorpio_helper_date_Core_ {
 		if ($update === true) {
 			list($microsecond, $timestamp) = explode(' ', microtime());
 
-			$microsecond = substr($microsecond, 0, 10);
-
-			$this->set('microsecond', (string)$microsecond);
+			$microsecond = $this->microsecond((string)$microsecond);
 
 			$microsecond = substr($microsecond, 1);
 			$this->set('timestamp', (string)$timestamp . (string)$microsecond);
@@ -144,19 +149,14 @@ class Scorpio_helper_date_Core_ {
 
 				$microsecond = $update - $timestamp;
 
-				/**
-				 * 0.51142200
-				 */
-				$microsecond = substr($microsecond, 0, 10);
+				$microsecond = $this->microsecond((string)$microsecond);
 
-				$this->set('microsecond', (string)$microsecond);
 				$microsecond = substr($microsecond, 1);
 			} elseif (strpos($update, ' ') !== false) {
 				list($microsecond, $timestamp) = explode(' ', $update);
 
-				$microsecond = substr($microsecond, 0, 10);
+				$microsecond = $this->microsecond((string)$microsecond);
 
-				$this->set('microsecond', (string)$microsecond);
 				$microsecond = substr($microsecond, 1);
 			}
 			$this->set('timestamp', (string)$timestamp . (string)$microsecond);
