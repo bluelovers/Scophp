@@ -23,7 +23,7 @@ if (0) {
  **/
 class Scorpio_Date_Core_ extends DateTime {
 
-	protected $_date = array();
+	protected $_date = null;
 
 	const SCO_ISO8601 = 'Y-m-d H:i:s';
 
@@ -59,6 +59,7 @@ class Scorpio_Date_Core_ extends DateTime {
 			)
 		) {
 			$_o = new scodate();
+			$this->_date = array();
 			$this->_date[0] = $_o->timestamp($time);
 			$this->_date[1] = $_o->microsecond();
 
@@ -74,6 +75,13 @@ class Scorpio_Date_Core_ extends DateTime {
 		}
 
 		parent::__construct($time, $timezone);
+
+		if (!isset($this->_date)) {
+			$this->_date = array(
+				$this->getTimestamp(),
+				0,
+			);
+		}
 
 		return $this;
 	}
