@@ -23,6 +23,8 @@ if (0) {
  **/
 class Scorpio_Date_Core_ extends DateTime {
 
+	private $_sleep;
+
 	protected $_date	= null;
 
 	const SCO_ISO8601	= 'Y-m-d H:i:s';
