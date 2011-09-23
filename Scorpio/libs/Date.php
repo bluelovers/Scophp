@@ -293,7 +293,7 @@ class Scorpio_Date_Core_ extends DateTime {
 
 		$dt = parent::createFromFormat($format, $time, $timezone);
 
-		$idt = new Scorpio_Date($dt::format(Scorpio_Date::SCO_ISO8601), $dt->timezone);
+		$idt = new Scorpio_Date($dt->format(Scorpio_Date::SCO_ISO8601), $dt->getTimezone());
 		return $idt;
 	}
 
