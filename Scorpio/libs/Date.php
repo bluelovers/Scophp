@@ -244,6 +244,21 @@ class Scorpio_Date_Core_ extends DateTime {
 	}
 
 	/**
+	 * @param DateInterval $interval The amount of time to add
+	 */
+	public function add($interval) {
+		return parent::add($interval);
+	}
+
+
+	/**
+	 * @param DateInterval $interval The amount of time to add
+	 */
+	public function sub($interval) {
+		return parent::sub($interval);
+	}
+
+	/**
 	 * DateTime::diff -- date_diff —
 	 * Returns the difference between two DateTime objects
 	 *
