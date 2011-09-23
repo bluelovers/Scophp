@@ -161,10 +161,6 @@ class Scorpio_Date_Core_ extends DateTime {
 		return $this;
 	}
 
-	public function getDate() {
-
-	}
-
 	/**
 	 * DateTime::setDate -- date_date_set — Sets the date
 	 *
