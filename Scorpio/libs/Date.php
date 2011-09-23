@@ -38,6 +38,10 @@ class Scorpio_Date_Core_ extends DateTime {
 	public function __construct($time = 'now', $timezone = null) {
 		if (!isset($time)) $time = 'now';
 
+		if (!isset($timezone)) {
+			$timezone = new DateTimeZone(date_default_timezone_get());
+		}
+
 		if (
 			is_float($time)
 			|| preg_match('/(?|(\d{10})|(\d{10})?(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time)
@@ -49,10 +53,6 @@ class Scorpio_Date_Core_ extends DateTime {
 			unset($_o);
 
 			$time = date(Scorpio_Date::SCO_ISO8601, $this->_date[0]);
-		}
-
-		if (!isset($timezone)) {
-			$timezone = new DateTimeZone(date_default_timezone_get());
 		}
 
 		parent::__construct($time, $timezone);
