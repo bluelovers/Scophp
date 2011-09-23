@@ -48,7 +48,10 @@ class Scorpio_Date_Core_ extends DateTime {
 			*/
 			$timezone_default = Scorpio_Date::D_TIMEZONE;
 			$timezone = new DateTimeZone($timezone_default);
-		} elseif (is_string($timezone)) {
+		} elseif (
+			is_string($timezone)
+			|| !is_a($timezone, 'DateTimeZone')
+		) {
 			$timezone = new DateTimeZone($timezone);
 		}
 
