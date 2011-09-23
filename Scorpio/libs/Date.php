@@ -56,6 +56,15 @@ class Scorpio_Date_Core_ extends DateTime {
 		return $this;
 	}
 
+	/**
+	 * Return Date in ISO8601 format
+	 *
+	 * @return String
+	 */
+	public function __toString() {
+		return $this->format(Scorpio_Date::SCO_ISO8601);
+	}
+
 }
 
 ?>
