@@ -314,6 +314,8 @@ class Scorpio_Date_Core_ extends DateTime {
 
 	public function __wakeup() {
 		$this->__construct($this->_sleep[0], $this->_sleep[1]);
+
+		unset($this->_sleep);
 	}
 
 }
