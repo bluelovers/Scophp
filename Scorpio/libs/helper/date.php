@@ -164,7 +164,7 @@ class Scorpio_helper_date_Core_ {
 
 				$microsecond = substr($microsecond, 1);
 			}
-			$this->set('timestamp', (string)$timestamp . (string)$microsecond);
+			$this->set('timestamp', (int)$timestamp . (string)$microsecond);
 		}
 
 		return $this->get('timestamp');
