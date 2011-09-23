@@ -52,7 +52,7 @@ class Scorpio_Date_Core_ extends DateTime {
 		}
 
 		if (!isset($timezone)) {
-			$timezone = new DateTimeZone('Asia/Taipei');
+			$timezone = new DateTimeZone(date_default_timezone_get());
 		}
 
 		parent::__construct($time, $timezone);
