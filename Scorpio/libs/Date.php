@@ -203,6 +203,17 @@ class Scorpio_Date_Core_ extends DateTime {
 		return $this;
 	}
 
+	/**
+	 * DateTime::modify -- date_modify — Alters the timestamp
+	 *
+	 * @return Scorpio_Date
+	 */
+	public function modify($modify) {
+		parent::modify($modify);
+
+		return $this;
+	}
+
 }
 
 ?>
