@@ -94,7 +94,7 @@ class Scorpio_Date_Core_ extends DateTime {
 	 * @return String
 	 */
 	public function __toString() {
-		return $this->format(Scorpio_Date::SCO_ISO8601.' u');
+		return $this->format(Scorpio_Date::SCO_ISO8601);
 	}
 
 	/**
