@@ -119,11 +119,38 @@ class Scorpio_helper_date_Core_ {
 
 	public function timestamp($update = false) {
 		if ($update === true) {
-			// 更新 timestamp
-			$this->set('timestamp', microtime(true));
+			list($microsecond, $timestamp) = explode(' ', microtime());
+
+			$microsecond = substr($microsecond, 0, 10);
+
+			$this->set('microsecond', (string)$microsecond);
+
+			$microsecond = substr($microsecond, 1);
+			$this->set('timestamp', (string)$timestamp . (string)$microsecond);
+
 		} elseif ($update !== true && $update > 0) {
-			// 以指定的 timestamp 來更新
-			$this->set('timestamp', $update);
+
+			if (strpos($update, ' ') === false) {
+				list($timestamp, $microsecond) = explode('.', $update);
+
+				$microsecond = $update - $timestamp;
+
+				/**
+				 * 0.51142200
+				 */
+				$microsecond = substr($microsecond, 0, 10);
+
+				$this->set('microsecond', (string)$microsecond);
+				$microsecond = substr($microsecond, 1);
+			} elseif (strpos($update, ' ') !== false) {
+				list($microsecond, $timestamp) = explode(' ', $update);
+
+				$microsecond = substr($microsecond, 0, 10);
+
+				$this->set('microsecond', (string)$microsecond);
+				$microsecond = substr($microsecond, 1);
+			}
+			$this->set('timestamp', (string)$timestamp . (string)$microsecond);
 		}
 
 		return $this->get('timestamp');
