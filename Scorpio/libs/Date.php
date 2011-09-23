@@ -247,6 +247,9 @@ class Scorpio_Date_Core_ extends DateTime {
 	 * DateTime::diff -- date_diff —
 	 * Returns the difference between two DateTime objects
 	 *
+	 * @param DateTime $datetime2
+	 * @param bool $absolute = false
+	 *
 	 * @return DateInterval
 	 */
 	public function diff($datetime2, $absolute = false) {
