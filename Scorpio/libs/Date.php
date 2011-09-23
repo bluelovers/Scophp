@@ -35,6 +35,8 @@ class Scorpio_Date_Core_ extends DateTime {
 	const S_HOUR   = 3600;
 	const S_MINUTE = 60;
 
+	const B_TIMEZONE = 'GMT';
+
 	public function __construct($time = 'now', $timezone = null) {
 		if (!isset($time)) $time = 'now';
 
@@ -54,13 +56,13 @@ class Scorpio_Date_Core_ extends DateTime {
 
 			unset($_o);
 
-			$_o = new DateTime(gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0] + $this->_date[1]), new DateTimeZone('GMT'));
+			$_o = new DateTime(gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0]), new DateTimeZone(Scorpio_Date::B_TIMEZONE));
 
 			$offset = $timezone->getOffset($_o);
 
 			unset($_o);
 
-			$time = date(Scorpio_Date::SCO_ISO8601, $this->_date[0] + $this->_date[1] + $offset);
+			$time = date(Scorpio_Date::SCO_ISO8601, $this->_date[0] + $offset);
 		}
 
 		parent::__construct($time, $timezone);
