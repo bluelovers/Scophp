@@ -23,21 +23,28 @@ if (0) {
  **/
 class Scorpio_Date_Core_ extends DateTime {
 
-	protected $_date = null;
+	private $_sleep;
 
-	const SCO_ISO8601 = 'Y-m-d H:i:s';
-	const SCO_ISO8601_U = 'Y-m-d H:i:s u';
+	protected $_date	= null;
+
+	const SCO_ISO8601	= 'Y-m-d H:i:s';
+	const SCO_ISO8601_U	= 'Y-m-d H:i:s u';
 
 	// Second amounts for various time increments
-	const S_YEAR   = 31556926;
-	const S_MONTH  = 2629744;
-	const S_WEEK   = 604800;
-	const S_DAY    = 86400;
-	const S_HOUR   = 3600;
-	const S_MINUTE = 60;
+	const S_YEAR		= 31556926;
+	const S_MONTH		= 2629744;
+	const S_WEEK		= 604800;
+	const S_DAY			= 86400;
+	const S_HOUR		= 3600;
+	const S_MINUTE		= 60;
 
-	const B_TIMEZONE = 'GMT';
-	const D_TIMEZONE = 'Asia/Taipei';
+	const B_TIMEZONE	= 'GMT';
+	const D_TIMEZONE	= 'Asia/Taipei';
+
+	/**
+	 * default timezone for DateTime
+	 */
+	static $D_TIMEZONE	= 'Asia/Taipei';
 
 	public function __construct($time = 'now', $timezone = null) {
 		if (!isset($time)) $time = 'now';
@@ -46,7 +53,7 @@ class Scorpio_Date_Core_ extends DateTime {
 			/*
 			$timezone_default = date_default_timezone_get();
 			*/
-			$timezone_default = Scorpio_Date::D_TIMEZONE;
+			$timezone_default = Scorpio_Date::$D_TIMEZONE;
 			$timezone = new DateTimeZone($timezone_default);
 		} elseif (
 			is_string($timezone)
@@ -231,6 +238,84 @@ class Scorpio_Date_Core_ extends DateTime {
 		$this->_date[0] .= substr($this->_date[1], 1);
 
 		return $this->_date[0];
+	}
+
+	/**
+	 * DateTime::getOffset -- date_offset_get — Returns the timezone offset
+	 *
+	 * @return int
+	 */
+	public function getOffset() {
+		return parent::getOffset();
+	}
+
+	/**
+	 * @param DateInterval $interval The amount of time to add
+	 */
+	public function add($interval) {
+		return parent::add($interval);
+	}
+
+
+	/**
+	 * @param DateInterval $interval The amount of time to add
+	 */
+	public function sub($interval) {
+		return parent::sub($interval);
+	}
+
+	/**
+	 * DateTime::diff -- date_diff —
+	 * Returns the difference between two DateTime objects
+	 *
+	 * @param DateTime $datetime2
+	 * @param bool $absolute = false
+	 *
+	 * @return DateInterval
+	 */
+	public function diff($datetime2, $absolute = false) {
+		return parent::diff($datetime2, $absolute);
+	}
+
+	/**
+	 * DateTime::createFromFormat -- date_create_from_format —
+	 * Returns new DateTime object formatted according to the specified format
+	 *
+	 * @param string $format
+	 * @param string $time
+	 * @param DateTimeZone $timezone = null
+	 *
+	 * @return Scorpio_Date
+	 */
+	public static function createFromFormat($format, $time, $timezone = null) {
+		if (!isset($timezone)) $timezone = Scorpio_Date::$D_TIMEZONE;
+
+		if (
+			is_string($timezone)
+			|| !is_a($timezone, 'DateTimeZone')
+		) {
+			$timezone = new DateTimeZone($timezone);
+		}
+
+		$dt = parent::createFromFormat($format, $time, $timezone);
+
+		$idt = new Scorpio_Date($dt->format(Scorpio_Date::SCO_ISO8601), $dt->getTimezone());
+		return $idt;
+	}
+
+	public function __sleep() {
+		$this->_sleep = array(
+			$this->getMicrotime(),
+			$this->getTimezone()->getName(),
+		);
+
+		return array('_sleep');
+	}
+
+	public function __wakeup() {
+		$this->__construct($this->_sleep[0], $this->_sleep[1]);
+
+		unset($this->_sleep);
 	}
 
 }
