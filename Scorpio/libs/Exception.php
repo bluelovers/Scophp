@@ -202,7 +202,7 @@ class Scorpio_Exception_Core_ extends Exception {
 	}
 
 	function _view_cli(&$e, &$_e) {
-		if (Scorpio_Kenal::$is_cli) {
+		if (Scorpio_Kenal::$server_api == 'cli') {
 			// Just display the text of the exception
 			echo "\n{$_e[error]}\n";
 
