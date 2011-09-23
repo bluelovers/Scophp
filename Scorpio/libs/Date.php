@@ -53,7 +53,10 @@ class Scorpio_Date_Core_ extends DateTime {
 
 		if (
 			is_float($time)
-			|| preg_match('/(?|(\d{10})|(\d{10})?(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time)
+			|| (
+				preg_match('/(?|(\d{10})|(\d{10})?(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m)
+				&& $m[0] != ''
+			)
 		) {
 			$_o = new scodate();
 			$this->_date[0] = $_o->timestamp($time);
