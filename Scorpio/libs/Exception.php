@@ -191,7 +191,7 @@ class Scorpio_Exception_Core_ extends Exception {
 		}
 	}
 
-	function _view_log(&$e, &$_e) {
+	protected static function _view_log(&$e, &$_e) {
 		if (is_object(Scorpio_Kenal::$log)) {
 			// Add this exception to the log
 			Scorpio_Kenal::$log->add(Log::ERROR, $_e['error']);
@@ -201,7 +201,7 @@ class Scorpio_Exception_Core_ extends Exception {
 		}
 	}
 
-	function _view_cli(&$e, &$_e) {
+	protected static function _view_cli(&$e, &$_e) {
 		if (Scorpio_Kenal::$server_api == 'cli') {
 			// Just display the text of the exception
 			echo "\n{$_e[error]}\n";
@@ -210,7 +210,7 @@ class Scorpio_Exception_Core_ extends Exception {
 		}
 	}
 
-	function _view_ajax(&$e, &$_e) {
+	protected static function _view_ajax(&$e, &$_e) {
 
 		return;
 
@@ -222,7 +222,7 @@ class Scorpio_Exception_Core_ extends Exception {
 		}
 	}
 
-	function _view_default(&$e, &$_e) {
+	protected static function _view_default(&$e, &$_e) {
 		// Start an output buffer
 		ob_start();
 
