@@ -70,7 +70,10 @@ class Scorpio_Date_Core_ extends DateTime {
 	}
 
 	public function format($format) {
+		/*
 		return parent::format($format);
+		*/
+		return scodate::gmdate($format, $this->_date[0] + $this->_date[1]);
 	}
 
 }
