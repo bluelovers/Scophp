@@ -52,4 +52,18 @@ print_r(array(
 	"\$scodate->cache_set = 'new scodate set2'" => $scodate->cache_set = 'new scodate set2',
 ));
 
+var_dump($scodate);
+
+$scodate->timestamp(microtime());
+
+var_dump($scodate);
+
+$scodate->timestamp(microtime(true));
+
+var_dump($scodate);
+
+$scodate->timestamp(time());
+
+var_dump($scodate);
+
 ?>
