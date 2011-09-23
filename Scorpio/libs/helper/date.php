@@ -118,6 +118,11 @@ class Scorpio_helper_date_Core_ {
 	}
 
 	public function microsecond($update = false) {
+
+		if ($update === true) {
+			$this->timestamp(true);
+		}
+
 		return $this->get('microsecond');
 	}
 
