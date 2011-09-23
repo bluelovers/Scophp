@@ -38,6 +38,10 @@ class Scorpio_Date_Core_ extends DateTime {
 
 	const B_TIMEZONE	= 'GMT';
 	const D_TIMEZONE	= 'Asia/Taipei';
+
+	/**
+	 * default timezone for DateTime
+	 */
 	static $D_TIMEZONE	= 'Asia/Taipei';
 
 	public function __construct($time = 'now', $timezone = null) {
