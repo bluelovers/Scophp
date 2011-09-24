@@ -54,12 +54,12 @@ class Scorpio_Date_Core_ extends DateTime {
 			$timezone_default = date_default_timezone_get();
 			*/
 			$timezone_default = Scorpio_Date::$D_TIMEZONE;
-			$timezone = new DateTimeZone($timezone_default);
+			$timezone = new Scorpio_Date_Zone($timezone_default);
 		} elseif (
 			is_string($timezone)
 			|| !is_a($timezone, 'DateTimeZone')
 		) {
-			$timezone = new DateTimeZone($timezone);
+			$timezone = new Scorpio_Date_Zone($timezone);
 		}
 
 		if ($time == 'now') $time = microtime(true);
@@ -78,7 +78,7 @@ class Scorpio_Date_Core_ extends DateTime {
 
 			unset($_o);
 
-			$_o = new DateTime(gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0]), new DateTimeZone(Scorpio_Date::B_TIMEZONE));
+			$_o = new DateTime(gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0]), new Scorpio_Date_Zone(Scorpio_Date::B_TIMEZONE));
 
 			$offset = $timezone->getOffset($_o);
 
@@ -210,7 +210,7 @@ class Scorpio_Date_Core_ extends DateTime {
 	 */
 	public function setTimezone($timezone) {
 
-		if (!is_a($timezone, 'DateTimeZone')) $timezone = new DateTimeZone($timezone);
+		if (!is_a($timezone, 'DateTimeZone')) $timezone = new Scorpio_Date_Zone($timezone);
 
 		parent::setTimezone($timezone);
 
@@ -294,7 +294,7 @@ class Scorpio_Date_Core_ extends DateTime {
 			is_string($timezone)
 			|| !is_a($timezone, 'DateTimeZone')
 		) {
-			$timezone = new DateTimeZone($timezone);
+			$timezone = Scorpio_Date_Zone($timezone);
 		}
 
 		$dt = parent::createFromFormat($format, $time, $timezone);
