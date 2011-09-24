@@ -21,6 +21,17 @@ class Scorpio_Date_Zone_Core_ extends DateTimeZone {
 
 		if (!isset($timezone)) $timezone = Scorpio_Date::B_TIMEZONE;
 
+		if (preg_match('/^GMT([+\-]\d+)$/i', $timezone, $m)) {
+			$m[1] = 0 - (int)$m[1];
+			if ($m[1] >= 0) {
+				$m[1] = '+' . abs($m[1]);
+			}
+
+			$timezone = 'Etc/GMT' . $m[1];
+
+			unset($m);
+		}
+
 		parent::__construct($timezone);
 
 		return $this;
