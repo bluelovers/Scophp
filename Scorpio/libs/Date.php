@@ -318,6 +318,9 @@ class Scorpio_Date_Core_ extends DateTime {
 		unset($this->_sleep);
 	}
 
+	/**
+	 * @return Scorpio_Date_Zone|DateTimeZone
+	 */
 	public static function _createDateTimeZone($timezone = null) {
 		if (!isset($timezone)) $timezone = Scorpio_Date::$D_TIMEZONE;
 
