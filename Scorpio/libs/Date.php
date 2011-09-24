@@ -49,18 +49,7 @@ class Scorpio_Date_Core_ extends DateTime {
 	public function __construct($time = 'now', $timezone = null) {
 		if (!isset($time)) $time = 'now';
 
-		if (!isset($timezone)) {
-			/*
-			$timezone_default = date_default_timezone_get();
-			*/
-			$timezone_default = Scorpio_Date::$D_TIMEZONE;
-			$timezone = new DateTimeZone($timezone_default);
-		} elseif (
-			is_string($timezone)
-			|| !is_a($timezone, 'DateTimeZone')
-		) {
-			$timezone = new DateTimeZone($timezone);
-		}
+		$timezone = Scorpio_Date::_createDateTimeZone($timezone);
 
 		if ($time == 'now') $time = microtime(true);
 
@@ -78,7 +67,7 @@ class Scorpio_Date_Core_ extends DateTime {
 
 			unset($_o);
 
-			$_o = new DateTime(gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0]), new DateTimeZone(Scorpio_Date::B_TIMEZONE));
+			$_o = new DateTime(gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0]), Scorpio_Date::_createDateTimeZone(Scorpio_Date::B_TIMEZONE));
 
 			$offset = $timezone->getOffset($_o);
 
@@ -210,7 +199,7 @@ class Scorpio_Date_Core_ extends DateTime {
 	 */
 	public function setTimezone($timezone) {
 
-		if (!is_a($timezone, 'DateTimeZone')) $timezone = new DateTimeZone($timezone);
+		$timezone = Scorpio_Date::_createDateTimeZone($timezone);
 
 		parent::setTimezone($timezone);
 
@@ -288,14 +277,7 @@ class Scorpio_Date_Core_ extends DateTime {
 	 * @return Scorpio_Date
 	 */
 	public static function createFromFormat($format, $time, $timezone = null) {
-		if (!isset($timezone)) $timezone = Scorpio_Date::$D_TIMEZONE;
-
-		if (
-			is_string($timezone)
-			|| !is_a($timezone, 'DateTimeZone')
-		) {
-			$timezone = new DateTimeZone($timezone);
-		}
+		$timezone = Scorpio_Date::_createDateTimeZone($timezone);
 
 		$dt = parent::createFromFormat($format, $time, $timezone);
 
@@ -316,6 +298,25 @@ class Scorpio_Date_Core_ extends DateTime {
 		$this->__construct($this->_sleep[0], $this->_sleep[1]);
 
 		unset($this->_sleep);
+	}
+
+	/**
+	 * @return Scorpio_Date_Zone|DateTimeZone
+	 */
+	public static function _createDateTimeZone($timezone = null) {
+		if (!isset($timezone)) $timezone = Scorpio_Date::$D_TIMEZONE;
+
+		if (
+			!is_a($timezone, 'DateTimeZone')
+		) {
+			if (class_exists('Scorpio_Date_Zone')) {
+				$timezone = new Scorpio_Date_Zone($timezone);
+			} else {
+				$timezone = new DateTimeZone($timezone);
+			}
+		}
+
+		return $timezone;
 	}
 
 }
