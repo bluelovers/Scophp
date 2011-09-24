@@ -17,7 +17,10 @@ class Scorpio_Date_Zone_Core_ extends DateTimeZone {
 	 *
 	 * @return Scorpio_Date_Zone
 	 */
-	public function __construct($timezone) {
+	public function __construct($timezone = null) {
+
+		if (!isset($timezone)) $timezone = Scorpio_Date::B_TIMEZONE;
+
 		parent::__construct($timezone);
 
 		return $this;
