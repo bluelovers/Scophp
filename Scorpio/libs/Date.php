@@ -210,7 +210,7 @@ class Scorpio_Date_Core_ extends DateTime {
 	 */
 	public function setTimezone($timezone) {
 
-		if (!is_a($timezone, 'DateTimeZone')) $timezone = new Scorpio_Date_Zone($timezone);
+		$timezone = Scorpio_Date::_createDateTimeZone($timezone);
 
 		parent::setTimezone($timezone);
 
