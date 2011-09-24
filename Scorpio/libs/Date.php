@@ -49,18 +49,7 @@ class Scorpio_Date_Core_ extends DateTime {
 	public function __construct($time = 'now', $timezone = null) {
 		if (!isset($time)) $time = 'now';
 
-		if (!isset($timezone)) {
-			/*
-			$timezone_default = date_default_timezone_get();
-			*/
-			$timezone_default = Scorpio_Date::$D_TIMEZONE;
-			$timezone = new Scorpio_Date_Zone($timezone_default);
-		} elseif (
-			is_string($timezone)
-			|| !is_a($timezone, 'DateTimeZone')
-		) {
-			$timezone = new Scorpio_Date_Zone($timezone);
-		}
+		$timezone = Scorpio_Date::_createDateTimeZone($timezone);
 
 		if ($time == 'now') $time = microtime(true);
 
