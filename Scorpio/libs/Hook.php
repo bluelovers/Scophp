@@ -79,10 +79,10 @@ class Scorpio_Hook_Core_ {
 		if ( !isset( self::$hooklist[$event] ) || empty(self::$hooklist[$event]) ) {
 			return false;
 		} elseif (!is_array(self::$hooklist)) {
-			if ($strict && $_support['Scorpio_Exception']) throw new Scorpio_Exception("Global hooks array is not an array!\n");
+			if ($strict && $_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			return false;
 		} elseif (!is_array(self::$hooklist[$event])) {
-			if ($strict && $_support['Scorpio_Exception']) throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
+			if ($strict && $_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			return false;
 		}
 
