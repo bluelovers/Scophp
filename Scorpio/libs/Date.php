@@ -320,6 +320,14 @@ class Scorpio_Date_Core_ extends DateTime {
 
 	public static function _createDateTimeZone($timezone = null) {
 		if (!isset($timezone)) $timezone = Scorpio_Date::$D_TIMEZONE;
+
+		if (
+			!is_a($timezone, 'DateTimeZone')
+		) {
+			$timezone = Scorpio_Date_Zone($timezone);
+		}
+
+		return $timezone;
 	}
 
 }
