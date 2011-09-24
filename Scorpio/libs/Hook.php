@@ -50,6 +50,8 @@ class Scorpio_Hook_Core_ {
 
 	static $event = null;
 
+	static $throw_exception = false;
+
 	public static function add($event, $args) {
 		self::$hooklist[$event][] = &$args;
 	}
@@ -77,10 +79,10 @@ class Scorpio_Hook_Core_ {
 		if ( !isset( self::$hooklist[$event] ) || empty(self::$hooklist[$event]) ) {
 			return false;
 		} elseif (!is_array(self::$hooklist)) {
-			if ($strict && $_support['Scorpio_Exception']) throw new Scorpio_Exception("Global hooks array is not an array!\n");
+			if ($strict && $_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			return false;
 		} elseif (!is_array(self::$hooklist[$event])) {
-			if ($strict && $_support['Scorpio_Exception']) throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
+			if ($strict && $_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			return false;
 		}
 
@@ -108,12 +110,12 @@ class Scorpio_Hook_Core_ {
 		if ( !isset( self::$hooklist[$event] ) ) {
 			return true;
 		} elseif (!is_array(self::$hooklist)) {
-			if ($_support['Scorpio_Exception']) {
+			if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
 				throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			}
 			return self::RET_FAILED;
 		} elseif (!is_array(self::$hooklist[$event])) {
-			if ($_support['Scorpio_Exception']) {
+			if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
 				throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			}
 			return self::RET_FAILED;
@@ -142,7 +144,7 @@ class Scorpio_Hook_Core_ {
 
 			if ( is_array( $hook ) ) {
 				if ( count( $hook ) < 1 ) {
-					if ($_support['Scorpio_Exception']) {
+					if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
 						throw new Scorpio_Exception('Empty array in hooks for ' . $event . "\n");
 					}
 				} else if ( is_object( $hook[0] ) ) {
@@ -180,7 +182,7 @@ class Scorpio_Hook_Core_ {
 						$have_data = true;
 					}
 				} else {
-					if ($_support['Scorpio_Exception']) {
+					if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
 						throw new Scorpio_Exception( 'Unknown datatype in hooks for ' . $event . "\n" );
 					}
 				}
@@ -194,7 +196,7 @@ class Scorpio_Hook_Core_ {
 					$method = 'on' . $event;
 				}
 			} else {
-				if ($_support['Scorpio_Exception']) {
+				if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
 					throw new Scorpio_Exception( 'Unknown datatype in hooks for ' . $event . "\n" );
 				}
 			}
@@ -270,7 +272,7 @@ class Scorpio_Hook_Core_ {
 			if ( is_string( $retval ) ) {
 
 //				self::clear($event);
-				if ($_support['Scorpio_Exception']) {
+				if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
 					throw new Scorpio_Exception( $retval );
 				}
 
@@ -292,7 +294,7 @@ class Scorpio_Hook_Core_ {
 					$prettyFunc = strval( $callback );
 				}
 
-				if ($_support['Scorpio_Exception']) {
+				if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
 					throw new Scorpio_Exception(
 						'Detected bug in an extension! ' .
 						"Hook $prettyFunc failed to return a value; " .
