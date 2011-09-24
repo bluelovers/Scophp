@@ -117,9 +117,9 @@ class Scorpio_Kenal_Core_ {
 					// (PHP 5 >= 5.3.0)
 					class_alias($m['pre'].$m['class'].$_core_, $m['pre'].$m['class']);
 				} else {
-				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . $m['pre'].$m['class'].$_core_ . ' { }';
+					$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . $m['pre'].$m['class'].$_core_ . ' { }';
 
-				eval($extension);
+					eval($extension);
 				}
 			}
 
