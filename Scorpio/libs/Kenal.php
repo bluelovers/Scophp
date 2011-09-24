@@ -118,7 +118,6 @@ class Scorpio_Kenal_Core_ {
 					class_alias($m['pre'].$m['class'].$_core_, $m['pre'].$m['class']);
 				} else {
 					$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . $m['pre'].$m['class'].$_core_ . ' { }';
-
 					eval($extension);
 				}
 			}
