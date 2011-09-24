@@ -50,6 +50,8 @@ class Scorpio_Hook_Core_ {
 
 	static $event = null;
 
+	static $throw_exception = false;
+
 	public static function add($event, $args) {
 		self::$hooklist[$event][] = &$args;
 	}
