@@ -113,9 +113,13 @@ class Scorpio_Kenal_Core_ {
 				// 防止無限迴圈
 				&& class_exists($m['pre'].$m['class'].$_core_, false)
 			) {
-				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . $m['pre'].$m['class'].$_core_ . ' { }';
-
-				eval($extension);
+				if (function_exists('class_alias')) {
+					// (PHP 5 >= 5.3.0)
+					class_alias($m['pre'].$m['class'].$_core_, $m['pre'].$m['class']);
+				} else {
+					$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . $m['pre'].$m['class'].$_core_ . ' { }';
+					eval($extension);
+				}
 			}
 
 			$ret = class_exists($class, false);
@@ -126,8 +130,13 @@ class Scorpio_Kenal_Core_ {
 				// 防止無限迴圈
 				&& class_exists('Scorpio_helper_'.$m['class'], false)
 			) {
-				$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . 'Scorpio_helper_'.$m['class'] . ' { }';
-				eval($extension);
+				if (function_exists('class_alias')) {
+					// (PHP 5 >= 5.3.0)
+					class_alias('Scorpio_helper_'.$m['class'], $m['pre'].$m['class']);
+				} else {
+					$extension = 'class ' . $m['pre'].$m['class'] . ' extends ' . 'Scorpio_helper_'.$m['class'] . ' { }';
+					eval($extension);
+				}
 			}
 
 			$ret = class_exists($class, false);
