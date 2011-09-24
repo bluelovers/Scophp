@@ -21,6 +21,9 @@ class Scorpio_Date_Zone_Core_ extends DateTimeZone {
 
 		if (!isset($timezone)) $timezone = Scorpio_Date::B_TIMEZONE;
 
+		/**
+		 * 使 $timezone 支援 GMT[+-]\d+ 格式, 自動轉換為 Etc/GMT 格式
+		 */
 		if (preg_match('/^GMT([+\-]\d+)$/i', $timezone, $m)) {
 			$m[1] = 0 - (int)$m[1];
 			if ($m[1] >= 0) {
