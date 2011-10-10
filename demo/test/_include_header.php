@@ -5,6 +5,6 @@
  * @copyright 2011
  */
 
-include_once '../../Scorpio/Bootstrap.php';
+include_once dirname(__FILE__).'/../../Scorpio/Bootstrap.php';
 
 ?>
