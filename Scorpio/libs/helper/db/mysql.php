@@ -17,7 +17,13 @@ class Scorpio_helper_db_mysql_Core_ {
 	protected static $func_prefix = 'mysql_';
 
 	public static function &instance() {
-		return self::$instances;
+		$class = __CLASS__;
+
+		if (!isset(self::$instances[$class])) {
+			self::$instances[$class] = new $class;
+		}
+
+		return self::$instances[$class];
 	}
 
 	function __construct() {
