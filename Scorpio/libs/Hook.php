@@ -340,6 +340,20 @@ class Scorpio_Hook_Core_ {
 ////		$clear_data = '';
 ////		self::$data[$event] =& $clear_data;
 //	}
+
+	/**
+	 * This REALLY should be protected... but it's public for compatibility
+	 *
+	 * @param $errno Unused
+	 * @param $errstr String: error message
+	 * @return Boolean: false
+	 */
+	public static function hookErrorHandler( $errno, $errstr ) {
+		if ( strpos( $errstr, 'expected to be a reference, value given' ) !== false ) {
+			throw new MWHookException( $errstr );
+		}
+		return false;
+	}
 }
 
 ?>
