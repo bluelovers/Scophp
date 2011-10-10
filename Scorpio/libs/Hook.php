@@ -78,10 +78,7 @@ class Scorpio_Hook_Core_ {
 	}
 
 	public static function exists($event, $strict = false) {
-		static $_support;
-		if ($_support === null) {
-			$_support = self::_support();
-		}
+		$_support = self::_support();
 
 		// 強化判斷是否存在 hook
 		if ( !isset( self::$hooklist[$event] ) || empty(self::$hooklist[$event]) ) {
