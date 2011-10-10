@@ -1,4 +1,4 @@
-<?php defined('SYSPATH') or exit('Install tests must be loaded from within index.php!'); ?>
+<?php defined('SCORPIO_SYSPATH') or include_once('./_include_header.php') or exit('Install tests must be loaded from within index.php!'); ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
