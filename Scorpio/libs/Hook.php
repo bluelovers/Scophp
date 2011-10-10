@@ -310,7 +310,6 @@ class Scorpio_Hook_Core_ {
 				}
 
 				if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
-
 					if ( $badhookmsg ) {
 						throw new Scorpio_Exception(
 							'Detected bug in an extension! ' .
