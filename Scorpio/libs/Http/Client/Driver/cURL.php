@@ -200,7 +200,6 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 * @link http://www.php.net/curl_init
 	 * @param string $theURL [optional] the URL to be accessed by this instance of the class.
 	 */
-
 	public function __construct($theURL = null) {
 		if (!function_exists('curl_init')) {
 			trigger_error('PHP was not built with --with-curl, rebuild PHP to use the curl class.', E_USER_ERROR);
@@ -229,7 +228,6 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 *
 	 * @link http://www.php.net/curl_close
 	 */
-
 	public function close($force = false) {
 		(!$this->_scorpio_['cache']['closed'] || $force) && @curl_close($this->_scorpio_['handle']);
 		//		$this->_scorpio_['handle'] = null ;
@@ -260,7 +258,6 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 * @return string The contents of the page (or other interaction as defined by the
 	 *                 settings of the various curl options).
 	 */
-
 	public function exec($theURL = null) {
 
 
@@ -391,7 +388,6 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 * @param integer $ the requested CURLOPT.
 	 * @returns mixed
 	 */
-
 	public function getOption($theOption) {
 
 
@@ -408,7 +404,6 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 * @return mixed The error message associated with the error if an error
 	 *                occurred, false otherwise.
 	 */
-
 	public function hasError() {
 
 
@@ -435,7 +430,6 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 *
 	 * @param string $theHeader The HTTP data header.
 	 */
-
 	public function parseHeader($theHeader) {
 
 
@@ -472,7 +466,6 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 *                          status field is requested, false is returned.
 	 * @returns mixed
 	 */
-
 	public function getStatus($theField = null) {
 
 
@@ -494,7 +487,6 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 * @param mixed $theOption One of the valid CURLOPT defines.
 	 * @param mixed $theValue the value of the curl option.
 	 */
-
 	public function setopt($theOption, $theValue = null) {
 		$this->_clear(1);
 
@@ -590,7 +582,6 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 * @param string $ [optional] name of the datum.
 	 * @access public
 	 */
-
 	public function &asPostString(&$theData, $theName = null) {
 		$thePostString = '';
 		$thePrefix = $theName;
@@ -621,7 +612,6 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 * @returns mixed an empty array implies no headers.
 	 * @access public
 	 */
-
 	public function getFollowedHeaders() {
 
 
