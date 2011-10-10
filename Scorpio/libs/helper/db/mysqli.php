@@ -13,11 +13,11 @@
 
 if (0) {
 	// for IDE
-	class scodb_mysqli extends Scorpio_Helper_Db_Mysqli_Core {
+	class scodb_mysqli extends Scorpio_helper_db_mysqli_Core_ {
 	}
 }
 
-class Scorpio_Helper_Db_Mysqli_Core extends Scorpio_Helper_Db_Mysql {
+class Scorpio_helper_db_mysqli_Core_ extends Scorpio_helper_db_mysql {
 	protected static $func_prefix = 'mysqli_';
 }
 
