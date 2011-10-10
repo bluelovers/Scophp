@@ -290,7 +290,7 @@ class Scorpio_Hook_Core_ {
 					throw new Scorpio_Exception( $retval );
 				}
 
-				return false;
+				return self::RET_ERROR;
 			} elseif( $retval === self::RET_FAILED ) {
 
 //				self::clear($event);
