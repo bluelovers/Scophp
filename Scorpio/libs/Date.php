@@ -79,6 +79,7 @@ class Scorpio_Date_Core_ extends DateTime {
 
 			unset($_o);
 
+			/*
 			$_o = new DateTime(gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0]), Scorpio_Date::_createDateTimeZone(Scorpio_Date::B_TIMEZONE));
 
 			$offset = $timezone->getOffset($_o);
@@ -86,6 +87,15 @@ class Scorpio_Date_Core_ extends DateTime {
 			unset($_o);
 
 			$time = gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0] + $offset);
+			*/
+
+			$_o = new DateTime(gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0]), Scorpio_Date::_createDateTimeZone(Scorpio_Date::B_TIMEZONE));
+
+			$_o->setTimezone($timezone);
+
+			$time = $_o->format(Scorpio_Date::SCO_ISO8601);
+
+			unset($_o);
 		}
 
 		parent::__construct($time, $timezone);
