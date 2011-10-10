@@ -96,10 +96,11 @@ function dmicrotime() {
 	return array_sum(explode(' ', microtime()));
 }
 
-$do = 10000;
+$do = 100;
 
 while($j < 5) {
 	$j++;
+	$i = 0;
 
 	echo '<hr>';
 
@@ -117,6 +118,8 @@ while($j < 5) {
 	));
 
 	sleep(1);
+
+	$i = 0;
 
 	profile();
 
