@@ -176,12 +176,12 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	public static function &instance() {
 		$args = func_get_args();
 
-		static::$instances = &$emptyinstances;
+		self::$instances = &$emptyinstances;
 
 		$ref = new ReflectionClass(__CLASS__);
-		static::$instances =& $ref->newInstanceArgs((array)$args);
+		self::$instances =& $ref->newInstanceArgs((array)$args);
 
-		return static::$instances;
+		return self::$instances;
 	}
 
 	/**
@@ -530,7 +530,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	protected function _setopt($default = false) {
 
 		if ($default) {
-			foreach (static::$default_options as $_k => $_v) {
+			foreach (self::$default_options as $_k => $_v) {
 				if ($this->getOption($_k) === null) {
 					$this->setopt($_k, $_v);
 				}
@@ -609,9 +609,9 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 		if (is_array($theData)) {
 			foreach ($theData as $theKey => $theValue) {
 				if ($thePrefix === null) {
-					$thePostString .= '&' . static::asPostString($theValue, $theKey) ;
+					$thePostString .= '&' . self::asPostString($theValue, $theKey) ;
 				} else {
-					$thePostString .= '&' . static::asPostString($theValue, $thePrefix . '[' . $theKey . ']') ;
+					$thePostString .= '&' . self::asPostString($theValue, $thePrefix . '[' . $theKey . ']') ;
 				}
 			}
 		} else {
