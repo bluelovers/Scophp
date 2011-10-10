@@ -104,6 +104,13 @@ class Scorpio_Hook_Core_ {
 	}
 
 	/**
+	 * alias method for execute
+	 */
+	public static function run($event, $args = array(), $iscall = 0) {
+		return self::execute($event, $args, $iscall);
+	}
+
+	/**
 	 * Call hook functions defined in Hooks::register
 	 *
 	 * Because programmers assign to $wgHooks, we need to be very
