@@ -178,7 +178,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 
 		static::$instances = &$emptyinstances;
 
-		$ref = new ReflectionClass(get_called_class());
+		$ref = new ReflectionClass(__CLASS__);
 		static::$instances =& $ref->newInstanceArgs((array)$args);
 
 		return static::$instances;
