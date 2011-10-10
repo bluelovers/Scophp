@@ -60,7 +60,7 @@ class Scorpio_Hook_Core_ {
 		self::$handlers[$event][] = &$args;
 	}
 
-	public static function get($event) {
+	public static function &get($event) {
 		return self::$handlers[$event];
 	}
 
