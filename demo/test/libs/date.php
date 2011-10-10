@@ -54,7 +54,7 @@ foreach (array(
 
 	var_dump($_o);
 
-	$_o->modify('+1hour');
+	$_o->modify('+1 hour');
 
 	echo $_o;
 
