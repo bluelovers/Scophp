@@ -282,10 +282,18 @@ class Scorpio_Hook_Core_ {
 			$retval = null;
 			set_error_handler( 'Scorpio_Hook::hookErrorHandler' );
 			//wfProfileIn( $func );
+			if ($_support['Scorpio_Hook_Exception']) {
+				try {
+					$retval = call_user_func_array( $callback, $hook_args );
+				} catch ( Scorpio_Hook_Exception $e ) {
+					$badhookmsg = $e->getMessage();
+				}
+			} else {
 			try {
 				$retval = call_user_func_array( $callback, $hook_args );
 			} catch ( Exception $e ) {
 				$badhookmsg = $e->getMessage();
+			}
 			}
 			//wfProfileOut( $func );
 			restore_error_handler();
