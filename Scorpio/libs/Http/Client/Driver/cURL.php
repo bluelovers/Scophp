@@ -655,7 +655,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 
 		static $cookies;
 
-		(!$chkmode && !$cookies) && $cookies = tempnam($_SERVER['SERVER_ROOT'] . '/tmp', "CURLCOOKIE");
+		(!$chkmode && !$cookies) && $cookies = tempnam($this->_get_temp_dir(), "CURLCOOKIE");
 
 		return $cookies;
 	}
