@@ -20,16 +20,16 @@ class Scorpio_helper_db_mysql_Core_ {
 		$class = __CLASS__;
 
 		if (!isset($this->$instances[$class])) {
-			$this->$instances[$class] = new $class;
+			self::$instances[$class] = new $class;
 		}
 
-		return $this->$instances[$class];
+		return self::$instances[$class];
 	}
 
 	function __construct() {
 		$class = get_class($this);
 
-		$this->$instances[$class] = &$this;
+		self::$instances[$class] = &$this;
 
 		return $this;
 	}
