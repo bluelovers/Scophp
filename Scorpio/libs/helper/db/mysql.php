@@ -21,6 +21,11 @@ class Scorpio_helper_db_mysql_Core_ {
 	}
 
 	function __construct() {
+		$class = get_class($this);
+
+		self::$instances[$class] = &$this;
+
+		return $this;
 	}
 
 	function &__exec($func, $args) {
