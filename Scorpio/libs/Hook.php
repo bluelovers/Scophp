@@ -319,7 +319,7 @@ class Scorpio_Hook_Core_ {
 
 //				self::clear($event);
 
-				return false;
+				return self::RET_STOP;
 			}
 		}
 
