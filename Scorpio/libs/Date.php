@@ -210,7 +210,7 @@ class Scorpio_Date_Core_ extends DateTime {
 		$_o = new scodate();
 		$this->_date[0] = $_o->timestamp($unixtimestamp);
 		*/
-		if (is_int($unixtimestamp)) {
+		if ($_is_int = is_int($unixtimestamp)) {
 			$this->_date[0] = $unixtimestamp;
 		} else {
 			$_o = $this->_microtime($unixtimestamp);
@@ -219,12 +219,16 @@ class Scorpio_Date_Core_ extends DateTime {
 
   		parent::setTimestamp($this->_date[0]);
 
+		if ($_is_int) {
+
+		} else {
   		$timestamp = parent::getTimestamp();
 
   		if ((string)$this->_date[0] !== (string)$timestamp) {
   			$this->_date[1] = $_o[1];
 		} else {
 			$this->_date[0] = $this->getMicrotime();
+		}
 		}
 
   		return $this;
