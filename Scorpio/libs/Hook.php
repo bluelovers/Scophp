@@ -64,10 +64,10 @@ class Scorpio_Hook_Core_ {
 		return self::$hooklist[$event];
 	}
 
-	protected static function _support() {
+	protected static function _support($force = false) {
 		static $_support;
 
-		if ($_support === null) {
+		if ($_support === null || $force) {
 			$_support = array();
 			$_support['closure'] = version_compare(PHP_VERSION, '5.3.0', '>=') ? true : false;
 			$_support['Scorpio_Exception'] = class_exists('Scorpio_Exception');
