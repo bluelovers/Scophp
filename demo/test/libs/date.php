@@ -42,13 +42,19 @@ foreach (array(
 
 	var_dump($_o);
 
-	$_o->setTimestamp(microtime(true) + 3600);
+	$_o->setTimestamp(time() + 3600 * 1);
 
 	echo $_o;
 
 	var_dump($_o);
 
-	$_o->setTimestamp(time() + 3600 * 2);
+	$_o->setTimestamp(microtime(true) + 3600 * 2);
+
+	echo $_o;
+
+	var_dump($_o);
+
+	$_o->modify('+1hour');
 
 	echo $_o;
 
