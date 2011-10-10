@@ -14,6 +14,13 @@ foreach (array(
 	'Scorpio_helper_db_mysql',
 ) as $class) {
 	echo $class . ' = ' . class_exists($class).LF;
+
+	$_class = call_user_func(array(
+		$class,
+		'instance'
+	));
+
+	var_dump($_class);
 }
 
 ?>
