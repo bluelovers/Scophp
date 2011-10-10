@@ -98,7 +98,7 @@ function dmicrotime() {
 
 $do = 100;
 
-while($j < 5) {
+while($j < 3) {
 	$j++;
 	$i = 0;
 
@@ -117,7 +117,7 @@ while($j < 5) {
 		'DateTime'
 	));
 
-	sleep(1);
+	//sleep(1);
 
 	$i = 0;
 
@@ -136,7 +136,7 @@ while($j < 5) {
 
 	echo '<hr>';
 
-	sleep(1);
+	//sleep(1);
 }
 
 ?>
