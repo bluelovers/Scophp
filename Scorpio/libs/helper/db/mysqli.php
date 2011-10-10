@@ -17,7 +17,7 @@ class Scorpio_helper_db_mysqli_Core_ extends Scorpio_helper_db_mysql {
 	public static function &instance() {
 		$class = __CLASS__;
 
-		if (!isset($this->$instances[$class])) {
+		if (!isset(self::$instances[$class])) {
 			self::$instances[$class] = new $class;
 		}
 
