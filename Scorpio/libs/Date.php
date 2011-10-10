@@ -386,7 +386,8 @@ class Scorpio_Date_Core_ extends DateTime {
 		if (!isset($timezone)) $timezone = Scorpio_Date::$D_TIMEZONE;
 
 		if (
-			!is_a($timezone, 'DateTimeZone')
+			is_string($timezone)
+			|| !is_a($timezone, 'DateTimeZone')
 		) {
 			if (class_exists('Scorpio_Date_Zone')) {
 				$timezone = new Scorpio_Date_Zone($timezone);
