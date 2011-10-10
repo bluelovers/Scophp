@@ -128,7 +128,7 @@ class Scorpio_Hook_Core_ {
 			return self::RET_FAILED;
 		} elseif (!is_array(self::$handlers[$event])) {
 			if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
-				throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
+				throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n", array('event' => $event));
 			}
 			return self::RET_FAILED;
 		}
