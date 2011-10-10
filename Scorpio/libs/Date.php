@@ -88,6 +88,55 @@ class Scorpio_Date_Core_ extends DateTime {
 		return $this;
 	}
 
+	function _microsecond($update) {
+		if ($update > 0) {
+			if ($update > 1) {
+				list($timestamp) = explode('.', (string)$update);
+
+				$microsecond = $update - (int)$timestamp;
+			} else {
+				$microsecond = $update;
+			}
+
+			$microsecond = substr($microsecond, 0, 10);
+
+			return (string)$microsecond;
+		} else {
+			return '0';
+		}
+	}
+
+	function _microtime($time) {
+		$ret = array(0, 0);
+
+		if ($time === true) {
+			list($microsecond, $timestamp) = explode(' ', microtime());
+
+			$microsecond = $this->_microsecond((string)$microsecond);
+			$microsecond = substr($microsecond, 1);
+
+			$ret[0] = (string)$timestamp . (string)$microsecond;
+			$ret[1] = (string)$microsecond;
+		} elseif ($time !== true && $time > 0) {
+			if (strpos($time, ' ') === false) {
+				list($timestamp, $microsecond) = explode('.', $time);
+
+				$microsecond = $this->_microsecond($time);
+			} else {
+				list($microsecond, $timestamp) = explode(' ', $time);
+
+				$microsecond = $this->_microsecond((string)$microsecond);
+			}
+
+			$microsecond = substr($microsecond, 1);
+
+			$ret[0] = (string)$timestamp . (string)$microsecond;
+			$ret[1] = (string)$microsecond;
+		}
+
+		return $ret;
+	}
+
 	/**
 	 * Return Date in ISO8601 format
 	 *
