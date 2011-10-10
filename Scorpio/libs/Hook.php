@@ -37,13 +37,18 @@ if (0) {
 }
 
 class Scorpio_Hook_Core_ {
-	protected static $hooklist = array();
-	protected static $calevenlist = array();
+	protected static $handlers = array();
+
+	/**
+	 * save all try called hook
+	 */
+	protected static $handlers_called = array();
 
 	const RET_FAILED = null;
 //	const RET_FAILED = false;
 	const RET_SUCCESS = true;
 	const RET_STOP = false;
+	const RET_ERROR = false;
 
 //	static $data = null;
 //	static $args = null;
@@ -53,40 +58,57 @@ class Scorpio_Hook_Core_ {
 	static $throw_exception = false;
 
 	public static function add($event, $args) {
-		self::$hooklist[$event][] = &$args;
+		self::$handlers[$event][] = &$args;
 	}
 
-	public static function get($event) {
-		return self::$hooklist[$event];
+	public static function &get($event) {
+		return self::$handlers[$event];
 	}
 
-	protected static function _support() {
-		$_support = array();
-		$_support['closure'] = version_compare(PHP_VERSION, '5.3.0', '>=') ? true : false;
-		$_support['Scorpio_Exception'] = class_exists('Scorpio_Exception');
-		$_support['Scorpio_Event'] = class_exists('Scorpio_Event');
+	public static function remove($event) {
+		$ret = self::exists($event);
+
+		unset(self::$handlers[$event]);
+
+		return $ret;
+	}
+
+	protected static function _support($force = false) {
+		static $_support;
+
+		if ($_support === null || $force) {
+			$_support = array();
+			$_support['closure'] = version_compare(PHP_VERSION, '5.3.0', '>=') ? true : false;
+			$_support['Scorpio_Exception'] = class_exists('Scorpio_Exception');
+			$_support['Scorpio_Hook_Exception'] = class_exists('Scorpio_Hook_Exception');
+			$_support['Scorpio_Event'] = class_exists('Scorpio_Event');
+		}
 
 		return $_support;
 	}
 
 	public static function exists($event, $strict = false) {
-		static $_support;
-		if ($_support === null) {
-			$_support = self::_support();
-		}
+		$_support = self::_support();
 
 		// 強化判斷是否存在 hook
-		if ( !isset( self::$hooklist[$event] ) || empty(self::$hooklist[$event]) ) {
+		if ( !isset( self::$handlers[$event] ) || empty(self::$handlers[$event]) ) {
 			return false;
-		} elseif (!is_array(self::$hooklist)) {
+		} elseif (!is_array(self::$handlers)) {
 			if ($strict && $_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			return false;
-		} elseif (!is_array(self::$hooklist[$event])) {
+		} elseif (!is_array(self::$handlers[$event])) {
 			if ($strict && $_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			return false;
 		}
 
-		return true;
+		return ( count( self::$handlers[$event] ) != 0 ) ? true : false;
+	}
+
+	/**
+	 * alias method for execute
+	 */
+	public static function run($event, $args = array(), $iscall = 0) {
+		return self::execute($event, $args, $iscall);
 	}
 
 	/**
@@ -101,22 +123,21 @@ class Scorpio_Hook_Core_ {
 	 * @return Boolean
 	 */
 	public static function execute($event, $args = array(), $iscall = 0) {
-		static $_support;
-		if ($_support === null) {
-			$_support = self::_support();
-		}
+		$_support = self::_support();
+
+		Scorpio_Hook::$handlers_called[$event] += 1;
 
 		// Return quickly in the most common case
-		if ( !isset( self::$hooklist[$event] ) ) {
+		if ( !isset( self::$handlers[$event] ) ) {
 			return true;
-		} elseif (!is_array(self::$hooklist)) {
+		} elseif (!is_array(self::$handlers)) {
 			if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
 				throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			}
 			return self::RET_FAILED;
-		} elseif (!is_array(self::$hooklist[$event])) {
+		} elseif (!is_array(self::$handlers[$event])) {
 			if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
-				throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
+				throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n", array('event' => $event));
 			}
 			return self::RET_FAILED;
 		}
@@ -126,7 +147,9 @@ class Scorpio_Hook_Core_ {
 
 		self::$event = $event;
 
-		foreach (self::$hooklist[$event] as $index => $hook) {
+		$_cache_handlers = &self::get($event);
+
+		foreach ((array)$_cache_handlers as $index => $hook) {
 
 			$object = null;
 			$method = null;
@@ -148,7 +171,7 @@ class Scorpio_Hook_Core_ {
 						throw new Scorpio_Exception('Empty array in hooks for ' . $event . "\n");
 					}
 				} else if ( is_object( $hook[0] ) ) {
-					$object = self::$hooklist[$event][$index][0];
+					$object = $_cache_handlers[$index][0];
 					if ( $_support['closure'] && $object instanceof Closure ) {
 						$closure = true;
 						if ( count( $hook ) > 1 ) {
@@ -189,7 +212,7 @@ class Scorpio_Hook_Core_ {
 			} else if ( is_string( $hook ) ) { # functions look like strings, too
 				$func = $hook;
 			} else if ( is_object( $hook ) ) {
-				$object = self::$hooklist[$event][$index];
+				$object = $_cache_handlers[$index];
 				if ( $_support['closure'] && $object instanceof Closure ) {
 					$closure = true;
 				} else {
@@ -257,15 +280,29 @@ class Scorpio_Hook_Core_ {
 			 * problem here.
 			 */
 			$retval = null;
-			//set_error_handler( 'Hooks::hookErrorHandler' );
+			set_error_handler( 'Scorpio_Hook::hookErrorHandler' );
 			//wfProfileIn( $func );
-			try {
-				$retval = call_user_func_array( $callback, $hook_args );
-			} catch ( Exception $e ) {
-				$badhookmsg = $e->getMessage();
+			if ($_support['Scorpio_Hook_Exception']) {
+				try {
+					$retval = call_user_func_array( $callback, $hook_args );
+				} catch ( Scorpio_Hook_Exception $e ) {
+					$badhookmsg = $e->getMessage();
+				}
+			} elseif ($_support['Scorpio_Exception']) {
+				try {
+					$retval = call_user_func_array( $callback, $hook_args );
+				} catch ( Scorpio_Exception $e ) {
+					$badhookmsg = $e->getMessage();
+				}
+			} else {
+				try {
+					$retval = call_user_func_array( $callback, $hook_args );
+				} catch ( Exception $e ) {
+					$badhookmsg = $e->getMessage();
+				}
 			}
 			//wfProfileOut( $func );
-			//restore_error_handler();
+			restore_error_handler();
 
 			/* String return is an error; false return means stop processing. */
 			//TODO: add hook ret object
@@ -276,7 +313,7 @@ class Scorpio_Hook_Core_ {
 					throw new Scorpio_Exception( $retval );
 				}
 
-				return false;
+				return self::RET_ERROR;
 			} elseif( $retval === self::RET_FAILED ) {
 
 //				self::clear($event);
@@ -295,27 +332,61 @@ class Scorpio_Hook_Core_ {
 				}
 
 				if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
-					throw new Scorpio_Exception(
-						'Detected bug in an extension! ' .
-						"Hook $prettyFunc failed to return a value; " .
-						'should return true to continue hook processing or false to abort.'
-					);
+					if ( $badhookmsg ) {
+						throw new Scorpio_Exception(
+							'Detected bug in an extension! ' .
+							"Hook $prettyFunc has invalid call signature; " . $badhookmsg
+						);
+					} else {
+						throw new Scorpio_Exception(
+							'Detected bug in an extension! ' .
+							"Hook $prettyFunc failed to return a value; " .
+							'should return true to continue hook processing or false to abort.'
+						);
+					}
 				}
 			} elseif ( $retval === self::RET_STOP ) {
 
 //				self::clear($event);
 
-				return false;
+				return self::RET_STOP;
 			}
 		}
 
 //		self::clear($event);
+
+		return self::RET_SUCCESS;
 	}
 
 //	public static function clear($event) {
 ////		$clear_data = '';
 ////		self::$data[$event] =& $clear_data;
 //	}
+
+	/**
+	 * This REALLY should be protected... but it's public for compatibility
+	 *
+	 * @param $errno Unused
+	 * @param $errstr String: error message
+	 * @return Boolean: false
+	 */
+	public static function hookErrorHandler( $errno, $errstr ) {
+		$_support = self::_support();
+
+		if (Scorpio_Hook::$throw_exception
+			&& strpos( $errstr, 'expected to be a reference, value given' ) !== false
+		) {
+			if ($_support['Scorpio_Hook_Exception']) {
+				throw new Scorpio_Hook_Exception( $errstr );
+			} elseif ($_support['Scorpio_Exception']) {
+				throw new Scorpio_Exception( $errstr );
+			} else {
+				throw new Exception( $errstr );
+			}
+		}
+
+		return false;
+	}
 }
 
 ?>
