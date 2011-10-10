@@ -48,6 +48,7 @@ class Scorpio_Hook_Core_ {
 //	const RET_FAILED = false;
 	const RET_SUCCESS = true;
 	const RET_STOP = false;
+	const RET_ERROR = false;
 
 //	static $data = null;
 //	static $args = null;
