@@ -133,7 +133,7 @@ class Scorpio_Date_Core_ extends DateTime {
 
 			$ret[0] = (string)$timestamp . (string)$microsecond;
 			$ret[1] = (string)$microsecond;
-		} elseif (defined('SCORPIO_MICROTIME')) {
+		} elseif ($time === false && defined('SCORPIO_MICROTIME')) {
 			$ret = $this->_microtime(SCORPIO_MICROTIME);
 		}
 
