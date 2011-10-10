@@ -12,7 +12,17 @@ if (0) {
 }
 
 class Scorpio_helper_db_mysqli_Core_ extends Scorpio_helper_db_mysql {
-	protected static $func_prefix = 'mysqli_';
+	protected $func_prefix = 'mysqli_';
+
+	public static function &instance() {
+		$class = __CLASS__;
+
+		if (!isset($this->$instances[$class])) {
+			self::$instances[$class] = new $class;
+		}
+
+		return self::$instances[$class];
+	}
 }
 
 ?>
