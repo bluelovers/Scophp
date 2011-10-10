@@ -310,11 +310,19 @@ class Scorpio_Hook_Core_ {
 				}
 
 				if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
+
+					if ( $badhookmsg ) {
+						throw new Scorpio_Exception(
+							'Detected bug in an extension! ' .
+							"Hook $prettyFunc has invalid call signature; " . $badhookmsg
+						);
+					} else {
 					throw new Scorpio_Exception(
 						'Detected bug in an extension! ' .
 						"Hook $prettyFunc failed to return a value; " .
 						'should return true to continue hook processing or false to abort.'
 					);
+					}
 				}
 			} elseif ( $retval === self::RET_STOP ) {
 
