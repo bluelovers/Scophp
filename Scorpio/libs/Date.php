@@ -101,9 +101,9 @@ class Scorpio_Date_Core_ extends DateTime {
 
 	function _preg_match_timestamp($time, &$m) {
 		$ret = preg_match('/(?|(\d{10})|(\d{10})?(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m);
-		if ($ret && empty($m[0])) $ret = false;
-
-		if ($ret && (
+		if ($ret && empty($m[0])) {
+			$ret = false;
+		} elseif ($ret && (
 			empty($m[1])
 			|| empty($m[2])
 		)) {
