@@ -37,7 +37,7 @@ if (0) {
 }
 
 class Scorpio_Hook_Core_ {
-	protected static $hooklist = array();
+	protected static $handlers = array();
 
 	/**
 	 * save all try called hook
@@ -57,11 +57,11 @@ class Scorpio_Hook_Core_ {
 	static $throw_exception = false;
 
 	public static function add($event, $args) {
-		self::$hooklist[$event][] = &$args;
+		self::$handlers[$event][] = &$args;
 	}
 
 	public static function get($event) {
-		return self::$hooklist[$event];
+		return self::$handlers[$event];
 	}
 
 	protected static function _support($force = false) {
@@ -81,12 +81,12 @@ class Scorpio_Hook_Core_ {
 		$_support = self::_support();
 
 		// 強化判斷是否存在 hook
-		if ( !isset( self::$hooklist[$event] ) || empty(self::$hooklist[$event]) ) {
+		if ( !isset( self::$handlers[$event] ) || empty(self::$handlers[$event]) ) {
 			return false;
-		} elseif (!is_array(self::$hooklist)) {
+		} elseif (!is_array(self::$handlers)) {
 			if ($strict && $_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			return false;
-		} elseif (!is_array(self::$hooklist[$event])) {
+		} elseif (!is_array(self::$handlers[$event])) {
 			if ($strict && $_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			return false;
 		}
@@ -111,14 +111,14 @@ class Scorpio_Hook_Core_ {
 		Scorpio_Hook::$calevenlist[$event] += 1;
 
 		// Return quickly in the most common case
-		if ( !isset( self::$hooklist[$event] ) ) {
+		if ( !isset( self::$handlers[$event] ) ) {
 			return true;
-		} elseif (!is_array(self::$hooklist)) {
+		} elseif (!is_array(self::$handlers)) {
 			if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
 				throw new Scorpio_Exception("Global hooks array is not an array!\n");
 			}
 			return self::RET_FAILED;
-		} elseif (!is_array(self::$hooklist[$event])) {
+		} elseif (!is_array(self::$handlers[$event])) {
 			if ($_support['Scorpio_Exception'] && Scorpio_Hook::$throw_exception) {
 				throw new Scorpio_Exception("Hooks array for event '%(event)s' is not an array!\n");
 			}
@@ -130,7 +130,7 @@ class Scorpio_Hook_Core_ {
 
 		self::$event = $event;
 
-		foreach (self::$hooklist[$event] as $index => $hook) {
+		foreach (self::$handlers[$event] as $index => $hook) {
 
 			$object = null;
 			$method = null;
@@ -152,7 +152,7 @@ class Scorpio_Hook_Core_ {
 						throw new Scorpio_Exception('Empty array in hooks for ' . $event . "\n");
 					}
 				} else if ( is_object( $hook[0] ) ) {
-					$object = self::$hooklist[$event][$index][0];
+					$object = self::$handlers[$event][$index][0];
 					if ( $_support['closure'] && $object instanceof Closure ) {
 						$closure = true;
 						if ( count( $hook ) > 1 ) {
@@ -193,7 +193,7 @@ class Scorpio_Hook_Core_ {
 			} else if ( is_string( $hook ) ) { # functions look like strings, too
 				$func = $hook;
 			} else if ( is_object( $hook ) ) {
-				$object = self::$hooklist[$event][$index];
+				$object = self::$handlers[$event][$index];
 				if ( $_support['closure'] && $object instanceof Closure ) {
 					$closure = true;
 				} else {
