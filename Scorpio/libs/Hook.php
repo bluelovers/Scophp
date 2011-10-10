@@ -38,6 +38,10 @@ if (0) {
 
 class Scorpio_Hook_Core_ {
 	protected static $hooklist = array();
+
+	/**
+	 * save all try called hook
+	 */
 	protected static $calevenlist = array();
 
 	const RET_FAILED = null;
