@@ -60,22 +60,35 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('client_encoding', $args);
 	}
+
 	/**
 	 * Close MySQL connection
+	 *
+	 * @param resource $link_identifier
 	 */
 	function &close() {
 		$args = func_get_args();
 
 		return self::__exec('close', $args);
 	}
+
 	/**
 	 * Open a connection to a MySQL Server
+	 *
+	 * @param string $server=ini_get("mysql.default_host")
+	 * @param string $username=ini_get("mysql.default_user")
+	 * @param string $password=ini_get("mysql.default_password")
+	 * @param bool $new_link=false
+	 * @param int $client_flags=0
+	 *
+	 * @return resource
 	 */
 	function &connect() {
 		$args = func_get_args();
 
 		return self::__exec('connect', $args);
 	}
+
 	/**
 	 * Create a MySQL database
 	 */
@@ -84,6 +97,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('create_db', $args);
 	}
+
 	/**
 	 * Move internal result pointer
 	 */
@@ -92,6 +106,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('data_seek', $args);
 	}
+
 	/**
 	 * Get result data
 	 */
@@ -100,6 +115,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('db_name', $args);
 	}
+
 	/**
 	 * Send a MySQL query
 	 */
@@ -108,6 +124,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('db_query', $args);
 	}
+
 	/**
 	 * Drop (delete) a MySQL database
 	 */
@@ -116,6 +133,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('drop_db', $args);
 	}
+
 	/**
 	 * Returns the numerical value of the error message from previous MySQL operation
 	 */
@@ -124,6 +142,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('errno', $args);
 	}
+
 	/**
 	 * Returns the text of the error message from previous MySQL operation
 	 */
@@ -132,6 +151,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('error', $args);
 	}
+
 	/**
 	 * Escapes a string for use in a $args = func_get_args();
 
@@ -142,6 +162,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('escape_string', $args);
 	}
+
 	/**
 	 * Fetch a result row as an associative array , a numeric array, or both
 	 */
@@ -150,6 +171,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('fetch_array', $args);
 	}
+
 	/**
 	 * Fetch a result row as an associative array
 	 */
@@ -158,6 +180,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('fetch_assoc', $args);
 	}
+
 	/**
 	 * Get column information from a result and return as an object
 	 */
@@ -166,6 +189,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('fetch_field', $args);
 	}
+
 	/**
 	 * Get the length of each output in a result
 	 */
@@ -174,6 +198,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('fetch_lengths', $args);
 	}
+
 	/**
 	 * Fetch a result row as an object
 	 */
@@ -182,6 +207,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('fetch_object', $args);
 	}
+
 	/**
 	 * Get a result row as an enumerated array
 	 */
@@ -190,6 +216,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('fetch_row', $args);
 	}
+
 	/**
 	 * Get the flags associated with the specified field in a result
 	 */
@@ -198,6 +225,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('field_flags', $args);
 	}
+
 	/**
 	 * Returns the length of the specified field
 	 */
@@ -206,6 +234,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('field_len', $args);
 	}
+
 	/**
 	 * Get the name of the specified field in a result
 	 */
@@ -214,6 +243,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('field_name', $args);
 	}
+
 	/**
 	 * Set result pointer to a specified field offset
 	 */
@@ -222,6 +252,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('field_seek', $args);
 	}
+
 	/**
 	 * Get name of the table the specified field is in
 	 */
@@ -230,6 +261,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('field_table', $args);
 	}
+
 	/**
 	 * Get the type of the specified field in a result
 	 */
@@ -238,6 +270,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('field_type', $args);
 	}
+
 	/**
 	 * Free result memory
 	 */
@@ -246,6 +279,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('free_result', $args);
 	}
+
 	/**
 	 * Get MySQL client info
 	 */
@@ -254,6 +288,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('get_client_info', $args);
 	}
+
 	/**
 	 * Get MySQL host info
 	 */
@@ -262,6 +297,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('get_host_info', $args);
 	}
+
 	/**
 	 * Get MySQL protocol info
 	 */
@@ -270,6 +306,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('get_proto_info', $args);
 	}
+
 	/**
 	 * Get MySQL server info
 	 */
@@ -278,6 +315,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('get_server_info', $args);
 	}
+
 	/**
 	 * Get information about the most recent query
 	 */
@@ -286,6 +324,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('info', $args);
 	}
+
 	/**
 	 * Get the ID generated in the last query
 	 */
@@ -294,6 +333,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('insert_id', $args);
 	}
+
 	/**
 	 * List databases available on a MySQL server
 	 */
@@ -310,6 +350,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('list_fields', $args);
 	}
+
 	/**
 	 * List MySQL processes
 	 */
@@ -318,6 +359,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('list_processes', $args);
 	}
+
 	/**
 	 * List tables in a MySQL database
 	 */
@@ -326,6 +368,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('list_tables', $args);
 	}
+
 	/**
 	 * Get number of fields in result
 	 */
@@ -334,6 +377,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('num_fields', $args);
 	}
+
 	/**
 	 * Get number of rows in result
 	 */
@@ -342,6 +386,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('num_rows', $args);
 	}
+
 	/**
 	 * Open a persistent connection to a MySQL server
 	 */
@@ -350,6 +395,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('pconnect', $args);
 	}
+
 	/**
 	 * Ping a server connection or reconnect if there is no connection
 	 */
@@ -358,6 +404,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('ping', $args);
 	}
+
 	/**
 	 * Send a MySQL query
 	 */
@@ -366,6 +413,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('query', $args);
 	}
+
 	/**
 	 * Escapes special characters in a string for use in an SQL statement
 	 */
@@ -374,6 +422,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('real_escape_string', $args);
 	}
+
 	/**
 	 * Get result data
 	 */
@@ -382,6 +431,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('result', $args);
 	}
+
 	/**
 	 * Select a MySQL database
 	 */
@@ -390,6 +440,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('select_db', $args);
 	}
+
 	/**
 	 * Sets the client character set
 	 */
@@ -398,6 +449,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('set_charset', $args);
 	}
+
 	/**
 	 * Get current system status
 	 */
@@ -406,6 +458,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('stat', $args);
 	}
+
 	/**
 	 * Get table name of field
 	 */
@@ -414,6 +467,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('tablename', $args);
 	}
+
 	/**
 	 * Return the current thread ID
 	 */
@@ -422,6 +476,7 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('thread_id', $args);
 	}
+
 	/**
 	 * Send an SQL query to MySQL without fetching and buffering the result rows.
 	 */
