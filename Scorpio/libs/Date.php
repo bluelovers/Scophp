@@ -222,13 +222,13 @@ class Scorpio_Date_Core_ extends DateTime {
 		if ($_is_int) {
 
 		} else {
-  		$timestamp = parent::getTimestamp();
+	  		$timestamp = parent::getTimestamp();
 
-  		if ((string)$this->_date[0] !== (string)$timestamp) {
-  			$this->_date[1] = $_o[1];
-		} else {
-			$this->_date[0] = $this->getMicrotime();
-		}
+	  		if ((string)$this->_date[0] !== (string)$timestamp) {
+	  			$this->_date[1] = $_o[1];
+			} else {
+				$this->_date[0] = $this->getMicrotime();
+			}
 		}
 
   		return $this;
