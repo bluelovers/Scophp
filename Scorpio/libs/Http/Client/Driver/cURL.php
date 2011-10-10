@@ -184,10 +184,6 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 		return static::$instances;
 	}
 
-	public static function &_self() {
-		return static::$instances;
-	}
-
 	/**
 	 * curl class constructor
 	 *
