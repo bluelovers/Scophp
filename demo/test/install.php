@@ -49,8 +49,8 @@
 		</tr>
 		<tr>
 			<th>System Directory</th>
-			<?php if (is_dir(SYSPATH) AND is_file(SYSPATH.'classes/kohana'.EXT)): ?>
-				<td class="pass"><?php echo SYSPATH ?></td>
+			<?php if (is_dir(SCORPIO_SYSPATH) AND is_file(SCORPIO_SYSPATH.'Scorpio/libs/Kenal.php')): ?>
+				<td class="pass"><?php echo SCORPIO_SYSPATH ?></td>
 			<?php else: $failed = TRUE ?>
 				<td class="fail">The configured <code>system</code> directory does not exist or does not contain required files.</td>
 			<?php endif ?>
