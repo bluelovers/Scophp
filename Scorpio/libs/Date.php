@@ -148,7 +148,7 @@ class Scorpio_Date_Core_ extends DateTime {
 
 			$ret[0] = (string)$timestamp . (string)$microsecond;
 		} elseif ($time !== true && $time > 0) {
-			if (strpos($time, ' ') === false) {
+			if (is_float($time) || strpos($time, ' ') === false) {
 				list($timestamp, $microsecond) = explode('.', $time);
 
 				$ret[1] = $this->_microsecond($time);
