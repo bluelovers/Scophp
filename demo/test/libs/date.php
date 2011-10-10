@@ -79,4 +79,61 @@ $_o = new DateTime($d, new DateTimeZone('Asia/Taipei'));
 
 	var_dump($_o);
 
+function profile($dump = FALSE) {
+    static $profile;
+
+    // Return the times stored in profile, then erase it
+    if ($dump) {
+    	$temp = dmicrotime(true) - $profile;
+        unset($profile);
+        return number_format($temp, 6);
+    }
+
+    $profile = dmicrotime(true);
+}
+
+function dmicrotime() {
+	return array_sum(explode(' ', microtime()));
+}
+
+$do = 10000;
+
+while($j < 5) {
+	$j++;
+
+	echo '<hr>';
+
+	profile();
+
+	while ($i < $do) {
+		$i++;
+
+		$_o = new DateTime($d);
+	}
+
+	var_dump(array(
+		profile(true),
+		'DateTime'
+	));
+
+	sleep(1);
+
+	profile();
+
+	while ($i < $do) {
+		$i++;
+
+		$_o = new Scorpio_Date($d);
+	}
+
+	var_dump(array(
+		profile(true),
+		'Scorpio_Date'
+	));
+
+	echo '<hr>';
+
+	sleep(1);
+}
+
 ?>
