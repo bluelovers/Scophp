@@ -86,7 +86,11 @@ class Scorpio_Date_Core_ extends DateTime {
 	}
 
 	function _microsecond($update) {
-		if ($update > 0) {
+		if ($update === true) {
+			$_o = $this->_microtime(true);
+
+			return $_o[1];
+		} elseif ($update > 0) {
 			if ($update > 1) {
 				list($timestamp) = explode('.', (string)$update);
 
