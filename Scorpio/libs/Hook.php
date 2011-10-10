@@ -64,6 +64,14 @@ class Scorpio_Hook_Core_ {
 		return self::$handlers[$event];
 	}
 
+	public static function remove($event) {
+		$ret = self::exists($event);
+
+		unset(self::$handlers[$event]);
+
+		return $ret;
+	}
+
 	protected static function _support($force = false) {
 		static $_support;
 
