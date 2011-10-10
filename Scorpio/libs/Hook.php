@@ -272,7 +272,7 @@ class Scorpio_Hook_Core_ {
 			 * problem here.
 			 */
 			$retval = null;
-			//set_error_handler( 'Hooks::hookErrorHandler' );
+			set_error_handler( 'Scorpio_Hook::hookErrorHandler' );
 			//wfProfileIn( $func );
 			try {
 				$retval = call_user_func_array( $callback, $hook_args );
@@ -280,7 +280,7 @@ class Scorpio_Hook_Core_ {
 				$badhookmsg = $e->getMessage();
 			}
 			//wfProfileOut( $func );
-			//restore_error_handler();
+			restore_error_handler();
 
 			/* String return is an error; false return means stop processing. */
 			//TODO: add hook ret object
