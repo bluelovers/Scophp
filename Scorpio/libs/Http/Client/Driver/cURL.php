@@ -63,11 +63,12 @@
 
  Dick Munroe (munroe@csworks.com) 17-Dec-2007 1.2.0
  Add a function to parse post strings as this is frequently needed capability.
-*/
+ */
 
 if (0) {
 	// for IDE
-	class Scorpio_Http_Client_Driver_cURL extends Scorpio_Http_Client_Driver_cURL_Core_ {}
+	class Scorpio_Http_Client_Driver_cURL extends Scorpio_Http_Client_Driver_cURL_Core_ {
+	}
 }
 
 class Scorpio_Http_Client_Driver_cURL_Core_ {
@@ -181,7 +182,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 		self::$instances = &$emptyinstances;
 
 		$ref = new ReflectionClass(__CLASS__);
-		self::$instances =& $ref->newInstanceArgs((array)$args);
+		self::$instances = &$ref->newInstanceArgs((array )$args);
 
 		return self::$instances;
 	}
@@ -202,24 +203,22 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 
 	public function __construct($theURL = null) {
 		if (!function_exists('curl_init')) {
-			trigger_error('PHP was not built with --with-curl, rebuild PHP to use the curl class.',
-				E_USER_ERROR) ;
+			trigger_error('PHP was not built with --with-curl, rebuild PHP to use the curl class.', E_USER_ERROR);
 		}
 
 		register_shutdown_function(array($this, '__destruct'));
 
-		foreach($this->_scorpio_ as $_k) {
-			$this->_scorpio_[$_k] = null ;
+		foreach ($this->_scorpio_ as $_k) {
+			$this->_scorpio_[$_k] = null;
 		}
 
-		$this->_scorpio_['handle'] = curl_init() ;
+		$this->_scorpio_['handle'] = curl_init();
 
 		if (!empty($theURL)) {
-			$this->setopt(CURLOPT_URL, $theURL) ;
+			$this->setopt(CURLOPT_URL, $theURL);
 		}
-		$this->setopt(CURLOPT_HEADER, false) ;
-		$this->setopt(CURLOPT_RETURNTRANSFER, true) ;
-
+		$this->setopt(CURLOPT_HEADER, false);
+		$this->setopt(CURLOPT_RETURNTRANSFER, true);
 
 
 		return $this;
@@ -232,8 +231,8 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 */
 
 	public function close($force = false) {
-		(!$this->_scorpio_['cache']['closed'] || $force) && @curl_close($this->_scorpio_['handle']) ;
-//		$this->_scorpio_['handle'] = null ;
+		(!$this->_scorpio_['cache']['closed'] || $force) && @curl_close($this->_scorpio_['handle']);
+		//		$this->_scorpio_['handle'] = null ;
 
 		if ($force) {
 			$this->_clear();
@@ -268,85 +267,79 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 		$this->_clear(1);
 
 		if (!empty($theURL)) {
-			$this->setopt(CURLOPT_URL, $theURL) ;
+			$this->setopt(CURLOPT_URL, $theURL);
 		}
 
 		if ($this->getOption(CURLOPT_COOKIEJAR) == true) {
-			$this->setopt(CURLOPT_COOKIEFILE, $this->cookies()) ;
-			$this->setopt(CURLOPT_COOKIEJAR, $this->cookies()) ;
+			$this->setopt(CURLOPT_COOKIEFILE, $this->cookies());
+			$this->setopt(CURLOPT_COOKIEJAR, $this->cookies());
 		}
 
 		$this->_setopt(1);
 
-		$theReturnValue = curl_exec($this->_scorpio_['handle']) ;
+		$theReturnValue = curl_exec($this->_scorpio_['handle']);
 
-		$this->_scorpio_['status'] = curl_getinfo($this->_scorpio_['handle']) ;
-		$this->_scorpio_['status']['errno'] = curl_errno($this->_scorpio_['handle']) ;
-		$this->_scorpio_['status']['error'] = curl_error($this->_scorpio_['handle']) ;
+		$this->_scorpio_['status'] = curl_getinfo($this->_scorpio_['handle']);
+		$this->_scorpio_['status']['errno'] = curl_errno($this->_scorpio_['handle']);
+		$this->_scorpio_['status']['error'] = curl_error($this->_scorpio_['handle']);
 
 		// Collect headers espesically if CURLOPT_FOLLOWLOCATION set.
 		// Parse out the http header (from last one if any).
 
-		$this->_scorpio_['header'] = null ;
+		$this->_scorpio_['header'] = null;
 		$this->_scorpio_['followed'] = null;
 
 		// If there has been a curl error, just return a null string.
 
 		if ($this->hasError()) {
-			return '' ;
+			return '';
 		}
 
 		if ($this->getOption(CURLOPT_HEADER)) {
-			$this->_scorpio_['followed'] = array() ;
-			$rv = $theReturnValue ;
+			$this->_scorpio_['followed'] = array();
+			$rv = $theReturnValue;
 
 			while (count($this->_scorpio_['followed']) <= $this->_scorpio_['status']['redirect_count']) {
-				$theArray = preg_split("/(\r\n){2,2}/", $rv, 2) ;
+				$theArray = preg_split("/(\r\n){2,2}/", $rv, 2);
 
-				$this->_scorpio_['followed'][] = $theArray[0] ;
+				$this->_scorpio_['followed'][] = $theArray[0];
 
-				$rv = $theArray[1] ;
+				$rv = $theArray[1];
 			}
 
-			$this->parseHeader($theArray[0]) ;
+			$this->parseHeader($theArray[0]);
 			$this->_scorpio_['retval'] = $theArray[1];
 
 			if (0 && $this->getOption(CURLOPT_FOLLOWLOCATION)) {
 				$_f = $this->getFollowedHeaders();
 				foreach ($_f as $_fa) {
 					if ($_fa[0] && preg_match('%^HTTP/\d+\.\d+\s+(\d{3})\s+.*$%', $_fa[0], $_r) && ($_r[1] == 302 || $_r[1] == 301)) {
-						for ($i=1, $ii = count($_fa); $i < $ii; $i++) {
+						for ($i = 1, $ii = count($_fa); $i < $ii; $i++) {
 							if (preg_match('%^Location:\s*(.+)\s*$%i', $_fa[$i], $_r)) {
 
-//								print_r($_r);
-//								exit();
+								//								print_r($_r);
+								//								exit();
 
 								return $this->exec($_r[1]);
 							}
 
-//							echo $_fa[i].'<br>';
+							//							echo $_fa[i].'<br>';
 						}
 					}
 
-//					echo '<pre>';
-//				print_r(array($_fa, $_r, $i, $ii, preg_match('%^HTTP/\d+\.\d+\s+(\d{3})\s+.*$%', $_fa[0], $_r), $_r));
-//				exit();
+					//					echo '<pre>';
+					//				print_r(array($_fa, $_r, $i, $ii, preg_match('%^HTTP/\d+\.\d+\s+(\d{3})\s+.*$%', $_fa[0], $_r), $_r));
+					//				exit();
 				}
 
 
 			}
 		} else {
-			$this->_scorpio_['retval'] = $theReturnValue ;
+			$this->_scorpio_['retval'] = $theReturnValue;
 		}
 
-		if (
-			0 && $this->getSetting('javascript_loop') > 0
-			&& (
-				preg_match("/>[[:space:]]+window\.location\.replace\('(.*)'\)/i", $this->_scorpio_['retval'], $m)
-				|| preg_match("/>[[:space:]]+window\.location\=\"(.*)\"/i", $this->_scorpio_['retval'], $m)
-			)
-		) {
-			$this->setSetting('javascript_loop', $this->getSetting('javascript_loop') -1)->exec($m[1]);
+		if (0 && $this->getSetting('javascript_loop') > 0 && (preg_match("/>[[:space:]]+window\.location\.replace\('(.*)'\)/i", $this->_scorpio_['retval'], $m) || preg_match("/>[[:space:]]+window\.location\=\"(.*)\"/i", $this->_scorpio_['retval'], $m))) {
+			$this->setSetting('javascript_loop', $this->getSetting('javascript_loop') - 1)->exec($m[1]);
 		}
 
 		return $this->_scorpio_['retval'];
@@ -355,13 +348,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	public function getExec($detial = false) {
 
 
-		return $detial ? array(
-			'header' => $this->getHeader(),
-			'exec' => $this->_scorpio_['retval'],
-			'followed' => $this->getFollowedHeaders(),
-			'options' => $this->_scorpio_['options'],
-			'status' => $this->getStatus(),
-		) : $this->_scorpio_['retval'];
+		return $detial ? array('header' => $this->getHeader(), 'exec' => $this->_scorpio_['retval'], 'followed' => $this->getFollowedHeaders(), 'options' => $this->_scorpio_['options'], 'status' => $this->getStatus(), ) : $this->_scorpio_['retval'];
 	}
 
 	/**
@@ -382,17 +369,17 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 		// returned (happens in the event of errors).
 
 		if (empty($this->_scorpio_['header'])) {
-			return false ;
+			return false;
 		}
 
 		if (empty($theHeader)) {
-			return $this->_scorpio_['header'] ;
+			return $this->_scorpio_['header'];
 		} else {
-			$theHeader = strtoupper($theHeader) ;
+			$theHeader = strtoupper($theHeader);
 			if (isset($this->_scorpio_['caseless'][$theHeader])) {
-				return $this->_scorpio_['header'][$this->_scorpio_['caseless'][$theHeader]] ;
+				return $this->_scorpio_['header'][$this->_scorpio_['caseless'][$theHeader]];
 			} else {
-				return false ;
+				return false;
 			}
 		}
 	}
@@ -409,10 +396,10 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 
 
 		if (isset($this->_scorpio_['options'][$theOption])) {
-			return $this->_scorpio_['options'][$theOption] ;
+			return $this->_scorpio_['options'][$theOption];
 		}
 
-		return null ;
+		return null;
 	}
 
 	/**
@@ -426,9 +413,9 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 
 
 		if (isset($this->_scorpio_['status']['error'])) {
-			return (empty($this->_scorpio_['status']['error']) ? false : $this->_scorpio_['status']['error']) ;
+			return (empty($this->_scorpio_['status']['error']) ? false : $this->_scorpio_['status']['error']);
 		} else {
-			return false ;
+			return false;
 		}
 	}
 
@@ -452,26 +439,26 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	public function parseHeader($theHeader) {
 
 
-		$this->_scorpio_['caseless'] = array() ;
+		$this->_scorpio_['caseless'] = array();
 
-		$theArray = preg_split("/(\r\n)+/", $theHeader) ;
+		$theArray = preg_split("/(\r\n)+/", $theHeader);
 
 		// Ditch the HTTP status line.
 
 		if (preg_match('/^HTTP/', $theArray[0])) {
-			$theArray = array_slice($theArray, 1) ;
+			$theArray = array_slice($theArray, 1);
 		}
 
 		foreach ($theArray as $theHeaderString) {
-			$theHeaderStringArray = preg_split("/\s*:\s*/", $theHeaderString, 2) ;
+			$theHeaderStringArray = preg_split("/\s*:\s*/", $theHeaderString, 2);
 
-			$theCaselessTag = strtoupper($theHeaderStringArray[0]) ;
+			$theCaselessTag = strtoupper($theHeaderStringArray[0]);
 
 			if (!isset($this->_scorpio_['caseless'][$theCaselessTag])) {
-				$this->_scorpio_['caseless'][$theCaselessTag] = $theHeaderStringArray[0] ;
+				$this->_scorpio_['caseless'][$theCaselessTag] = $theHeaderStringArray[0];
 			}
 
-			$this->_scorpio_['header'][$this->_scorpio_['caseless'][$theCaselessTag]][] = $theHeaderStringArray[1] ;
+			$this->_scorpio_['header'][$this->_scorpio_['caseless'][$theCaselessTag]][] = $theHeaderStringArray[1];
 		}
 	}
 
@@ -490,12 +477,12 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 
 
 		if (empty($theField)) {
-			return $this->_scorpio_['status'] ;
+			return $this->_scorpio_['status'];
 		} else {
 			if (isset($this->_scorpio_['status'][$theField])) {
-				return $this->_scorpio_['status'][$theField] ;
+				return $this->_scorpio_['status'][$theField];
 			} else {
-				return false ;
+				return false;
 			}
 		}
 	}
@@ -518,12 +505,12 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 		} else {
 
 			if ($theOption == CURLOPT_URL) {
-//				$theValue = str_replace('&amp;', '&', urldecode(trim($theValue)));
+				//				$theValue = str_replace('&amp;', '&', urldecode(trim($theValue)));
 				$theValue = str_replace('&amp;', '&', trim($theValue));
 			}
 
-//			curl_setopt($this->_scorpio_['handle'], $theOption, $theValue) ;
-			$this->_scorpio_['options'][$theOption] = $theValue ;
+			//			curl_setopt($this->_scorpio_['handle'], $theOption, $theValue) ;
+			$this->_scorpio_['options'][$theOption] = $theValue;
 		}
 
 		return $this;
@@ -557,8 +544,8 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 				$this->setSetting($_k, $_v);
 			}
 		} else {
-//			curl_setopt($this->_scorpio_['handle'], $theOption, $theValue) ;
-			$this->_scorpio_['setting'][$theOption] = $theValue ;
+			//			curl_setopt($this->_scorpio_['handle'], $theOption, $theValue) ;
+			$this->_scorpio_['setting'][$theOption] = $theValue;
 		}
 
 		return $this;
@@ -568,10 +555,10 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 
 
 		if (isset($this->_scorpio_['setting'][$theOption])) {
-			return $this->_scorpio_['setting'][$theOption] ;
+			return $this->_scorpio_['setting'][$theOption];
 		}
 
-		return null ;
+		return null;
 	}
 
 	/**
@@ -583,14 +570,14 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 */
 
 	public function &fromPostString(&$thePostString) {
-		$return = array() ;
-		$fields = explode('&', $thePostString) ;
-		foreach($fields as $aField) {
-			$xxx = explode('=', $aField) ;
-			$return[$xxx[0]] = urldecode($xxx[1]) ;
+		$return = array();
+		$fields = explode('&', $thePostString);
+		foreach ($fields as $aField) {
+			$xxx = explode('=', $aField);
+			$return[$xxx[0]] = urldecode($xxx[1]);
 		}
 
-		return $return ;
+		return $return;
 	}
 
 	/**
@@ -605,24 +592,24 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 */
 
 	public function &asPostString(&$theData, $theName = null) {
-		$thePostString = '' ;
-		$thePrefix = $theName ;
+		$thePostString = '';
+		$thePrefix = $theName;
 
 		if (is_array($theData)) {
 			foreach ($theData as $theKey => $theValue) {
 				if ($thePrefix === null) {
-					$thePostString .= '&' . self::asPostString($theValue, $theKey) ;
+					$thePostString .= '&' . self::asPostString($theValue, $theKey);
 				} else {
-					$thePostString .= '&' . self::asPostString($theValue, $thePrefix . '[' . $theKey . ']') ;
+					$thePostString .= '&' . self::asPostString($theValue, $thePrefix . '[' . $theKey . ']');
 				}
 			}
 		} else {
-			$thePostString .= '&' . urlencode((string)$thePrefix) . '=' . urlencode($theData) ;
+			$thePostString .= '&' . urlencode((string )$thePrefix) . '=' . urlencode($theData);
 		}
 
-		$xxx = &substr($thePostString, 1) ;
+		$xxx = &substr($thePostString, 1);
 
-		return $xxx ;
+		return $xxx;
 	}
 
 	/**
@@ -638,15 +625,16 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	public function getFollowedHeaders() {
 
 
-		$theHeaders = array() ;
+		$theHeaders = array();
 		if ($this->_scorpio_['followed']) {
 			foreach ($this->_scorpio_['followed'] as $aHeader) {
-				$theHeaders[] = explode("\r\n", $aHeader) ;
-			} ;
-			return $theHeaders ;
+				$theHeaders[] = explode("\r\n", $aHeader);
+			}
+			;
+			return $theHeaders;
 		}
 
-		return $theHeaders ;
+		return $theHeaders;
 	}
 
 	public function cookies($chkmode = false) {
@@ -654,7 +642,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 
 		static $cookies;
 
-		(!$chkmode && !$cookies) && $cookies = tempnam ($_SERVER['SERVER_ROOT'].'/tmp', "CURLCOOKIE");
+		(!$chkmode && !$cookies) && $cookies = tempnam($_SERVER['SERVER_ROOT'] . '/tmp', "CURLCOOKIE");
 
 		return $cookies;
 	}
