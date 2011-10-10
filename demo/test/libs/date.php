@@ -1,5 +1,7 @@
 <?php
 
+include_once '../../../Scorpio/Bootstrap.php';
+
 echo '<pre>';
 
 foreach (array(
@@ -19,9 +21,15 @@ foreach (array(
 		$r,
 		$m,
 	));
+
+	$r = Scorpio_Date::_preg_match_timestamp($d, $m1);
+
+	var_dump(array(
+		$r,
+		$m1,
+	));
 }
 
-include_once '../../../Scorpio/Bootstrap.php';
 /*
 include_once('../../../Scorpio/libs/Date.php');
 
