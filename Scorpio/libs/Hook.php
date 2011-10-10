@@ -140,7 +140,7 @@ class Scorpio_Hook_Core_ {
 
 		$_cache_handlers = &self::get($event);
 
-		foreach (self::$handlers[$event] as $index => $hook) {
+		foreach ($_cache_handlers as $index => $hook) {
 
 			$object = null;
 			$method = null;
@@ -162,7 +162,7 @@ class Scorpio_Hook_Core_ {
 						throw new Scorpio_Exception('Empty array in hooks for ' . $event . "\n");
 					}
 				} else if ( is_object( $hook[0] ) ) {
-					$object = self::$handlers[$event][$index][0];
+					$object = $_cache_handlers[$index][0];
 					if ( $_support['closure'] && $object instanceof Closure ) {
 						$closure = true;
 						if ( count( $hook ) > 1 ) {
@@ -203,7 +203,7 @@ class Scorpio_Hook_Core_ {
 			} else if ( is_string( $hook ) ) { # functions look like strings, too
 				$func = $hook;
 			} else if ( is_object( $hook ) ) {
-				$object = self::$handlers[$event][$index];
+				$object = $_cache_handlers[$index];
 				if ( $_support['closure'] && $object instanceof Closure ) {
 					$closure = true;
 				} else {
