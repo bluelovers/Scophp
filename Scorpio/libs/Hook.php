@@ -380,6 +380,8 @@ class Scorpio_Hook_Core_ {
 				throw new Scorpio_Hook_Exception( $errstr );
 			} elseif ($_support['Scorpio_Exception']) {
 				throw new Scorpio_Exception( $errstr );
+			} else {
+				throw new Exception( $errstr );
 			}
 		}
 
