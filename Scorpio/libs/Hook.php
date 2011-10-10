@@ -106,10 +106,7 @@ class Scorpio_Hook_Core_ {
 	 * @return Boolean
 	 */
 	public static function execute($event, $args = array(), $iscall = 0) {
-		static $_support;
-		if ($_support === null) {
-			$_support = self::_support();
-		}
+		$_support = self::_support();
 
 		Scorpio_Hook::$calevenlist[$event] += 1;
 
