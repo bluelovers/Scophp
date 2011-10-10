@@ -49,8 +49,11 @@ class Scorpio_Date_Core_ extends DateTime {
 		if (
 			is_float($time)
 			|| (
+				/*
 				preg_match('/(?|(\d{10})|(\d{10})?(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m)
 				&& $m[0] != ''
+				*/
+				$this->_preg_match_timestamp($time, $m)
 			)
 		) {
 			/*
@@ -83,6 +86,13 @@ class Scorpio_Date_Core_ extends DateTime {
 		}
 
 		return $this;
+	}
+
+	function _preg_match_timestamp($time, &$m) {
+		$ret = preg_match('/(?|(\d{10})|(\d{10})?(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m);
+		if ($ret) $ret = !empty($m[0]);
+
+		return $ret;
 	}
 
 	function _microsecond($update) {
