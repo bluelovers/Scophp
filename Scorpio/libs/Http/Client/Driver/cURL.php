@@ -637,6 +637,19 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 		return $theHeaders;
 	}
 
+	/**
+	 * @return string default return sys_get_temp_dir()
+	 */
+	function _get_temp_dir() {
+		$dir = sys_get_temp_dir();
+
+		if (empty($dir)) {
+			$dir = $_SERVER['SERVER_ROOT'] . '/tmp';
+		}
+
+		return $dir;
+	}
+
 	public function cookies($chkmode = false) {
 
 
