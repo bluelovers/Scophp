@@ -106,6 +106,8 @@ class Scorpio_Hook_Core_ {
 			$_support = self::_support();
 		}
 
+		Scorpio_Hook::$calevenlist[$event] += 1;
+
 		// Return quickly in the most common case
 		if ( !isset( self::$hooklist[$event] ) ) {
 			return true;
