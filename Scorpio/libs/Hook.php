@@ -324,6 +324,8 @@ class Scorpio_Hook_Core_ {
 		}
 
 //		self::clear($event);
+
+		return self::RET_SUCCESS;
 	}
 
 //	public static function clear($event) {
