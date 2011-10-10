@@ -39,6 +39,11 @@ class Scorpio_Date_Core_ extends DateTime {
 	 */
 	static $D_TIMEZONE	= 'Asia/Taipei';
 
+	public static function &instance($time = 'now', $timezone = null) {
+		$_o = new Scorpio_Date($time, $timezone);
+		return $_o;
+	}
+
 	public function __construct($time = 'now', $timezone = null) {
 		if (!isset($time)) $time = 'now';
 
