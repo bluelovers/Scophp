@@ -14,31 +14,28 @@ if (0) {
 class Scorpio_helper_db_mysql_Core_ {
 	protected static $instances = null;
 
-	protected static $func_prefix = 'mysql_';
+	protected $func_prefix = 'mysql_';
 
 	public static function &instance() {
 		$class = __CLASS__;
 
-		if (!isset(self::$instances[$class])) {
-			self::$instances[$class] = new $class;
+		if (!isset($this->$instances[$class])) {
+			$this->$instances[$class] = new $class;
 		}
 
-		return self::$instances[$class];
+		return $this->$instances[$class];
 	}
 
 	function __construct() {
 		$class = get_class($this);
 
-		self::$instances[$class] = &$this;
+		$this->$instances[$class] = &$this;
 
 		return $this;
 	}
 
 	function &__exec($func, $args) {
-//		$args = func_get_args();
-//		array_shift($args);
-
-		return call_user_func_array(self::$func_prefix.$func, $args);
+		return call_user_func_array($this->func_prefix.$func, $args);
 	}
 
 	public static $connection;
@@ -52,7 +49,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &affected_rows() {
 		$args = func_get_args();
 
-		return self::__exec('affected_rows', $args);
+		return $this->__exec('affected_rows', $args);
 	}
 
 	/**
@@ -63,7 +60,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &client_encoding() {
 		$args = func_get_args();
 
-		return self::__exec('client_encoding', $args);
+		return $this->__exec('client_encoding', $args);
 	}
 
 	/**
@@ -74,7 +71,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &close() {
 		$args = func_get_args();
 
-		return self::__exec('close', $args);
+		return $this->__exec('close', $args);
 	}
 
 	/**
@@ -91,7 +88,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &connect() {
 		$args = func_get_args();
 
-		return self::__exec('connect', $args);
+		return $this->__exec('connect', $args);
 	}
 
 	/**
@@ -103,7 +100,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &create_db() {
 		$args = func_get_args();
 
-		return self::__exec('create_db', $args);
+		return $this->__exec('create_db', $args);
 	}
 
 	/**
@@ -112,7 +109,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &data_seek() {
 		$args = func_get_args();
 
-		return self::__exec('data_seek', $args);
+		return $this->__exec('data_seek', $args);
 	}
 
 	/**
@@ -121,7 +118,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &db_name() {
 		$args = func_get_args();
 
-		return self::__exec('db_name', $args);
+		return $this->__exec('db_name', $args);
 	}
 
 	/**
@@ -130,7 +127,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &db_query() {
 		$args = func_get_args();
 
-		return self::__exec('db_query', $args);
+		return $this->__exec('db_query', $args);
 	}
 
 	/**
@@ -139,7 +136,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &drop_db() {
 		$args = func_get_args();
 
-		return self::__exec('drop_db', $args);
+		return $this->__exec('drop_db', $args);
 	}
 
 	/**
@@ -148,7 +145,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &errno() {
 		$args = func_get_args();
 
-		return self::__exec('errno', $args);
+		return $this->__exec('errno', $args);
 	}
 
 	/**
@@ -157,18 +154,18 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &error() {
 		$args = func_get_args();
 
-		return self::__exec('error', $args);
+		return $this->__exec('error', $args);
 	}
 
 	/**
 	 * Escapes a string for use in a $args = func_get_args();
 
-		self::__exec('query', $args);
+		$this->__exec('query', $args);
 	 */
 	function &escape_string() {
 		$args = func_get_args();
 
-		return self::__exec('escape_string', $args);
+		return $this->__exec('escape_string', $args);
 	}
 
 	/**
@@ -177,7 +174,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &fetch_array() {
 		$args = func_get_args();
 
-		return self::__exec('fetch_array', $args);
+		return $this->__exec('fetch_array', $args);
 	}
 
 	/**
@@ -186,7 +183,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &fetch_assoc() {
 		$args = func_get_args();
 
-		return self::__exec('fetch_assoc', $args);
+		return $this->__exec('fetch_assoc', $args);
 	}
 
 	/**
@@ -195,7 +192,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &fetch_field() {
 		$args = func_get_args();
 
-		return self::__exec('fetch_field', $args);
+		return $this->__exec('fetch_field', $args);
 	}
 
 	/**
@@ -204,7 +201,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &fetch_lengths() {
 		$args = func_get_args();
 
-		return self::__exec('fetch_lengths', $args);
+		return $this->__exec('fetch_lengths', $args);
 	}
 
 	/**
@@ -213,7 +210,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &fetch_object() {
 		$args = func_get_args();
 
-		return self::__exec('fetch_object', $args);
+		return $this->__exec('fetch_object', $args);
 	}
 
 	/**
@@ -222,7 +219,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &fetch_row() {
 		$args = func_get_args();
 
-		return self::__exec('fetch_row', $args);
+		return $this->__exec('fetch_row', $args);
 	}
 
 	/**
@@ -231,7 +228,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &field_flags() {
 		$args = func_get_args();
 
-		return self::__exec('field_flags', $args);
+		return $this->__exec('field_flags', $args);
 	}
 
 	/**
@@ -240,7 +237,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &field_len() {
 		$args = func_get_args();
 
-		return self::__exec('field_len', $args);
+		return $this->__exec('field_len', $args);
 	}
 
 	/**
@@ -249,7 +246,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &field_name() {
 		$args = func_get_args();
 
-		return self::__exec('field_name', $args);
+		return $this->__exec('field_name', $args);
 	}
 
 	/**
@@ -258,7 +255,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &field_seek() {
 		$args = func_get_args();
 
-		return self::__exec('field_seek', $args);
+		return $this->__exec('field_seek', $args);
 	}
 
 	/**
@@ -267,7 +264,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &field_table() {
 		$args = func_get_args();
 
-		return self::__exec('field_table', $args);
+		return $this->__exec('field_table', $args);
 	}
 
 	/**
@@ -276,7 +273,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &field_type() {
 		$args = func_get_args();
 
-		return self::__exec('field_type', $args);
+		return $this->__exec('field_type', $args);
 	}
 
 	/**
@@ -285,7 +282,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &free_result() {
 		$args = func_get_args();
 
-		return self::__exec('free_result', $args);
+		return $this->__exec('free_result', $args);
 	}
 
 	/**
@@ -294,7 +291,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &get_client_info() {
 		$args = func_get_args();
 
-		return self::__exec('get_client_info', $args);
+		return $this->__exec('get_client_info', $args);
 	}
 
 	/**
@@ -303,7 +300,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &get_host_info() {
 		$args = func_get_args();
 
-		return self::__exec('get_host_info', $args);
+		return $this->__exec('get_host_info', $args);
 	}
 
 	/**
@@ -312,7 +309,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &get_proto_info() {
 		$args = func_get_args();
 
-		return self::__exec('get_proto_info', $args);
+		return $this->__exec('get_proto_info', $args);
 	}
 
 	/**
@@ -321,7 +318,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &get_server_info() {
 		$args = func_get_args();
 
-		return self::__exec('get_server_info', $args);
+		return $this->__exec('get_server_info', $args);
 	}
 
 	/**
@@ -330,7 +327,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &info() {
 		$args = func_get_args();
 
-		return self::__exec('info', $args);
+		return $this->__exec('info', $args);
 	}
 
 	/**
@@ -339,7 +336,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &insert_id() {
 		$args = func_get_args();
 
-		return self::__exec('insert_id', $args);
+		return $this->__exec('insert_id', $args);
 	}
 
 	/**
@@ -348,7 +345,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &list_dbs() {
 		$args = func_get_args();
 
-		return self::__exec('list_dbs', $args);
+		return $this->__exec('list_dbs', $args);
 	}
 	/**
 	 * List MySQL table fields
@@ -356,7 +353,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &list_fields() {
 		$args = func_get_args();
 
-		return self::__exec('list_fields', $args);
+		return $this->__exec('list_fields', $args);
 	}
 
 	/**
@@ -365,7 +362,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &list_processes() {
 		$args = func_get_args();
 
-		return self::__exec('list_processes', $args);
+		return $this->__exec('list_processes', $args);
 	}
 
 	/**
@@ -374,7 +371,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &list_tables() {
 		$args = func_get_args();
 
-		return self::__exec('list_tables', $args);
+		return $this->__exec('list_tables', $args);
 	}
 
 	/**
@@ -383,7 +380,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &num_fields() {
 		$args = func_get_args();
 
-		return self::__exec('num_fields', $args);
+		return $this->__exec('num_fields', $args);
 	}
 
 	/**
@@ -392,7 +389,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &num_rows() {
 		$args = func_get_args();
 
-		return self::__exec('num_rows', $args);
+		return $this->__exec('num_rows', $args);
 	}
 
 	/**
@@ -401,7 +398,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &pconnect() {
 		$args = func_get_args();
 
-		return self::__exec('pconnect', $args);
+		return $this->__exec('pconnect', $args);
 	}
 
 	/**
@@ -410,7 +407,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &ping() {
 		$args = func_get_args();
 
-		return self::__exec('ping', $args);
+		return $this->__exec('ping', $args);
 	}
 
 	/**
@@ -419,7 +416,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &query() {
 		$args = func_get_args();
 
-		return self::__exec('query', $args);
+		return $this->__exec('query', $args);
 	}
 
 	/**
@@ -428,7 +425,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &real_escape_string() {
 		$args = func_get_args();
 
-		return self::__exec('real_escape_string', $args);
+		return $this->__exec('real_escape_string', $args);
 	}
 
 	/**
@@ -437,7 +434,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &result() {
 		$args = func_get_args();
 
-		return self::__exec('result', $args);
+		return $this->__exec('result', $args);
 	}
 
 	/**
@@ -446,7 +443,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &select_db() {
 		$args = func_get_args();
 
-		return self::__exec('select_db', $args);
+		return $this->__exec('select_db', $args);
 	}
 
 	/**
@@ -455,7 +452,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &set_charset() {
 		$args = func_get_args();
 
-		return self::__exec('set_charset', $args);
+		return $this->__exec('set_charset', $args);
 	}
 
 	/**
@@ -464,7 +461,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &stat() {
 		$args = func_get_args();
 
-		return self::__exec('stat', $args);
+		return $this->__exec('stat', $args);
 	}
 
 	/**
@@ -473,7 +470,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &tablename() {
 		$args = func_get_args();
 
-		return self::__exec('tablename', $args);
+		return $this->__exec('tablename', $args);
 	}
 
 	/**
@@ -482,7 +479,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &thread_id() {
 		$args = func_get_args();
 
-		return self::__exec('thread_id', $args);
+		return $this->__exec('thread_id', $args);
 	}
 
 	/**
@@ -491,7 +488,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	function &unbuffered_query() {
 		$args = func_get_args();
 
-		return self::__exec('unbuffered_query', $args);
+		return $this->__exec('unbuffered_query', $args);
 	}
 }
 
