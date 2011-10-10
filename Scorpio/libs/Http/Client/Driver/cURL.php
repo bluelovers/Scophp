@@ -29,39 +29,41 @@
  * @example ./example.class.curl.php
  */
 
-// Edit History:
+/**
+ Edit History:
 
-// Dick Munroe munroe@csworks.com 30-Nov-2004
-// Initial Version Created.
+ Dick Munroe munroe@csworks.com 30-Nov-2004
+ Initial Version Created.
 
-// Dick Munroe munroe@csworks.com 01-Dec-2004
-// Forgot to check for cURL actually being in this instance of PHP.
+ Dick Munroe munroe@csworks.com 01-Dec-2004
+ Forgot to check for cURL actually being in this instance of PHP.
 
-// Dick Munroe (munroe@csworks.com) 07-Apr-2006
-// Fix tab characters.
-// Add utility function to return post string.
+ Dick Munroe (munroe@csworks.com) 07-Apr-2006
+ Fix tab characters.
+ Add utility function to return post string.
 
-// Richard W. Schlatter (richard@rth10260.info) 27-Apr-2006
-// Extend processing for headers when CURLOPT_FOLLOWLOCATION is also set.
-// Only the headers of the final page will be used to return parsed headers.
-// Add utility function to return array of all collected headers.
+ Richard W. Schlatter (richard@rth10260.info) 27-Apr-2006
+ Extend processing for headers when CURLOPT_FOLLOWLOCATION is also set.
+ Only the headers of the final page will be used to return parsed headers.
+ Add utility function to return array of all collected headers.
 
-// Dick Munroe (munroe@csworks.com) 01-May-2006
-// asPostString doesn't need to be an object specific method.
+ Dick Munroe (munroe@csworks.com) 01-May-2006
+ asPostString doesn't need to be an object specific method.
 
-// Dick Munroe (munroe@csworks.com) 02-May-2006
-// Not all versions of PHP allow returning of a reference to the result
-// of a function.
+ Dick Munroe (munroe@csworks.com) 02-May-2006
+ Not all versions of PHP allow returning of a reference to the result
+ of a function.
 
-// Richard W. Schlatter (richard@rth10260.info) 03-May-2006
-// For consistency, return an empty array if there aren't any headers
-// to be parsed.
+ Richard W. Schlatter (richard@rth10260.info) 03-May-2006
+ For consistency, return an empty array if there aren't any headers
+ to be parsed.
 
-// Richard W. Schlatter (richard@rth10260.info) 05-Jun-2006
-// Don't parse headers in the event of an error when executing a cURL request.
+ Richard W. Schlatter (richard@rth10260.info) 05-Jun-2006
+ Don't parse headers in the event of an error when executing a cURL request.
 
-// Dick Munroe (munroe@csworks.com) 17-Dec-2007 1.2.0
-// Add a function to parse post strings as this is frequently needed capability.
+ Dick Munroe (munroe@csworks.com) 17-Dec-2007 1.2.0
+ Add a function to parse post strings as this is frequently needed capability.
+*/
 
 if (0) {
 	// for IDE
