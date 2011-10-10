@@ -113,26 +113,24 @@ class Scorpio_Date_Core_ extends DateTime {
 		if ($time === true) {
 			list($microsecond, $timestamp) = explode(' ', microtime());
 
-			$microsecond = $this->_microsecond((string)$microsecond);
-			$microsecond = substr($microsecond, 1);
+			$ret[1] = $this->_microsecond((string)$microsecond);
+			$microsecond = substr($ret[1], 1);
 
 			$ret[0] = (string)$timestamp . (string)$microsecond;
-			$ret[1] = (string)$microsecond;
 		} elseif ($time !== true && $time > 0) {
 			if (strpos($time, ' ') === false) {
 				list($timestamp, $microsecond) = explode('.', $time);
 
-				$microsecond = $this->_microsecond($time);
+				$ret[1] = $this->_microsecond($time);
 			} else {
 				list($microsecond, $timestamp) = explode(' ', $time);
 
-				$microsecond = $this->_microsecond((string)$microsecond);
+				$ret[1] = $this->_microsecond((string)$microsecond);
 			}
 
-			$microsecond = substr($microsecond, 1);
+			$microsecond = substr($ret[1], 1);
 
 			$ret[0] = (string)$timestamp . (string)$microsecond;
-			$ret[1] = (string)$microsecond;
 		} elseif ($time === false && defined('SCORPIO_MICROTIME')) {
 			$ret = $this->_microtime(SCORPIO_MICROTIME);
 		}
