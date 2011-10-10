@@ -178,9 +178,12 @@ class Scorpio_Date_Core_ extends DateTime {
 	 * @return Scorpio_Date
 	 */
 	public function setTimestamp($unixtimestamp) {
-
+		/*
 		$_o = new scodate();
 		$this->_date[0] = $_o->timestamp($unixtimestamp);
+		*/
+		$_o = $this->_microtime($time);
+		$this->_date[0] = $_o[0];
 
   		parent::setTimestamp($this->_date[0]);
 
