@@ -60,10 +60,13 @@ class Scorpio_Date_Core_ extends DateTime {
 				&& $m[0] != ''
 			)
 		) {
+			/*
 			$_o = new scodate();
 			$this->_date = array();
 			$this->_date[0] = $_o->timestamp($time);
 			$this->_date[1] = $_o->microsecond();
+			*/
+			$this->_date = $this->_microtime($time);
 
 			unset($_o);
 
