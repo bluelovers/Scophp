@@ -100,7 +100,7 @@ class Scorpio_Hook_Core_ {
 			return false;
 		}
 
-		return true;
+		return ( count( self::$handlers[$event] ) != 0 ) ? true : false;
 	}
 
 	/**
