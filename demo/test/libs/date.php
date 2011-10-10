@@ -12,6 +12,8 @@ foreach (array(
 	'S'.microtime(),
 	'S'.time(),
 	'now',
+	'2011-10-11 03:48:26',
+	'2011-10-11 03:48:26 0.821526',
 ) as $d) {
 	echo "\n".$d."\n";
 
@@ -28,6 +30,8 @@ foreach (array(
 		$r,
 		$m1,
 	));
+
+	var_dump(@@strtotime($d));
 }
 
 /*
