@@ -65,10 +65,14 @@ class Scorpio_Hook_Core_ {
 	}
 
 	protected static function _support() {
+		static $_support;
+
+		if ($_support === null) {
 		$_support = array();
 		$_support['closure'] = version_compare(PHP_VERSION, '5.3.0', '>=') ? true : false;
 		$_support['Scorpio_Exception'] = class_exists('Scorpio_Exception');
 		$_support['Scorpio_Event'] = class_exists('Scorpio_Event');
+		}
 
 		return $_support;
 	}
