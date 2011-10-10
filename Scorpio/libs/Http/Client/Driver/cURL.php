@@ -65,11 +65,10 @@
 
 if (0) {
 	// for IDE
-	class Scorpio_Helper_Curl extends Scorpio_Helper_Curl_Core {}
-	class scocurl extends Scorpio_Helper_Curl {}
+	class Scorpio_Http_Client_Driver_cURL extends Scorpio_Http_Client_Driver_cURL_Core_ {}
 }
 
-class Scorpio_Helper_Curl_Core {
+class Scorpio_Http_Client_Driver_cURL_Core_ {
 
 	protected $_scorpio_ = array(
 		/**
