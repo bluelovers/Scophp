@@ -59,6 +59,7 @@ class Scorpio_Date_Core_ extends DateTime {
 
 		if (
 			is_float($time)
+			|| is_int($time)
 			|| (
 				/*
 				preg_match('/(?|(\d{10})|(\d{10})?(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m)
