@@ -138,7 +138,7 @@ class Scorpio_Hook_Core_ {
 
 		self::$event = $event;
 
-		$_cache_handlers = self::get($event);
+		$_cache_handlers = &self::get($event);
 
 		foreach (self::$handlers[$event] as $index => $hook) {
 
