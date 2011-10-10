@@ -40,6 +40,9 @@ class Scorpio_helper_db_mysql_Core_ {
 
 	/**
 	 * Get number of affected rows in previous MySQL operation
+	 * Get the number of affected rows by the last INSERT, UPDATE, REPLACE or DELETE query associated with link_identifier
+	 *
+	 * @param resource $link_identifier
 	 */
 	function &affected_rows() {
 		$args = func_get_args();
