@@ -1,15 +1,8 @@
 <?
 
 /**
- *
- * $HeadURL$
- * $Revision$
- * $Author$
- * $Date$
- * $Id$
- *
  * @author bluelovers
- * @copyright 2010
+ * @copyright 2011
  */
 
 if (0) {
@@ -46,27 +39,47 @@ class Scorpio_Date_Core_ extends DateTime {
 	 */
 	static $D_TIMEZONE	= 'Asia/Taipei';
 
-	public function __construct($time = 'now', $timezone = null) {
-		if (!isset($time)) $time = 'now';
+	public static function &instance($time = 'now', $timezone = null) {
+		$_o = new Scorpio_Date($time, $timezone);
+		return $_o;
+	}
 
+	public function __construct($time = 'now', $timezone = null) {
 		$timezone = Scorpio_Date::_createDateTimeZone($timezone);
 
-		if ($time == 'now') $time = microtime(true);
+		if (
+			!isset($time)
+			|| $time == 'now'
+		) {
+			/*
+			$time = 'now';
+			*/
+			$time = microtime(true);
+		}
 
 		if (
 			is_float($time)
+			|| is_int($time)
 			|| (
+				/*
 				preg_match('/(?|(\d{10})|(\d{10})?(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m)
 				&& $m[0] != ''
+				*/
+				$this->_preg_match_timestamp($time, $m)
 			)
 		) {
+			/*
 			$_o = new scodate();
 			$this->_date = array();
 			$this->_date[0] = $_o->timestamp($time);
 			$this->_date[1] = $_o->microsecond();
+			*/
+			$_o = $this->_microtime($time);
+			$this->_date = $_o;
 
 			unset($_o);
 
+			/*
 			$_o = new DateTime(gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0]), Scorpio_Date::_createDateTimeZone(Scorpio_Date::B_TIMEZONE));
 
 			$offset = $timezone->getOffset($_o);
@@ -74,6 +87,15 @@ class Scorpio_Date_Core_ extends DateTime {
 			unset($_o);
 
 			$time = gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0] + $offset);
+			*/
+
+			$_o = new DateTime(gmdate(Scorpio_Date::SCO_ISO8601, $this->_date[0]), Scorpio_Date::_createDateTimeZone(Scorpio_Date::B_TIMEZONE));
+
+			$_o->setTimezone($timezone);
+
+			$time = $_o->format(Scorpio_Date::SCO_ISO8601);
+
+			unset($_o);
 		}
 
 		parent::__construct($time, $timezone);
@@ -86,6 +108,75 @@ class Scorpio_Date_Core_ extends DateTime {
 		}
 
 		return $this;
+	}
+
+	function _preg_match_timestamp($time, &$m) {
+		/*
+		$ret = preg_match('/(?|(\d{10})|(\d{10})(?:\.(\d*))?|(\d{10})?(?:\.(\d*))|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m);
+		*/
+		$ret = ($time != 'now') && preg_match('/(?|(\d{10})|(\d{10})(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m);
+		if ($ret && empty($m[0])) {
+			$ret = false;
+		} elseif ($ret && (
+			isset($m[2])
+		)) {
+			$ret = (strlen($m[1]) == 10 || strlen($m[2]) == 10);
+		}
+
+		return (bool)$ret;
+	}
+
+	function _microsecond($update) {
+		if ($update === true) {
+			$_o = $this->_microtime(true);
+
+			return $_o[1];
+		} elseif ($update > 0) {
+			if ($update > 1) {
+				list($timestamp) = explode('.', (string)$update);
+
+				$microsecond = $update - (int)$timestamp;
+			} else {
+				$microsecond = $update;
+			}
+
+			$microsecond = substr($microsecond, 0, 10);
+
+			return (string)$microsecond;
+		} else {
+			return '0';
+		}
+	}
+
+	function _microtime($time) {
+		$ret = array(0, 0);
+
+		if ($time === true) {
+			list($microsecond, $timestamp) = explode(' ', microtime());
+
+			$ret[1] = $this->_microsecond((string)$microsecond);
+			$microsecond = substr($ret[1], 1);
+
+			$ret[0] = (string)$timestamp . (string)$microsecond;
+		} elseif ($time !== true && $time > 0) {
+			if (is_float($time) || strpos($time, ' ') === false) {
+				list($timestamp, $microsecond) = explode('.', $time);
+
+				$ret[1] = $this->_microsecond($time);
+			} else {
+				list($microsecond, $timestamp) = explode(' ', $time);
+
+				$ret[1] = $this->_microsecond((string)$microsecond);
+			}
+
+			$microsecond = substr($ret[1], 1);
+
+			$ret[0] = (string)$timestamp . (string)$microsecond;
+		} elseif ($time === false && defined('SCORPIO_MICROTIME')) {
+			$ret = $this->_microtime(SCORPIO_MICROTIME);
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -126,18 +217,29 @@ class Scorpio_Date_Core_ extends DateTime {
 	 * @return Scorpio_Date
 	 */
 	public function setTimestamp($unixtimestamp) {
-
+		/*
 		$_o = new scodate();
 		$this->_date[0] = $_o->timestamp($unixtimestamp);
+		*/
+		if ($_is_int = is_int($unixtimestamp)) {
+			$this->_date[0] = $unixtimestamp;
+		} else {
+			$_o = $this->_microtime($unixtimestamp);
+			$this->_date[0] = $_o[0];
+		}
 
   		parent::setTimestamp($this->_date[0]);
 
-  		$timestamp = parent::getTimestamp();
-
-  		if ((string)$this->_date[0] !== (string)$timestamp) {
-  			$this->_date[1] = $_o->microsecond();
-		} else {
+		if ($_is_int) {
 			$this->_date[0] = $this->getMicrotime();
+		} else {
+	  		$timestamp = parent::getTimestamp();
+
+	  		if ((string)$this->_date[0] !== (string)$timestamp) {
+	  			$this->_date[1] = $_o[1];
+			} else {
+				$this->_date[0] = $this->getMicrotime();
+			}
 		}
 
   		return $this;
@@ -154,9 +256,13 @@ class Scorpio_Date_Core_ extends DateTime {
 	 * @return Scorpio_Date
 	 */
 	public function setMicrosecond($microsecond) {
+		/*
 		$_o = new scodate();
 		$_o->timestamp($microsecond);
 		$this->_date[1] = $_o->microsecond();;
+		*/
+		$_o = $this->_microtime($microsecond);
+		$this->_date[1] = $_o[1];
 
 		return $this;
 	}
@@ -307,7 +413,8 @@ class Scorpio_Date_Core_ extends DateTime {
 		if (!isset($timezone)) $timezone = Scorpio_Date::$D_TIMEZONE;
 
 		if (
-			!is_a($timezone, 'DateTimeZone')
+			is_string($timezone)
+			|| !is_a($timezone, 'DateTimeZone')
 		) {
 			if (class_exists('Scorpio_Date_Zone')) {
 				$timezone = new Scorpio_Date_Zone($timezone);
