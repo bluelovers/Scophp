@@ -91,6 +91,9 @@ class Scorpio_helper_db_mysql_Core_ {
 
 	/**
 	 * Create a MySQL database
+	 *
+	 * @param string $database_name
+	 * @param [ resource $link_identifier ]
 	 */
 	function &create_db() {
 		$args = func_get_args();
