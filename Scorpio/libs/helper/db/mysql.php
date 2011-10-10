@@ -19,7 +19,7 @@ class Scorpio_helper_db_mysql_Core_ {
 	public static function &instance() {
 		$class = __CLASS__;
 
-		if (!isset($this->$instances[$class])) {
+		if (!isset(self::$instances[$class])) {
 			self::$instances[$class] = new $class;
 		}
 
