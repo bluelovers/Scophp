@@ -100,12 +100,14 @@ class Scorpio_Date_Core_ extends DateTime {
 	}
 
 	function _preg_match_timestamp($time, &$m) {
+		/*
 		$ret = preg_match('/(?|(\d{10})|(\d{10})(?:\.(\d*))?|(\d{10})?(?:\.(\d*))|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m);
+		*/
+		$ret = preg_match('/(?|(\d{10})|(\d{10})(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m);
 		if ($ret && empty($m[0])) {
 			$ret = false;
 		} elseif ($ret && (
-			empty($m[1])
-			|| empty($m[2])
+			isset($m[2])
 		)) {
 			$ret = (strlen($m[1]) == 10 || strlen($m[2]) == 10);
 		}
@@ -208,8 +210,12 @@ class Scorpio_Date_Core_ extends DateTime {
 		$_o = new scodate();
 		$this->_date[0] = $_o->timestamp($unixtimestamp);
 		*/
-		$_o = $this->_microtime($unixtimestamp);
-		$this->_date[0] = $_o[0];
+		if (is_int($unixtimestamp)) {
+			$this->_date[0] = $unixtimestamp;
+		} else {
+			$_o = $this->_microtime($unixtimestamp);
+			$this->_date[0] = $_o[0];
+		}
 
   		parent::setTimestamp($this->_date[0]);
 
