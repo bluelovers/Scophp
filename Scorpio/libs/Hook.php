@@ -288,6 +288,12 @@ class Scorpio_Hook_Core_ {
 				} catch ( Scorpio_Hook_Exception $e ) {
 					$badhookmsg = $e->getMessage();
 				}
+			} elseif ($_support['Scorpio_Exception']) {
+				try {
+					$retval = call_user_func_array( $callback, $hook_args );
+				} catch ( Scorpio_Exception $e ) {
+					$badhookmsg = $e->getMessage();
+				}
 			} else {
 				try {
 					$retval = call_user_func_array( $callback, $hook_args );
