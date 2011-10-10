@@ -77,7 +77,11 @@ foreach (array(
 
 $_o = new DateTime($d, new DateTimeZone('Asia/Taipei'));
 
-	var_dump($_o);
+var_dump($_o);
+
+$_o->setTimezone(new DateTimeZone('GMT+0'));
+
+var_dump($_o);
 
 function profile($dump = FALSE) {
     static $profile;
