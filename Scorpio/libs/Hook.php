@@ -42,7 +42,7 @@ class Scorpio_Hook_Core_ {
 	/**
 	 * save all try called hook
 	 */
-	protected static $calevenlist = array();
+	protected static $handlers_called = array();
 
 	const RET_FAILED = null;
 //	const RET_FAILED = false;
@@ -116,7 +116,7 @@ class Scorpio_Hook_Core_ {
 	public static function execute($event, $args = array(), $iscall = 0) {
 		$_support = self::_support();
 
-		Scorpio_Hook::$calevenlist[$event] += 1;
+		Scorpio_Hook::$handlers_called[$event] += 1;
 
 		// Return quickly in the most common case
 		if ( !isset( self::$handlers[$event] ) ) {
