@@ -7,6 +7,10 @@
  * @example include_once {path}.'Scorpio/Bootstrap.php';
  */
 
+if (!defined('SCORPIO_MICROTIME')) {
+	define('SCORPIO_MICROTIME', microtime(true));
+}
+
 if (!defined('SCORPIO_SYSPATH')) {
 	include_once dirname(__FILE__).'/libs/File.php';
 
