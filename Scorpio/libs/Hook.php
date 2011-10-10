@@ -376,7 +376,9 @@ class Scorpio_Hook_Core_ {
 		if (Scorpio_Hook::$throw_exception
 			&& strpos( $errstr, 'expected to be a reference, value given' ) !== false
 		) {
-			if ($_support['Scorpio_Exception']) {
+			if ($_support['Scorpio_Hook_Exception']) {
+				throw new Scorpio_Hook_Exception( $errstr );
+			} elseif ($_support['Scorpio_Exception']) {
 				throw new Scorpio_Exception( $errstr );
 			}
 		}
