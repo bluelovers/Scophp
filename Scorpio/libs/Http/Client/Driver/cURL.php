@@ -230,7 +230,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 		$this->setopt(CURLOPT_HEADER, false) ;
 		$this->setopt(CURLOPT_RETURNTRANSFER, true) ;
 
-		static::_self_set(&$this);
+
 
 		return $this;
 	}
@@ -273,7 +273,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 */
 
 	public function exec($theURL = null) {
-		static::_self_set(&$this);
+
 
 		$this->_clear(1);
 
@@ -363,7 +363,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	}
 
 	public function getExec($detial = false) {
-		static::_self_set(&$this);
+
 
 		return $detial ? array(
 			'header' => $this->getHeader(),
@@ -386,7 +386,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 */
 
 	public function getHeader($theHeader = null) {
-		static::_self_set(&$this);
+
 
 		// There can't be any headers to check if there weren't any headers
 		// returned (happens in the event of errors).
@@ -416,7 +416,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 */
 
 	public function getOption($theOption) {
-		static::_self_set(&$this);
+
 
 		if (isset($this->_scorpio_['options'][$theOption])) {
 			return $this->_scorpio_['options'][$theOption] ;
@@ -433,7 +433,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 */
 
 	public function hasError() {
-		static::_self_set(&$this);
+
 
 		if (isset($this->_scorpio_['status']['error'])) {
 			return (empty($this->_scorpio_['status']['error']) ? false : $this->_scorpio_['status']['error']) ;
@@ -460,7 +460,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 */
 
 	public function parseHeader($theHeader) {
-		static::_self_set(&$this);
+
 
 		$this->_scorpio_['caseless'] = array() ;
 
@@ -497,7 +497,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 */
 
 	public function getStatus($theField = null) {
-		static::_self_set(&$this);
+
 
 		if (empty($theField)) {
 			return $this->_scorpio_['status'] ;
@@ -575,7 +575,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	}
 
 	public function getSetting($theOption) {
-		static::_self_set(&$this);
+
 
 		if (isset($this->_scorpio_['setting'][$theOption])) {
 			return $this->_scorpio_['setting'][$theOption] ;
@@ -646,7 +646,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	 */
 
 	public function getFollowedHeaders() {
-		static::_self_set(&$this);
+
 
 		$theHeaders = array() ;
 		if ($this->_scorpio_['followed']) {
@@ -660,7 +660,7 @@ class Scorpio_Http_Client_Driver_cURL_Core_ {
 	}
 
 	public function cookies($chkmode = false) {
-		static::_self_set(&$this);
+
 
 		static $cookies;
 
