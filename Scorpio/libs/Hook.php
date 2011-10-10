@@ -350,7 +350,7 @@ class Scorpio_Hook_Core_ {
 	 */
 	public static function hookErrorHandler( $errno, $errstr ) {
 		if ( strpos( $errstr, 'expected to be a reference, value given' ) !== false ) {
-			throw new MWHookException( $errstr );
+			throw new Scorpio_Exception( $errstr );
 		}
 		return false;
 	}
