@@ -66,7 +66,8 @@ class Scorpio_Date_Core_ extends DateTime {
 			$this->_date[0] = $_o->timestamp($time);
 			$this->_date[1] = $_o->microsecond();
 			*/
-			$this->_date = $this->_microtime($time);
+			$_o = $this->_microtime($time);
+			$this->_date = $_o;
 
 			unset($_o);
 
