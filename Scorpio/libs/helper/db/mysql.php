@@ -49,8 +49,11 @@ class Scorpio_helper_db_mysql_Core_ {
 
 		return self::__exec('affected_rows', $args);
 	}
+
 	/**
 	 * Returns the name of the character set
+	 *
+	 * @param resource $link_identifier
 	 */
 	function &client_encoding() {
 		$args = func_get_args();
