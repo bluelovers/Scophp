@@ -209,9 +209,13 @@ class Scorpio_Date_Core_ extends DateTime {
 	 * @return Scorpio_Date
 	 */
 	public function setMicrosecond($microsecond) {
+		/*
 		$_o = new scodate();
 		$_o->timestamp($microsecond);
 		$this->_date[1] = $_o->microsecond();;
+		*/
+		$_o = $this->_microtime($time);
+		$this->_date[1] = $_o[1];
 
 		return $this;
 	}
