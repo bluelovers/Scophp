@@ -220,7 +220,7 @@ class Scorpio_Date_Core_ extends DateTime {
   		parent::setTimestamp($this->_date[0]);
 
 		if ($_is_int) {
-
+			$this->_date[0] = $this->getMicrotime();
 		} else {
 	  		$timestamp = parent::getTimestamp();
 
