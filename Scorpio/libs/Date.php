@@ -104,7 +104,7 @@ class Scorpio_Date_Core_ extends DateTime {
 		/*
 		$ret = preg_match('/(?|(\d{10})|(\d{10})(?:\.(\d*))?|(\d{10})?(?:\.(\d*))|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m);
 		*/
-		$ret = preg_match('/(?|(\d{10})|(\d{10})(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m);
+		$ret = ($time != 'now') && preg_match('/(?|(\d{10})|(\d{10})(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m);
 		if ($ret && empty($m[0])) {
 			$ret = false;
 		} elseif ($ret && (
