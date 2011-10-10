@@ -140,7 +140,7 @@ class Scorpio_Hook_Core_ {
 
 		$_cache_handlers = &self::get($event);
 
-		foreach ($_cache_handlers as $index => $hook) {
+		foreach ((array)$_cache_handlers as $index => $hook) {
 
 			$object = null;
 			$method = null;
