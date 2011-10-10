@@ -90,9 +90,16 @@ class Scorpio_Date_Core_ extends DateTime {
 
 	function _preg_match_timestamp($time, &$m) {
 		$ret = preg_match('/(?|(\d{10})|(\d{10})?(?:\.(\d*))?|(?:0+\.(\d+))\s+(\d+))(?>$)/', $time, $m);
-		if ($ret) $ret = !empty($m[0]);
+		if ($ret && empty($m[0])) $ret = false;
 
-		return $ret;
+		if ($ret && (
+			empty($m[1])
+			|| empty($m[2])
+		)) {
+			$ret = (strlen($m[1]) == 10 || strlen($m[2]) == 10);
+		}
+
+		return (bool)$ret;
 	}
 
 	function _microsecond($update) {
