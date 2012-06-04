@@ -169,7 +169,7 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 		return $this;
 	}
 
-	public function pushAutoloader($callback, $namespace, $allow_self = false, $_append = '_')
+	protected function _fixNamespace($namespace, $allow_self = false, $_append = '_')
 	{
 		if ($allow_self && $_append)
 		{
@@ -190,11 +190,20 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 			call_user_func_array('array_push', $add);
 		}
 
+		return $namespace;
+	}
+
+	public function pushAutoloader($callback, $namespace, $allow_self = false, $_append = '_')
+	{
+		self::_fixNamespace(&$namespace, $allow_self, $_append);
+
 		return call_user_func(array('parent', __FUNCTION__ ), $callback, $namespace);
 	}
 
-	public function unshiftAutoloader($callback, $namespace, $allow_self, $_append = '_')
+	public function unshiftAutoloader($callback, $namespace, $allow_self = false, $_append = '_')
 	{
+		self::_fixNamespace(&$namespace, $allow_self, $_append);
+
 		return call_user_func(array('parent', __FUNCTION__ ), $callback, $namespace);
 	}
 
