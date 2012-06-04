@@ -105,9 +105,7 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 
 		foreach ($self->getRegisteredNamespaces() as $ns)
 		{
-			$ns_ = rtrim($ns, '_');
-
-			if ($class == $ns_ || 0 === strpos($class, $ns))
+			if (0 === strpos($class, $ns))
 			{
 				$autoloaders = $self->getNamespaceAutoloaders($ns);
 				break;
@@ -116,12 +114,8 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 
 		if (empty($autoloaders) || empty($ns)) return false;
 
-		// 解決 xdebug 會強制出現錯誤訊息的問題
-		//ob_start();
-
 		foreach ($autoloaders as $autoloader)
 		{
-
 			if ($autoloader instanceof Zend_Loader_Autoloader_Interface)
 			{
 				if ($autoloader->autoload($class))
@@ -156,8 +150,6 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 			}
 		}
 
-		//ob_end_clean();
-
 		return false;
 	}
 
@@ -177,31 +169,33 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 		return $this;
 	}
 
-	/**
-	 * Append an autoloader to the autoloader stack
-	 *
-	 * @param  object|array|string $callback PHP callback or Zend_Loader_Autoloader_Interface implementation
-	 * @param  string|array $namespace Specific namespace(s) under which to register callback
-	 * @return Zend_Loader_Autoloader
-	 */
-	public function pushAutoloader($callback, $namespace)
+	public function pushAutoloader($callback, $namespace, $allow_self = false, $_append = '_')
 	{
-		parent::pushAutoloader($callback, $namespace);
+		if ($allow_self && $_append)
+		{
+			$add = array();
 
-		return $this;
+			$namespace = (array )$namespace;
+
+			$add[] = &$namespace;
+
+			foreach ($namespace as $ns)
+			{
+				if (substr($ns, $i = 0 - strlen($_append)) === $_append)
+				{
+					$add[] = substr($ns, 0, $i);
+				}
+			}
+
+			call_user_func_array('array_push', $add);
+		}
+
+		return call_user_func(array('parent', __FUNCTION__ ), $callback, $namespace);
 	}
 
-	/**
-	 * Add an autoloader to the beginning of the stack
-	 *
-	 * @param  object|array|string $callback PHP callback or Zend_Loader_Autoloader_Interface implementation
-	 * @param  string|array $namespace Specific namespace(s) under which to register callback
-	 * @return Zend_Loader_Autoloader
-	 */
-	public function unshiftAutoloader($callback, $namespace)
+	public function unshiftAutoloader($callback, $namespace, $allow_self, $_append = '_')
 	{
-		parent::pushAutoloader($callback, $namespace);
-
-		return $this;
+		return call_user_func(array('parent', __FUNCTION__ ), $callback, $namespace);
 	}
+
 }
