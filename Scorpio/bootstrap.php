@@ -7,6 +7,8 @@
 
 error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
+echo '<pre>';
+
 //$_SCORPIO_KEY = md5(uniqid('get_included_files', true));
 //$_ENV[$_SCORPIO_KEY]['get_included_files'] = get_included_files();
 
@@ -30,6 +32,6 @@ else
 Zend_Loader::loadClass('Sco_Loader_Autoloader');
 
 Sco_Loader_Autoloader::getInstance()
-	->pushAutoloader(SCORPIO_SYSPATH, 'Sco_')
+	->pushAutoloader(SCORPIO_SYSPATH, 'Sco_', true)
 	->setDefaultAutoloader(array('Sco_Loader', 'loadClass'));
 ;
