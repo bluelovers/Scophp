@@ -10,34 +10,26 @@ class Sco_Loader extends Zend_Loader
 
 	protected static $_suppressNotFoundWarnings = false;
 
-	/**
-	 * Loads a class from a PHP file.  The filename must be formatted
-	 * as "$class.php".
-	 *
-	 * If $dirs is a string or an array, it will search the directories
-	 * in the order supplied, and attempt to load the first matching file.
-	 *
-	 * If $dirs is null, it will split the class name at underscores to
-	 * generate a path hierarchy (e.g., "Zend_Example_Class" will map
-	 * to "Zend/Example/Class.php").
-	 *
-	 * If the file was not found in the $dirs, or if no $dirs were specified,
-	 * it will attempt to load it from PHP's include_path.
-	 *
-	 * @param string $class      - The full class name of a Zend component.
-	 * @param string|array $dirs - OPTIONAL Either a path or an array of paths
-	 *                             to search.
-	 * @return void
-	 * @throws Zend_Exception
-	 */
-	public static function _loadClass($class, $dirs = null)
+	public function suppressNotFoundWarnings($flag = null)
 	{
-		if ((null !== $dirs) && !is_string($dirs) && !is_array($dirs))
+		if (null === $flag)
 		{
-			require_once 'Zend/Exception.php';
-			throw new Zend_Exception('Directory argument must be a string or an array');
+			return self::$_suppressNotFoundWarnings;
 		}
 
+		$old = self::$_suppressNotFoundWarnings;
+
+		self::$_suppressNotFoundWarnings = (bool)$flag;
+
+		return $old;
+	}
+
+	protected static function _loadClass($class, $dirs, $noerror = false)
+	{
+		// Autodiscover the path from the class name
+		// Implementation is PHP namespace-aware, and based on
+		// Framework Interop Group reference implementation:
+		// http://groups.google.com/group/php-standards/web/psr-0-final-proposal
 		$className = ltrim($class, '\\');
 		$file = '';
 		$namespace = '';
@@ -45,21 +37,18 @@ class Sco_Loader extends Zend_Loader
 		{
 			$namespace = substr($className, 0, $lastNsPos);
 			$className = substr($className, $lastNsPos + 1);
-			$file = str_replace('\\', DIR_SEP, $namespace) . DIR_SEP;
+			$file = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
 		}
-		$file .= str_replace('_', DIR_SEP, $className) . '.php';
+		$file .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
 
 		if (!empty($dirs))
 		{
 			// use the autodiscovered path
-
 			$dirPath = dirname($file);
-
 			if (is_string($dirs))
 			{
 				$dirs = explode(PATH_SEPARATOR, $dirs);
 			}
-
 			foreach ($dirs as $key => $dir)
 			{
 				if ($dir == '.')
@@ -69,43 +58,57 @@ class Sco_Loader extends Zend_Loader
 				else
 				{
 					$dir = rtrim($dir, '\\/');
-					$dirs[$key] = $dir . DIR_SEP . $dirPath;
+					$dirs[$key] = $dir . DIRECTORY_SEPARATOR . $dirPath;
 				}
 			}
 			$file = basename($file);
-
-			self::_loadFile($file, $dirs, true);
+			$return = self::loadFile($file, $dirs, true, $noerror);
 		}
 		else
 		{
-			self::_loadFile($file, null, true);
+			$return = self::loadFile($file, null, true, $noerror);
 		}
+
+		return array(
+			$return,
+			$file,
+			$dirs);
 	}
 
-	/**
-	 * Loads a PHP file.  This is a wrapper for PHP's include() function.
-	 *
-	 * $filename must be the complete filename, including any
-	 * extension such as ".php".  Note that a security check is performed that
-	 * does not permit extended characters in the filename.  This method is
-	 * intended for loading Zend Framework files.
-	 *
-	 * If $dirs is a string or an array, it will search the directories
-	 * in the order supplied, and attempt to load the first matching file.
-	 *
-	 * If the file was not found in the $dirs, or if no $dirs were specified,
-	 * it will attempt to load it from PHP's include_path.
-	 *
-	 * If $once is TRUE, it will use include_once() instead of include().
-	 *
-	 * @param  string        $filename
-	 * @param  string|array  $dirs - OPTIONAL either a path or array of paths
-	 *                       to search.
-	 * @param  boolean       $once
-	 * @return boolean
-	 * @throws Zend_Exception
-	 */
-	public static function _loadFile($filename, $dirs = null, $once = false)
+	public static function loadClass($class, $dirs = null, $ns = null)
+	{
+		if (class_exists($class, false) || interface_exists($class, false))
+		{
+			return;
+		}
+
+		if ((null !== $dirs) && !is_string($dirs) && !is_array($dirs))
+		{
+			require_once 'Zend/Exception.php';
+			throw new Zend_Exception('Directory argument must be a string or an array');
+		}
+
+		list($return, $file, $dirs) = self::_loadClass($class, $dirs, $chk = ($ns && substr($class, 0, $_len = strlen($ns)) == $ns));
+
+		if (!$return && $chk && !class_exists($class, false) && !interface_exists($class, false))
+		{
+			list($return, $file, $dirs) = self::_loadClass(substr($class, $_len), $dirs);
+		}
+
+		if (class_exists($class, false) || interface_exists($class, false))
+		{
+			return true;
+		}
+		elseif (!self::$_suppressNotFoundWarnings)
+		{
+			require_once 'Zend/Exception.php';
+			throw new Zend_Exception("File \"$file\" does not exist or class \"$class\" was not found in the file");
+		}
+
+		return false;
+	}
+
+	public static function loadFile($filename, $dirs = null, $once = false, $noerror = false)
 	{
 		self::_securityCheck($filename);
 
@@ -119,30 +122,35 @@ class Sco_Loader extends Zend_Loader
 			{
 				$dirs = implode(PATH_SEPARATOR, $dirs);
 			}
-
-			if (strpos($dirs, PATH_SEPARATOR) !== false)
-			{
-				$incPath = get_include_path();
-				set_include_path($dirs . PATH_SEPARATOR . $incPath);
-			}
-			else
-			{
-				$filename = $dirs . DIR_SEP . $filename;
-			}
+			$incPath = get_include_path();
+			set_include_path($dirs . PATH_SEPARATOR . $incPath);
 		}
 
 		/**
 		 * Try finding for the plain filename in the include_path.
 		 */
-		if (($incPath && self::isReadable($filename)) || file_exists($filename))
+		$return = false;
+
+		if ($noerror)
 		{
 			if ($once)
 			{
-				include_once $filename;
+				$return = @include_once ($filename);
 			}
 			else
 			{
-				include $filename;
+				$return = @include ($filename);
+			}
+		}
+		else
+		{
+			if ($once)
+			{
+				$return = include_once ($filename);
+			}
+			else
+			{
+				$return = include ($filename);
 			}
 		}
 
@@ -154,61 +162,7 @@ class Sco_Loader extends Zend_Loader
 			set_include_path($incPath);
 		}
 
-		return true;
-	}
-
-	public static function loadClass($class, $dirs = null, $ns = null)
-	{
-		if (class_exists($class, false) || interface_exists($class, false))
-		{
-			return;
-		}
-
-		self::_loadClass($class, $dirs);
-
-		if (!class_exists($class, false) && !interface_exists($class, false))
-		{
-			if ($ns)
-			{
-				$_len = strlen($ns);
-
-				if ($ns == substr($class, 0, $_len))
-				{
-					$_class = substr($class, $_len);
-
-					self::_loadClass($_class, $dirs);
-				}
-			}
-		}
-
-		if (!class_exists($class, false) && !interface_exists($class, false))
-		{
-
-			if (!self::$_suppressNotFoundWarnings)
-			{
-				throw new Zend_Exception("class \"$class\" was not found in the file");
-			}
-
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-
-	public function suppressNotFoundWarnings($flag = null)
-	{
-		if (null === $flag)
-		{
-			return self::$_suppressNotFoundWarnings;
-		}
-
-		$old = self::$_suppressNotFoundWarnings;
-
-		self::$_suppressNotFoundWarnings = (bool)$flag;
-
-		return $old;
+		return $return;
 	}
 
 }
