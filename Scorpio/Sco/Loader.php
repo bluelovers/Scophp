@@ -78,9 +78,14 @@ class Sco_Loader extends Zend_Loader
 			$dirs);
 	}
 
+	public static function existsClass($class, $autoload = true)
+	{
+		return (bool)(class_exists($class, $autoload) || interface_exists($class, $autoload));
+	}
+
 	public static function loadClass($class, $dirs = null, $ns = null, $class_sep = self::CLASS_SEP)
 	{
-		if (class_exists($class, false) || interface_exists($class, false))
+		if (self::existsClass($class, false))
 		{
 			return;
 		}
@@ -91,14 +96,16 @@ class Sco_Loader extends Zend_Loader
 			throw new Zend_Exception('Directory argument must be a string or an array');
 		}
 
-		list($return, $file, $dirs) = self::_loadClass($class, $dirs, $class_sep, $chk = ($ns && substr($class, 0, $_len = strlen($ns)) == $ns));
+		$chk = false;
 
-		if (!$return && $chk && !class_exists($class, false) && !interface_exists($class, false))
+		list($return, $file) = self::_loadClass($class, $dirs, $class_sep, $chk = ($ns && substr($class, 0, $_len = strlen($ns)) == $ns));
+
+		if ($chk && !self::existsClass($class, false))
 		{
 			list($return, $file, $dirs) = self::_loadClass(substr($class, $_len), $dirs, $class_sep);
 		}
 
-		if (class_exists($class, false) || interface_exists($class, false))
+		if (self::existsClass($class, false))
 		{
 			return true;
 		}
@@ -111,7 +118,7 @@ class Sco_Loader extends Zend_Loader
 		return false;
 	}
 
-	public static function loadFile($filename, $dirs = null, $once = false, $noerror = false)
+	public static function loadFile($filename, $dirs = null, $once = false, $noerror = false, $require = false)
 	{
 		self::_securityCheck($filename);
 
@@ -136,24 +143,52 @@ class Sco_Loader extends Zend_Loader
 
 		if ($noerror)
 		{
-			if ($once)
+			if ($require)
 			{
-				$return = @include_once ($filename);
+				if ($once)
+				{
+					$return = @require_once ($filename);
+				}
+				else
+				{
+					$return = @require ($filename);
+				}
 			}
 			else
 			{
-				$return = @include ($filename);
+				if ($once)
+				{
+					$return = @include_once ($filename);
+				}
+				else
+				{
+					$return = @include ($filename);
+				}
 			}
 		}
 		else
 		{
-			if ($once)
+			if ($require)
 			{
-				$return = include_once ($filename);
+				if ($once)
+				{
+					$return = require_once ($filename);
+				}
+				else
+				{
+					$return = require ($filename);
+				}
 			}
 			else
 			{
-				$return = include ($filename);
+				if ($once)
+				{
+					$return = include_once ($filename);
+				}
+				else
+				{
+					$return = include ($filename);
+				}
 			}
 		}
 
