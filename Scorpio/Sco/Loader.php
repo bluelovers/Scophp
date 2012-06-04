@@ -45,9 +45,9 @@ class Sco_Loader extends Zend_Loader
 		{
 			$namespace = substr($className, 0, $lastNsPos);
 			$className = substr($className, $lastNsPos + 1);
-			$file = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
+			$file = str_replace('\\', DIR_SEP, $namespace) . DIR_SEP;
 		}
-		$file .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+		$file .= str_replace('_', DIR_SEP, $className) . '.php';
 
 		if (!empty($dirs))
 		{
@@ -69,7 +69,7 @@ class Sco_Loader extends Zend_Loader
 				else
 				{
 					$dir = rtrim($dir, '\\/');
-					$dirs[$key] = $dir . DIRECTORY_SEPARATOR . $dirPath;
+					$dirs[$key] = $dir . DIR_SEP . $dirPath;
 				}
 			}
 			$file = basename($file);
@@ -127,7 +127,7 @@ class Sco_Loader extends Zend_Loader
 			}
 			else
 			{
-				$filename = $dirs . DIRECTORY_SEPARATOR . $filename;
+				$filename = $dirs . DIR_SEP . $filename;
 			}
 		}
 
@@ -186,7 +186,7 @@ class Sco_Loader extends Zend_Loader
 
 			if (!self::$_suppressNotFoundWarnings)
 			{
-				throw new Zend_Exception("File \"$file\" does not exist or class \"$class\" was not found in the file");
+				throw new Zend_Exception("class \"$class\" was not found in the file");
 			}
 
 			return false;
