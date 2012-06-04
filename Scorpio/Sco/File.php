@@ -33,7 +33,7 @@ class Sco_File
 			'$1'), trim($url));
 	}
 
-	protected function _path_join()
+	protected static function _path_join()
 	{
 		$args = func_get_args();
 
