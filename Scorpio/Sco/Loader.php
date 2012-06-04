@@ -8,6 +8,9 @@
 class Sco_Loader extends Zend_Loader
 {
 
+	const NS_SEP = '\\';
+	const CLASS_SEP = '_';
+
 	protected static $_suppressNotFoundWarnings = false;
 
 	public function suppressNotFoundWarnings($flag = null)
@@ -24,22 +27,22 @@ class Sco_Loader extends Zend_Loader
 		return $old;
 	}
 
-	protected static function _loadClass($class, $dirs, $noerror = false)
+	protected static function _loadClass($class, $dirs, $class_sep = self::CLASS_SEP, $noerror = false)
 	{
 		// Autodiscover the path from the class name
 		// Implementation is PHP namespace-aware, and based on
 		// Framework Interop Group reference implementation:
 		// http://groups.google.com/group/php-standards/web/psr-0-final-proposal
-		$className = ltrim($class, '\\');
+		$className = ltrim($class, self::NS_SEP);
 		$file = '';
 		$namespace = '';
-		if ($lastNsPos = strripos($className, '\\'))
+		if ($lastNsPos = strrpos($className, self::NS_SEP))
 		{
 			$namespace = substr($className, 0, $lastNsPos);
 			$className = substr($className, $lastNsPos + 1);
-			$file = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
+			$file = str_replace(self::NS_SEP, DIR_SEP, $namespace) . DIR_SEP;
 		}
-		$file .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php';
+		$file .= str_replace($class_sep, DIR_SEP, $className) . '.php';
 
 		if (!empty($dirs))
 		{
@@ -58,7 +61,7 @@ class Sco_Loader extends Zend_Loader
 				else
 				{
 					$dir = rtrim($dir, '\\/');
-					$dirs[$key] = $dir . DIRECTORY_SEPARATOR . $dirPath;
+					$dirs[$key] = $dir . DIR_SEP . $dirPath;
 				}
 			}
 			$file = basename($file);
@@ -75,7 +78,7 @@ class Sco_Loader extends Zend_Loader
 			$dirs);
 	}
 
-	public static function loadClass($class, $dirs = null, $ns = null)
+	public static function loadClass($class, $dirs = null, $ns = null, $class_sep = self::CLASS_SEP)
 	{
 		if (class_exists($class, false) || interface_exists($class, false))
 		{
@@ -88,11 +91,11 @@ class Sco_Loader extends Zend_Loader
 			throw new Zend_Exception('Directory argument must be a string or an array');
 		}
 
-		list($return, $file, $dirs) = self::_loadClass($class, $dirs, $chk = ($ns && substr($class, 0, $_len = strlen($ns)) == $ns));
+		list($return, $file, $dirs) = self::_loadClass($class, $dirs, $class_sep, $chk = ($ns && substr($class, 0, $_len = strlen($ns)) == $ns));
 
 		if (!$return && $chk && !class_exists($class, false) && !interface_exists($class, false))
 		{
-			list($return, $file, $dirs) = self::_loadClass(substr($class, $_len), $dirs);
+			list($return, $file, $dirs) = self::_loadClass(substr($class, $_len), $dirs, $class_sep);
 		}
 
 		if (class_exists($class, false) || interface_exists($class, false))
