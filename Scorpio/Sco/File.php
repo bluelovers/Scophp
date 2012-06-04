@@ -26,8 +26,8 @@ class Sco_File
 			'/^\.\/+/i',
 			'/(^|\/+)[^\.\/:]+\/+\s*\.\.\s*$/i',
 			), array(
-			'/',
-			'/',
+			DIR_SEP,
+			DIR_SEP,
 			'$1',
 			'',
 			'$1'), trim($url));
@@ -65,7 +65,7 @@ class Sco_File
 				$_v = trim($_v);
 				if (empty($_v) && $_v !== 0 && $_v !== '0') continue;
 
-				$ret .= '/' . $_v;
+				$ret .= DIR_SEP . $_v;
 			}
 		}
 
@@ -75,13 +75,13 @@ class Sco_File
 	public static function path()
 	{
 		$paths = func_get_args();
-		return rtrim(self::fix(self::_path_join($paths)), '/') . '/';
+		return rtrim(self::fix(self::_path_join($paths)), DIR_SEP) . DIR_SEP;
 	}
 
 	public static function file()
 	{
 		$paths = func_get_args();
-		return rtrim(self::fix(self::_path_join($paths)), '/');
+		return rtrim(self::fix(self::_path_join($paths)), DIR_SEP);
 	}
 
 	public static function remove_root($path, $root)
