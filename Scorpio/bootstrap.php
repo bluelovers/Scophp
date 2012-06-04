@@ -7,8 +7,6 @@
 
 error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
-echo '<pre>';
-
 //$_SCORPIO_KEY = md5(uniqid('get_included_files', true));
 //$_ENV[$_SCORPIO_KEY]['get_included_files'] = get_included_files();
 
