@@ -6,6 +6,7 @@
  */
 
 define('DIR_SEP', '/');
+define('NS_SEP', '\\');
 
 define('LF', "\n");
 define('CR', "\r");
