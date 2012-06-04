@@ -5,7 +5,7 @@
  * @copyright 2012
  */
 
-error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
+$error_reporting = error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
 //$_SCORPIO_KEY = md5(uniqid('get_included_files', true));
 //$_ENV[$_SCORPIO_KEY]['get_included_files'] = get_included_files();
@@ -33,3 +33,5 @@ Sco_Loader_Autoloader::getInstance()
 	->pushAutoloader(SCORPIO_SYSPATH, 'Sco_', true)
 	->setDefaultAutoloader(array('Sco_Loader', 'loadClass'));
 ;
+
+error_reporting($error_reporting);
