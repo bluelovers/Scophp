@@ -35,6 +35,8 @@ else
 	require_once SCORPIO_SYSPATH . 'Const/Env.php';
 }
 
+set_include_path(SCORPIO_SYSPATH . PATH_SEPARATOR . get_include_path());
+
 Zend_Loader::loadClass('Sco_Loader_Autoloader');
 
 Sco_Loader_Autoloader::getInstance()->pushAutoloader(SCORPIO_SYSPATH, 'Sco_', true)->setDefaultAutoloader(array('Sco_Loader', 'loadClass'));
