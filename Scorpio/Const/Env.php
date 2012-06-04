@@ -6,7 +6,6 @@
  */
 
 define('DIR_SEP', '/');
-define('PATH_SEP', PATH_SEPARATOR);
 
 define('LF', "\n");
 define('CR', "\r");
