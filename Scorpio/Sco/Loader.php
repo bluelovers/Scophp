@@ -65,11 +65,11 @@ class Sco_Loader extends Zend_Loader
 				}
 			}
 			$file = basename($file);
-			$return = self::loadFile($file, $dirs, true, $noerror);
+			$return = self::loadFile($file, $dirs, true, false, $noerror);
 		}
 		else
 		{
-			$return = self::loadFile($file, null, true, $noerror);
+			$return = self::loadFile($file, null, true, false, $noerror);
 		}
 
 		return array(
@@ -161,7 +161,7 @@ class Sco_Loader extends Zend_Loader
 		}
 	}
 
-	public static function loadFile($filename, $dirs = null, $once = false, $noerror = false, $require = false)
+	public static function loadFile($filename, $dirs = null, $once = false, $require = false, $noerror = false)
 	{
 		self::_securityCheck($filename);
 
