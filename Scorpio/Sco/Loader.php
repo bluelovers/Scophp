@@ -118,6 +118,49 @@ class Sco_Loader extends Zend_Loader
 		return false;
 	}
 
+	function fileExists($file)
+	{
+		if (file_exists($file)) return true;
+
+		foreach (explode(PATH_SEPARATOR, get_include_path()) as $path)
+		{
+			if (file_exists($path . DIR_SEP . $file)) return true;
+		}
+
+		return false;
+	}
+
+	public static function includeFile($filename, $once = false, $require = false, $noerror = false)
+	{
+		if ($noerror && !(file_exists($filename) || self::isReadable($filename)))
+		{
+			return false;
+		}
+
+		if ($require)
+		{
+			if ($once)
+			{
+				return require_once ($filename);
+			}
+			else
+			{
+				return require ($filename);
+			}
+		}
+		else
+		{
+			if ($once)
+			{
+				return include_once ($filename);
+			}
+			else
+			{
+				return include ($filename);
+			}
+		}
+	}
+
 	public static function loadFile($filename, $dirs = null, $once = false, $noerror = false, $require = false)
 	{
 		self::_securityCheck($filename);
@@ -139,58 +182,7 @@ class Sco_Loader extends Zend_Loader
 		/**
 		 * Try finding for the plain filename in the include_path.
 		 */
-		$return = false;
-
-		if ($noerror)
-		{
-			if ($require)
-			{
-				if ($once)
-				{
-					$return = @require_once ($filename);
-				}
-				else
-				{
-					$return = @require ($filename);
-				}
-			}
-			else
-			{
-				if ($once)
-				{
-					$return = @include_once ($filename);
-				}
-				else
-				{
-					$return = @include ($filename);
-				}
-			}
-		}
-		else
-		{
-			if ($require)
-			{
-				if ($once)
-				{
-					$return = require_once ($filename);
-				}
-				else
-				{
-					$return = require ($filename);
-				}
-			}
-			else
-			{
-				if ($once)
-				{
-					$return = include_once ($filename);
-				}
-				else
-				{
-					$return = include ($filename);
-				}
-			}
-		}
+		$return = self::includeFile($filename, $once, $require, $noerror);
 
 		/**
 		 * If searching in directories, reset include_path
