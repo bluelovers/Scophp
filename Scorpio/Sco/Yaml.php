@@ -51,22 +51,23 @@ class Sco_Yaml extends Symfony_Component_Yaml_Yaml
 
 	public static function dump($array, $inline = self::INLINE, $callback = null)
 	{
-		if (is_object($array) && method_exists($array, 'toYaml')) {
-            return $array->toYaml($inline, $callback);
-        }
+		if (is_object($array) && method_exists($array, 'toYaml'))
+		{
+			return $array->toYaml($inline, $callback);
+		}
 
-        if ($callback && is_callable($callback))
-        {
-        	$dump = call_user_func($callback, $array, $inline);
-        }
-        elseif (self::$_enableDefaultDumpFilter && is_callable(self::$_defaultDumpFilter))
-        {
-        	$dump = call_user_func(self::$_defaultDumpFilter, $array, $inline);
-        }
-        else
-        {
-        	$dump = $array;
-        }
+		if ($callback && is_callable($callback))
+		{
+			$dump = call_user_func($callback, $array, $inline);
+		}
+		elseif (self::$_enableDefaultDumpFilter && is_callable(self::$_defaultDumpFilter))
+		{
+			$dump = call_user_func(self::$_defaultDumpFilter, $array, $inline);
+		}
+		else
+		{
+			$dump = $array;
+		}
 
 		return parent::dump($dump, $inline);
 	}
@@ -76,7 +77,8 @@ class Sco_Yaml extends Symfony_Component_Yaml_Yaml
 		self::$_defaultDumpFilter = $callback;
 	}
 
-	public static function enableDefaultDumpFilter($flag = null) {
+	public static function enableDefaultDumpFilter($flag = null)
+	{
 		if (null === $flag)
 		{
 			return self::$_enableDefaultDumpFilter;
@@ -90,4 +92,3 @@ class Sco_Yaml extends Symfony_Component_Yaml_Yaml
 	}
 
 }
-
