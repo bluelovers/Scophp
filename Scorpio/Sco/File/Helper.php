@@ -31,4 +31,14 @@ class Sco_File_Helper
 		return $return;
 	}
 
+	public static function is_resource_file($fp)
+	{
+		if (is_resource($fp) && (get_resource_type($fp) == 'file' || get_resource_type($fp) == 'stream'))
+		{
+			return $fp;
+		}
+
+		return false;
+	}
+
 }
