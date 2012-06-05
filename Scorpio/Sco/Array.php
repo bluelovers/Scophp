@@ -76,6 +76,13 @@ class Sco_Array extends ArrayObject
 		return $this->getArrayCopy();
 	}
 
+	/*
+	public function toYaml($inline = Sco_Yaml::INLINE)
+	{
+		return Sco_Yaml::dump($this->toArray());
+	}
+	*/
+
 	public function array_walk()
 	{
 		$args = func_get_args();
