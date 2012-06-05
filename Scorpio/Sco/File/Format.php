@@ -5,7 +5,7 @@
  * @copyright 2012
  */
 
-class Sco_File
+class Sco_File_Format
 {
 
 	public static function dirname($path, $chdir = '', $dirnamefunc = false)
