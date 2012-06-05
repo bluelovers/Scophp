@@ -25,17 +25,22 @@ Zend_Loader_Autoloader::getInstance()->suppressNotFoundWarnings(true);
 
 if (!defined('SCORPIO_PATH_SYS'))
 {
-	include_once (dirname(__FILE__) . '/Const/Env.php');
-	!class_exists('Sco_File_Format') && include (dirname(__FILE__) . '/Sco/File/Format.php');
+	$path = dirname(__FILE__);
 
-	define('SCORPIO_PATH_SYS', Sco_File_Format::dirname(__FILE__, '', 1));
+	Zend_Loader::loadFile('Const/Env.php', $path, true);
+	!class_exists('Sco_File_Format') && Zend_Loader::loadClass('Sco_File_Format', $path, true);
+	;
+
+	define('SCORPIO_PATH_SYS', Sco_File_Format::path($path));
+
+	unset($path);
 }
 else
 {
 	Zend_Loader::loadFile('Const/Env.php', SCORPIO_PATH_SYS, true);
 }
 
-if (!class_exists('Sco_File_Format') || !class_exists('Sco_Loader_Autoloader'))
+if (!class_exists('Sco_File_Format') || !class_exists('Sco_Loader_Autoloader') || !class_exists('Sco_Loader'))
 {
 	$exists = false;
 	$get_include_path = get_include_path();
@@ -56,9 +61,13 @@ if (!class_exists('Sco_File_Format') || !class_exists('Sco_Loader_Autoloader'))
 	//Zend_Loader::loadClass('Sco_Loader_Autoloader', SCORPIO_PATH_SYS);
 	//Zend_Loader::loadClass('Sco_Loader', SCORPIO_PATH_SYS);
 	!class_exists('Sco_File_Format', false) && Zend_Loader::loadFile('Scorpio/Sco/File/Format.php', null, true);
+	!class_exists('Sco_Loader', false) && Zend_Loader::loadFile('Scorpio/Sco/Loader.php', null, true);
 	!class_exists('Sco_Loader_Autoloader', false) && Zend_Loader::loadFile('Scorpio/Sco/Loader/Autoloader.php', null, true);
 
-	!$exists && set_include_path($get_include_path);
+	//!$exists && set_include_path($get_include_path);
+
+	!$exists && set_include_path(Sco_File_Format::path($dir_parent) . PATH_SEPARATOR . $get_include_path);
+	//var_dump(get_include_path());
 }
 
 Sco_Loader_Autoloader::getInstance()->pushAutoloader(SCORPIO_PATH_SYS, 'Sco_', true)->setDefaultAutoloader(array('Sco_Loader', 'loadClass'));
