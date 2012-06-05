@@ -37,29 +37,28 @@ else
 }
 
 $exists = false;
-$paths = array();
-foreach (explode(PATH_SEPARATOR, get_include_path()) as $path)
-{
-	$path = Sco_File::path($path);
+$paths = get_include_path();
 
-	if (!$exists && $path == SCORPIO_PATH_TOP)
+foreach (explode(PATH_SEPARATOR, $paths) as $path)
+{
+	$path = realpath($path);
+
+	if (!$exists && $path == realpath(SCORPIO_PATH_TOP))
 	{
 		$exists = true;
 	}
-
-	$paths[] = $path;
 }
 
-if (!$exists) array_unshift($paths, SCORPIO_PATH_TOP);
-
-set_include_path(implode(PATH_SEPARATOR, $paths));
-unset($paths, $path, $exists);
+!$exists && set_include_path(SCORPIO_PATH_TOP . PATH_SEPARATOR . $paths);
 
 //Zend_Loader::loadClass('Sco_Loader_Autoloader', SCORPIO_PATH_SYS);
 //Zend_Loader::loadClass('Sco_Loader', SCORPIO_PATH_SYS);
-//Zend_Loader::loadFile('Scorpio/Sco/Loader.php');
-Zend_Loader::loadFile('Scorpio/Sco/Loader/Autoloader.php');
+Zend_Loader::loadFile('Scorpio/Sco/Loader/Autoloader.php', null, true);
+Zend_Loader::loadFile('Scorpio/Sco/File.php', null, true);
 
 Sco_Loader_Autoloader::getInstance()->pushAutoloader(SCORPIO_PATH_SYS, 'Sco_', true)->setDefaultAutoloader(array('Sco_Loader', 'loadClass'));
 
+!$exists && set_include_path($paths);
+
 error_reporting($error_reporting);
+unset($paths, $path, $exists, $error_reporting);
