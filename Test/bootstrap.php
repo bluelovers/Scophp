@@ -29,6 +29,12 @@ function _shutdown_function()
 	$size1 = rtrim(bcdiv($size1, pow(1024, ($i = floor(log($size1, 1024)))), 4), '0.') . ' ' . $unit[$i];
 	$size2 = rtrim(bcdiv($size2, pow(1024, ($i = floor(log($size2, 1024)))), 4), '0.') . ' ' . $unit[$i];
 
+	$get_included_files = get_included_files();
+
 	echo LF.LF;
-	printf('Processed in %.8f second(s), %d io, %s/%s.', microtime(true) - SCORPIO_MICROTIME, count(get_included_files()), $size1, $size2);
+	//printf('Processed in %.8f second(s), %d io, %s/%s.', microtime(true) - SCORPIO_MICROTIME, count(get_included_files()), $size1, $size2);
+
+	$table = new Zend_Text_Table(array('columnWidths' => array(80)));
+	$table->appendRow(array(sprintf('Processed in %.8f second(s), %d io, %s/%s.', microtime(true) - SCORPIO_MICROTIME, count($get_included_files), $size1, $size2)));
+	echo $table;
 }
