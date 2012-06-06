@@ -5,9 +5,14 @@
  * @copyright 2012
  */
 
+error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
+
 require_once (dirname(__FILE__) . '/../Scorpio/bootstrap.php');
 
-echo '<pre>';
+mb_internal_encoding('UTF-8');
+header('content-type: text/html; charset: ' . 'UTF-8');
+
+echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><pre>';
 
 Sco_Loader_Autoloader::getInstance()->pushAutoloader('D:\Users\Documents\The Project\symfony\symfony1\Yaml', 'Symfony_Component_Yaml_');
 
