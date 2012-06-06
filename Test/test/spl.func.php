@@ -11,6 +11,12 @@ Sco_Spl_Helper::createFunction('d', 'var_dump');
 
 d(time());
 
-Sco_Spl_Helper::createFunction('0a', 'd');
+Sco_Spl_Helper::createFunction('a', 'd');
 
-d(time());
+a(time());
+
+$callback = new Sco_Spl_Callback('a', time(), microtime(true));
+
+$callback->exec(123);
+
+$callback->exec();
