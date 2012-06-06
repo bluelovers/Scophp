@@ -9,7 +9,7 @@ class Sco_Text_Format
 {
 
 	//const REGEX_PRINTF = '/(?<!%)(?<fultext>%+(?:\((?<varname>[a-zA-Z_]\w*)\))?(?<type>\-?[a-zA-Z\d\.]+|%))/';
-	const REGEX_PRINTF = '/(?<!%)(?<fultext>%+(?:\((?<varname>[a-zA-Z_]\w*)\))?(?<pad>\'.\d+)?(?<type>\-?[a-zA-Z\d\.]+|%))/';
+	const REGEX_PRINTF = '/(?<!%)(?<fultext>%+(?:\((?<varname>[a-zA-Z_]\w*)\))?(\d+\$)?(?<pad>[ 0]|\'.)?(?<type>[+\-]?[a-zA-Z\d\.]+|%))/';
 
 	public static $_suppressArgvWarnings = false;
 
@@ -37,6 +37,8 @@ class Sco_Text_Format
 	 *
 	 * @see http://tw2.php.net/manual/en/function.sprintf.php#94608
 	 * @see http://tw2.php.net/manual/en/function.vsprintf.php#89349
+	 * @see http://www.php.net/manual/en/function.sprintf.php#93552
+	 * @see http://archive.plugins.jquery.com/project/printf
 	 *
 	 * @example test script
 	 * echo '<pre>';
@@ -62,7 +64,7 @@ class Sco_Text_Format
 	{
 		$args && $args = (array)$args;
 
-		if (strpos($format, '%(') !== false && preg_match_all(self::REGEX_PRINTF, $format, &$matchs))
+		if ((1 || strpos($format, '%(') !== false) && preg_match_all(self::REGEX_PRINTF, $format, &$matchs))
 		{
 			self::_printf_filter(&$format, &$matchs, &$args);
 			//var_dump($matchs);
@@ -140,6 +142,8 @@ class Sco_Text_Format
 		$strtr && $format = strtr($format, $strtr);
 
 		$args = $_args;
+
+		var_dump($matchs['fultext'], $args);
 
 		return true;
 	}
