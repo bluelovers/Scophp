@@ -1,3 +1,5 @@
-Scorpio Framework (scophp) v3 is a lazy PHP Framework 
+Scorpio Framework (scophp) v3 is a lazy PHP Framework
 
 Base on PHP > 5.2 and try to reduce reliance on PHP >= 5.3
+
+use Zend & Symfony like style.
