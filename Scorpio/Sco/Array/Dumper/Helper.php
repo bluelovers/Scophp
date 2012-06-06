@@ -19,29 +19,35 @@ class Sco_Array_Dumper_Helper
 			$dump = array();
 		}
 
-		foreach ($obj as $k => $v)
+		if (is_array($obj) || $obj instanceof Traversable)
 		{
-			if (($filter_empty && is_array($v) && empty($v)) || $v === null)
+			foreach ($obj as $k => $v)
 			{
-				continue;
-			}
-			elseif (is_array($v) || $v instanceof Traversable)
-			{
-				$_v = self::toArrayRecursive($v, $filter_empty);
-
-				if (!(($filter_empty && is_array($_v) && empty($_v)) || $_v === null))
+				if (($filter_empty && is_array($v) && empty($v)) || $v === null)
 				{
-					$dump[$k] = $_v;
+					continue;
+				}
+				elseif (is_array($v) || $v instanceof Traversable)
+				{
+					$_v = self::toArrayRecursive($v, $filter_empty);
+
+					if (!(($filter_empty && is_array($_v) && empty($_v)) || $_v === null))
+					{
+						$dump[$k] = $_v;
+					}
+				}
+				else
+				{
+					$dump[$k] = $v;
 				}
 			}
-			else
-			{
-				$dump[$k] = $v;
-			}
+		}
+		else
+		{
+			$dump = $obj;
 		}
 
 		return $dump;
 	}
 
 }
-
