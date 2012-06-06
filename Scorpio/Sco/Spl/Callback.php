@@ -10,7 +10,7 @@ class Sco_Spl_Callback
 	var $argv;
 	var $func;
 
-	function __construct($callback, $argv = null)
+	public function __construct($callback, $argv = null)
 	{
 		$argv = func_get_args();
 		$this->func(array_shift($argv));
@@ -23,7 +23,7 @@ class Sco_Spl_Callback
 	/**
 	 * @return self
 	 */
-	function newInstance($argv)
+	public static function newInstance($callback, $argv = null)
 	{
 		$ref = new ReflectionClass(__CLASS__);
 
@@ -35,12 +35,12 @@ class Sco_Spl_Callback
 	 *
 	 * @return callback|array
 	 */
-	function callback()
+	public function callback()
 	{
 		return array($this, 'exec');
 	}
 
-	function func($func = null)
+	public function func($func = null)
 	{
 		if ($func !== null)
 		{
@@ -50,21 +50,21 @@ class Sco_Spl_Callback
 		return $this;
 	}
 
-	function exec()
+	public function exec()
 	{
 		$argv = func_num_args() > 0 ? func_get_args() : (array)$this->argv;
 
 		return call_user_func_array($this->func, $argv);
 	}
 
-	function exec_array($argv = null)
+	public function exec_array($argv = null)
 	{
 		$argv = $argv !== null ? $argv : (array)$this->argv;
 
 		return call_user_func_array($this->func, $argv);
 	}
 
-	function create_function($func_name)
+	public function create_function($func_name)
 	{
 		return Sco_Spl_Helper::create_function($func_name, $this->callback());
 	}
