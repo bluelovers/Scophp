@@ -11,18 +11,18 @@
  * @link http://steike.com/PhpClosures
  * @author http://steike.com/PhpClosures
  */
-class Closure
+class Sco_Spl_Closure
 {
 	var $code;
 	var $env;
 
-	function Closure($code, $env)
+	public function __construct($code, $env)
 	{
 		$this->code = $code;
 		$this->env = $env;
 	}
 
-	function call($__args = NULL)
+	public function call($__args = NULL)
 	{
 		// $this will probably be clobbered by the next step, so grab our
 		// code and environment now
@@ -50,7 +50,7 @@ class Closure
 
 		$escaped = preg_replace("/['\\\\]/", "\\$&", $s);
 
-		$grabber = "return new Closure('$escaped', array($grabber));";
+		$grabber = "return new Sco_Spl_Closure('$escaped', array($grabber));";
 		return $grabber;
 	}
 }
