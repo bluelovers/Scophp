@@ -21,9 +21,19 @@ class Sco_Spl_Callback
 	}
 
 	/**
+	 * @return self
+	 */
+	function newInstance($argv)
+	{
+		$ref = new ReflectionClass(__CLASS__);
+
+		return $ref->newInstanceArgs(func_get_args());
+	}
+
+	/**
 	 * array($this, 'compare')
 	 *
-	 * @return array
+	 * @return callback|array
 	 */
 	function callback()
 	{
