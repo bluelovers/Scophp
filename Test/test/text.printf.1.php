@@ -94,7 +94,15 @@ echo str_repeat('-', 80) . LF;
 
 $time = microtime(true);
 
-echo Sco_Text_Format::sprintf('%\'_10s %\'=10s', 'ds', 'ds') . LF;
+echo Sco_Text_Format::sprintf('%\'_10s %\'=10s %010d', 'ds', 'ds', 51) . LF;
+
+printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+
+echo str_repeat('-', 80) . LF;
+
+$time = microtime(true);
+
+echo Sco_Text_Format::vsprintf('%\'_10s %\'=10s %(v3)\'.-10d %0+10d', array('ds', 'ds', 'v3' => 51, 15, 75)) . LF;
 
 printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
 
