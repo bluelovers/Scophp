@@ -51,9 +51,9 @@ array_push(&$test_list, array("second: %2\$s ; first: %1\$s", array('1st', '2nd'
 
 array_push(&$test_list, array('second: %second$s ; first: %first$s', array('1st', '2nd')));
 
-array_push(&$test_list, array("second: %2\$s ; first: %1\$s ; second: %2\$s ; first: %1\$s", array('1st', '2nd')));
+array_push(&$test_list, array("second: %2\$s ; first: %1\$s ; second: %2\$s ; first: %1\$s; ", array('1st', '2nd')));
 
-array_push(&$test_list, array("second: %2\$s ; first: %1\$s ; second: %2\$s ; first: %1\$s %s", array('1st', '2nd', '3nd')));
+array_push(&$test_list, array("second: %2\$s ; %s ; first: %1\$s ; %s ; second: %2\$s ; %s ; first: %1\$s ; %s ; %(v5)s", array('1st', '2nd', '3nd')));
 
 foreach ($test_list as $data)
 {
@@ -63,13 +63,22 @@ foreach ($test_list as $data)
 	echo $format.LF;
 	echo str_repeat('-', 80).LF;
 
+	$time = microtime(true);
+
 	$orig = vsprintf($format, (array)$args);
+
+	$time1 = microtime(true);
+
 	$frame = Sco_Text_Format::vsprintf($format, (array)$args);
+
+	$time2 = microtime(true);
 
 	$error = ($frame !== $orig);
 
 	echo $orig.LF;
+	printf('Processed in %.8f second(s)' . LF, $time1 - $time);
 	printf('<span style="color: %s">', $error ? 'red' : '#cccccc');
 	echo $frame.LF;
 	echo('</span>');
+	printf('Processed in %.8f second(s)' . LF, $time2 - $time1);
 }
