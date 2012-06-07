@@ -33,6 +33,8 @@ $vprintf_argv[0] = array(
 
 class_exists('Sco_Text_Format');
 
+Sco_Text_Format::suppressArgvWarnings(true);
+
 echo $vprintf[0] . LF;
 echo str_repeat('-', 80) . LF;
 
