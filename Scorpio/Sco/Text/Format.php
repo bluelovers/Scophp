@@ -308,7 +308,7 @@ class Sco_Text_Format
 				}
 				else
 				{
-					throw new InvalidArgumentException('Warning: '.$err);
+					throw new InvalidArgumentException('Warning: ' . $err);
 				}
 			}
 		}
