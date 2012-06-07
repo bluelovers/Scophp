@@ -9,6 +9,7 @@ require_once ('../bootstrap.php');
 
 Sco_Text_Format::suppressArgvWarnings(true);
 Sco_Text_Format::forceMode(true);
+//Sco_Text_Format::forceMode(Sco_Text_Format::FORCE_MODE_ALL);
 
 $test_list = array();
 
