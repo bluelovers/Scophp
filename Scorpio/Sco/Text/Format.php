@@ -9,7 +9,9 @@ class Sco_Text_Format
 {
 
 	//const REGEX_PRINTF = '/(?<!%)(?<fultext>%+(?:\((?<varname>[a-zA-Z_]\w*)\))?(?<type>\-?[a-zA-Z\d\.]+|%))/';
-	const REGEX_PRINTF = '/(?<!%)(?<fultext>%+(?:\((?<varname>[a-zA-Z_]\w*)\))?(?<varname2>\d+\$)?(?<pad>[ 0]|\'.)?(?<type>[+\-]?[a-zA-Z\d\.]+|%))/';
+	//const REGEX_PRINTF = '/(?<!%)(?<fultext>%+(?:\((?<varname>[a-zA-Z_]\w*)\))?(?<varname2>\d+\$)?(?<pad>[ 0]|\'.)?(?<type>[+\-]?[a-zA-Z\d\.]+|%))/';
+	const REGEX_PRINTF = '/(?<!%)(?<fultext>%+(?:\((?<varname>[a-zA-Z_]\w*)\))?(?<varname2>\d+\$)?(?:[ 0]|\'.)?(?:[+\-]?[\d\.]+)?[bcdeEufFgGosxX])/';
+	const TYPE_SPECIFIER = 'bcdeEufFgGosxX';
 
 	const LOSTARGV_VISIBLE = 0;
 	const LOSTARGV_PAD = 1;
@@ -18,8 +20,9 @@ class Sco_Text_Format
 	public static $_handleLostArgv = LOSTARGV_VISIBLE;
 
 	public static $_forceMode = false;
+	public static $_matchMode = 0;
 
-	public function suppressArgvWarnings($flag = null)
+	public static function suppressArgvWarnings($flag = null)
 	{
 		if (null === $flag)
 		{
@@ -33,7 +36,7 @@ class Sco_Text_Format
 		return $old;
 	}
 
-	public function handleLostArgv($flag = null)
+	public static function handleLostArgv($flag = null)
 	{
 		if (null === $flag)
 		{
@@ -42,12 +45,12 @@ class Sco_Text_Format
 
 		$old = self::$_handleLostArgv;
 
-		self::$_handleLostArgv = (int)$flag;
+		self::$_handleLostArgv = $flag;
 
 		return $old;
 	}
 
-	public function forceMode($flag = null)
+	public static function forceMode($flag = null)
 	{
 		if (null === $flag)
 		{
@@ -56,7 +59,21 @@ class Sco_Text_Format
 
 		$old = self::$_forceMode;
 
-		self::$_forceMode = (int)$flag;
+		self::$_forceMode = $flag;
+
+		return $old;
+	}
+
+	public static function matchMode($flag = null)
+	{
+		if (null === $flag)
+		{
+			return self::$_matchMode;
+		}
+
+		$old = self::$_matchMode;
+
+		self::$_matchMode = $flag;
 
 		return $old;
 	}
@@ -98,11 +115,7 @@ class Sco_Text_Format
 	{
 		$args && $args = (array )$args;
 
-		if ((self::$_forceMode || strpos($format, '%(') !== false) && preg_match_all(self::REGEX_PRINTF, $format, &$matchs))
-		{
-			self::_printf_filter(&$format, &$matchs, &$args);
-			//var_dump($matchs);
-		}
+		(self::$_forceMode || strpos($format, '%(') !== false) && self::_printf_match(&$format, &$matchs, &$args);
 
 		return vsprintf($format, $args);
 	}
@@ -115,9 +128,17 @@ class Sco_Text_Format
 	 * @param array $args
 	 * @param mixed $args, mixed $...
 	 */
-	public static function sprintf($format, $args)
+	public static function sprintf($format, $args = null)
 	{
 		return self::vsprintf($format, array_slice(func_get_args(), 1));
+	}
+
+	protected static function _printf_match(&$format, &$matchs, &$args)
+	{
+		if (preg_match_all(self::REGEX_PRINTF, $format, &$matchs))
+		{
+			self::_printf_filter(&$format, &$matchs, &$args);
+		}
 	}
 
 	protected static function _printf_filter(&$format, &$matchs, &$args)
@@ -163,7 +184,7 @@ class Sco_Text_Format
 				}
 				else
 				{
-					$strtr[$fulltext] = '%'.$fulltext;
+					$strtr[$fulltext] = '%' . $fulltext;
 					$_lost_args[] = $varname;
 				}
 			}
@@ -184,13 +205,13 @@ class Sco_Text_Format
 
 			if (self::$_suppressArgvWarnings)
 			{
-				$args = array_pad((array)$args, count((array)$k2), null);
+				$args = array_pad((array )$args, count((array )$k2), null);
 			}
 			else
 			{
 				//var_dump($matchs['fultext'], $args, $k2, $_lost_args, $strtr, implode(', ', (array)$_lost_args));
 
-				throw new InvalidArgumentException(sprintf('Warning: %s(): Too few arguments [ %d ] or lost argument key [ %s ]', __METHOD__, count((array)$k2), implode(', ', (array)$_lost_args)));
+				throw new InvalidArgumentException(sprintf('Warning: %s(): Too few arguments [ %d ] or lost argument key [ %s ]', __METHOD__, count((array )$k2), implode(', ', (array )$_lost_args)));
 			}
 		}
 
@@ -198,7 +219,7 @@ class Sco_Text_Format
 
 		//$args = $_args;
 
-		//var_dump($matchs['fultext'], $args, $k2);
+		var_dump($matchs['fultext'], $args, $k2, $strtr);
 
 		return true;
 	}
