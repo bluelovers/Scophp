@@ -9,9 +9,15 @@ class Sco_Text_Format
 {
 
 	//const REGEX_PRINTF = '/(?<!%)(?<fultext>%+(?:\((?<varname>[a-zA-Z_]\w*)\))?(?<type>\-?[a-zA-Z\d\.]+|%))/';
-	const REGEX_PRINTF = '/(?<!%)(?<fultext>%+(?:\((?<varname>[a-zA-Z_]\w*)\))?(\d+\$)?(?<pad>[ 0]|\'.)?(?<type>[+\-]?[a-zA-Z\d\.]+|%))/';
+	const REGEX_PRINTF = '/(?<!%)(?<fultext>%+(?:\((?<varname>[a-zA-Z_]\w*)\))?(?<varname2>\d+\$)?(?<pad>[ 0]|\'.)?(?<type>[+\-]?[a-zA-Z\d\.]+|%))/';
+
+	const LOSTARGV_VISIBLE = 0;
+	const LOSTARGV_PAD = 1;
 
 	public static $_suppressArgvWarnings = false;
+	public static $_handleLostArgv = LOSTARGV_VISIBLE;
+
+	public static $_forceMode = false;
 
 	public function suppressArgvWarnings($flag = null)
 	{
@@ -23,6 +29,34 @@ class Sco_Text_Format
 		$old = self::$_suppressArgvWarnings;
 
 		self::$_suppressArgvWarnings = (bool)$flag;
+
+		return $old;
+	}
+
+	public function handleLostArgv($flag = null)
+	{
+		if (null === $flag)
+		{
+			return self::$_handleLostArgv;
+		}
+
+		$old = self::$_handleLostArgv;
+
+		self::$_handleLostArgv = (int)$flag;
+
+		return $old;
+	}
+
+	public function forceMode($flag = null)
+	{
+		if (null === $flag)
+		{
+			return self::$_forceMode;
+		}
+
+		$old = self::$_forceMode;
+
+		self::$_forceMode = (int)$flag;
 
 		return $old;
 	}
@@ -62,9 +96,9 @@ class Sco_Text_Format
 	 */
 	public static function vsprintf($format, $args)
 	{
-		$args && $args = (array)$args;
+		$args && $args = (array )$args;
 
-		if ((1 || strpos($format, '%(') !== false) && preg_match_all(self::REGEX_PRINTF, $format, &$matchs))
+		if ((self::$_forceMode || strpos($format, '%(') !== false) && preg_match_all(self::REGEX_PRINTF, $format, &$matchs))
 		{
 			self::_printf_filter(&$format, &$matchs, &$args);
 			//var_dump($matchs);
@@ -89,22 +123,24 @@ class Sco_Text_Format
 	protected static function _printf_filter(&$format, &$matchs, &$args)
 	{
 		//$data = array();
-		$_args = $strtr = array();
+		$k2 = $strtr = array();
 		$_lost_args = false;
 
 		$k = 0;
 		$count = count($matchs['fultext']);
 
+		$keys = array_flip(array_keys($args));
+
 		for ($i = 0; $i < $count; $i++)
 		{
-			$fulltext = (string)$matchs['fultext'][$i];
+			$fulltext = (string )$matchs['fultext'][$i];
 
 			if (strpos(str_replace('%%', '', $fulltext), '%') !== 0)
 			{
 				continue;
 			}
 
-			$varname = (string)$matchs['varname'][$i];
+			$varname = (string )$matchs['varname'][$i];
 
 			/*
 			$data['fultext'][] = $fulltext;
@@ -114,44 +150,62 @@ class Sco_Text_Format
 
 			if ($varname)
 			{
-				if (array_key_exists($varname, $args))
+				if (array_key_exists($varname, $keys))
 				{
-					$_args[$k] = $args[$varname];
+					$strtr[$fulltext] = str_replace('(' . $varname . ')', ($keys[$varname] + 1) . '$', str_replace($matchs['varname2'][$i], '', $fulltext));
+					$k2[] = ($keys[$varname] + 1) . '$';
+				}
+				elseif (self::$_handleLostArgv & self::LOSTARGV_PAD)
+				{
+					$k2[] = ++$k . '$';
+					$strtr[$fulltext] = str_replace('(' . $varname . ')', $k . '$', $fulltext);
+					$_lost_args[] = $varname;
 				}
 				else
 				{
-					$_args[$k] = null;
+					$strtr[$fulltext] = '%'.$fulltext;
 					$_lost_args[] = $varname;
 				}
-
-				$strtr[$fulltext] = str_replace('(' . $varname . ')', '', $fulltext);
+			}
+			elseif ($matchs['varname2'][$i])
+			{
+				$k2[] = $matchs['varname2'][$i];
 			}
 			else
 			{
-				$_args[$k] = reset(array_slice($args, $k, 1, true));
+				$k2[] = ++$k . '$';
+				//$_args[$k] = reset(array_slice($args, $k, 1, true));
 			}
-
-			$k++;
 		}
 
-		if (!self::$_suppressArgvWarnings && ($_lost_args || count($args) < $k))
+		if ($_lost_args || $k2)
 		{
-			throw new InvalidArgumentException(sprintf('Warning: %s(): Too few arguments or lost argument key [%s]', __METHOD__, implode(', ', $_lost_argv)));
+			$k2 && $k2 = array_unique($k2);
+
+			if (self::$_suppressArgvWarnings)
+			{
+				$args = array_pad((array)$args, count((array)$k2), null);
+			}
+			else
+			{
+				//var_dump($matchs['fultext'], $args, $k2, $_lost_args, $strtr, implode(', ', (array)$_lost_args));
+
+				throw new InvalidArgumentException(sprintf('Warning: %s(): Too few arguments [ %d ] or lost argument key [ %s ]', __METHOD__, count((array)$k2), implode(', ', (array)$_lost_args)));
+			}
 		}
 
 		$strtr && $format = strtr($format, $strtr);
 
-		$args = $_args;
+		//$args = $_args;
 
-		var_dump($matchs['fultext'], $args);
+		//var_dump($matchs['fultext'], $args, $k2);
 
 		return true;
 	}
 
 	public static function sprintf_quote($string, $remove = false)
 	{
-		$string = $remove ? str_replace('%%', '%', $string) : str_replace('%', '%%', $string);
-		return $string;
+		return $string = $remove ? str_replace('%%', '%', $string) : str_replace('%', '%%', $string);
 	}
 
 	protected static function sprintf_parse($format)
