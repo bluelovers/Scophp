@@ -41,6 +41,18 @@ array_push(&$test_list, array("%+020d", $u));
 array_push(&$test_list, array("%'.+20d", $n));
 array_push(&$test_list, array("%'.+20d", $u));
 
+array_push(&$test_list, array("%1+20d", $n));
+array_push(&$test_list, array("%1+20d", $u));
+
+array_push(&$test_list, array("%+120d", $n));
+array_push(&$test_list, array("%+120d", $u));
+
+array_push(&$test_list, array("%'1+20d", $n));
+array_push(&$test_list, array("%'1+20d", $u));
+
+array_push(&$test_list, array("%#+20d", $n));
+array_push(&$test_list, array("%#+20d", $u));
+
 $s = 'monkey';
 $t = 'many monkeys';
 
@@ -50,6 +62,9 @@ array_push(&$test_list, array("[%-10s]", $s)); // left-justification with spaces
 array_push(&$test_list, array("[%010s]", $s)); // zero-padding works on strings too
 array_push(&$test_list, array("[%'#10s]", $s)); // use the custom padding character '#'
 array_push(&$test_list, array("[%10.10s]", $t)); // left-justification but with a cutoff of 10 characters
+
+array_push(&$test_list, array("[%10s]", $t));
+array_push(&$test_list, array("[%.10s]", $t));
 
 array_push(&$test_list, array("second: %2\$s ; first: %1\$s", array('1st', '2nd')));
 
@@ -112,7 +127,7 @@ foreach ($test_list as $data)
 
 	$time2 = microtime(true);
 
-	$error = ($frame !== $orig);
+	$error = ($frame !== $orig || empty($frame));
 
 	var_dump($orig);
 	printf('Processed in %.8f second(s)' . LF, $time1 - $time);
