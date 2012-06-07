@@ -46,6 +46,18 @@ printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
 
 echo str_repeat('-', 80) . LF;
 
+Sco_Text_Format::matchMode(1);
+
+$time = microtime(true);
+
+echo Sco_Text_Format::vsprintf($vprintf[0], $vprintf_argv[0]) . LF;
+
+printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+
+echo str_repeat('-', 80) . LF;
+
+Sco_Text_Format::matchMode(2);
+
 $time = microtime(true);
 
 echo Sco_Text_Format::vsprintf($vprintf[0], $vprintf_argv[0]) . LF;
