@@ -36,7 +36,7 @@ function _shutdown_function()
 
 	$get_included_files = get_included_files();
 
-	echo LF.LF;
+	echo NL.NL;
 	//printf('Processed in %.8f second(s), %d io, %s/%s.', microtime(true) - SCORPIO_MICROTIME, count(get_included_files()), $size1, $size2);
 
 	$table = new Zend_Text_Table(array('columnWidths' => array(80)));
