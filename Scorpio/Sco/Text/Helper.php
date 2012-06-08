@@ -136,7 +136,7 @@ class Sco_Text_Helper
 		return $case ? strtr((string )$str, $map_h2f) : strtr((string )$str, array_flip($map_h2f));
 	}
 
-	public static function chunk_split_unicode($str, $l = 76, $e = LF)
+	public static function chunk_split_unicode($str, $l = 76, $e = NL)
 	{
 		$tmp = array_chunk(preg_split('//u', $str, -1, PREG_SPLIT_NO_EMPTY), $l);
 		$str = '';
