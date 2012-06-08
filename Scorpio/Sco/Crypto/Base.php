@@ -42,14 +42,19 @@ abstract class Sco_Crypto_Base implements Sco_Crypto_EncodeInterface
 	 */
 	public static function newInstance($salt = null)
 	{
-		return new self($salt);
+		throw new BadMethodCallException(sprintf('Fatal error: Call to undefined method %s()', __METHOD__));
 	}
 
 	public function encode($val)
 	{
-		$ret = md5(md5($val).$this->salt);
-
-		return $ret;
+		throw new BadMethodCallException(sprintf('Fatal error: Call to undefined method %s::%s()', get_class($this), __FUNCTION__));
 	}
+
+	/*
+	public function decode($val)
+	{
+		throw new BadMethodCallException(sprintf('Fatal error: Call to undefined method %s::%s()', get_class($this), __FUNCTION__));
+	}
+	*/
 
 }
