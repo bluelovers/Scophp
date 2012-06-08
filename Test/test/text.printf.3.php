@@ -67,9 +67,9 @@ foreach ($test_list as $data)
 {
 	list($format, $args) = $data;
 
-	echo str_repeat('=', 80) . LF;
-	echo $format . LF;
-	echo str_repeat('-', 80) . LF;
+	echo str_repeat('=', 80) . NL;
+	echo $format . NL;
+	echo str_repeat('-', 80) . NL;
 
 	$args = (array )$args;
 
@@ -86,29 +86,29 @@ foreach ($test_list as $data)
 	$error = ($frame !== $orig || empty($frame));
 
 	var_dump($orig);
-	printf('Processed in %.8f second(s)' . LF, $time1 - $time);
+	printf('Processed in %.8f second(s)' . NL, $time1 - $time);
 	printf('<span style="color: %s">', $error ? 'red' : '#cccccc');
 	var_dump($frame);
 	echo ('</span>');
-	printf('Processed in %.8f second(s)' . LF, $time2 - $time1);
+	printf('Processed in %.8f second(s)' . NL, $time2 - $time1);
 }
 
 exit;
 
-echo $vprintf[0] . LF;
-echo str_repeat('-', 80) . LF;
+echo $vprintf[0] . NL;
+echo str_repeat('-', 80) . NL;
 
 $time = microtime(true);
 
-echo Sco_Text_Format::vsprintf($vprintf[0], $vprintf_argv[0]) . LF;
+echo Sco_Text_Format::vsprintf($vprintf[0], $vprintf_argv[0]) . NL;
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
 $run = 1000;
 
 Sco_Text_Format::matchMode(1);
 
-printf('matchMode: %s' . LF, Sco_Text_Format::matchMode());
+printf('matchMode: %s' . NL, Sco_Text_Format::matchMode());
 
 $time = microtime(true);
 
@@ -117,11 +117,11 @@ for ($i = 0; $i < $run; $i++)
 	Sco_Text_Format::vsprintf($vprintf[0], $vprintf_argv[0]);
 }
 
-printf('Processed in %.8f second(s) / %.8f second(s)' . LF, $total = microtime(true) - $time, $total / $run);
+printf('Processed in %.8f second(s) / %.8f second(s)' . NL, $total = microtime(true) - $time, $total / $run);
 
 Sco_Text_Format::matchMode(2);
 
-printf('matchMode: %s' . LF, Sco_Text_Format::matchMode());
+printf('matchMode: %s' . NL, Sco_Text_Format::matchMode());
 
 $time = microtime(true);
 
@@ -130,4 +130,4 @@ for ($i = 0; $i < $run; $i++)
 	Sco_Text_Format::vsprintf($vprintf[0], $vprintf_argv[0]);
 }
 
-printf('Processed in %.8f second(s) / %.8f second(s)' . LF, $total = microtime(true) - $time, $total / $run);
+printf('Processed in %.8f second(s) / %.8f second(s)' . NL, $total = microtime(true) - $time, $total / $run);
