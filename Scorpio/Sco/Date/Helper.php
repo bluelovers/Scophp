@@ -14,6 +14,9 @@ class Sco_Date_Helper
 {
 
 	const MICROTIME_LEN = 8;
+	const MICROTIME_PRINTF = '%-08.8s';
+
+	const DATE_U_PRINTF = '%-06.6s';
 
 	public static function microtime($get_as_float = false, $microtime = null)
 	{
@@ -24,7 +27,7 @@ class Sco_Date_Helper
 				list($microsec, $time) = $microtime;
 
 				return array(
-					sprintf('%-08.8s', (string )$microsec),
+					sprintf(self::MICROTIME_PRINTF, (string )$microsec),
 					(int)$time,
 					(float)((float)$time + (float)('0.' . (string )$microsec)),
 					);
@@ -50,7 +53,7 @@ class Sco_Date_Helper
 			$microsec = (float)$microtime - $time;
 
 			return array(
-				(string )substr($microsec, 2, self::MICROTIME_LEN),
+				sprintf(self::MICROTIME_PRINTF, substr($microsec, 2, self::MICROTIME_LEN)),
 				(int)$time,
 				(float)$microtime,
 				);
@@ -60,7 +63,7 @@ class Sco_Date_Helper
 	public static function microtime_split($microtime)
 	{
 		$time = substr($microtime, 0, 10);
-		$microsec = substr($microtime, 10, self::MICROTIME_LEN);
+		$microsec = sprintf(self::MICROTIME_PRINTF, substr($microtime, 10, self::MICROTIME_LEN));
 
 		return array((string )$microsec, (int)$time);
 	}
@@ -79,7 +82,7 @@ class Sco_Date_Helper
 					$microtime = self::microtime(false, $timestamp);
 				}
 
-				$u = sprintf('%-06.6s', $microtime[0]);
+				$u = sprintf(self::DATE_U_PRINTF, $microtime[0]);
 			}
 
 			$format = substr_replace($format, $u, $match[0][1], 1);
