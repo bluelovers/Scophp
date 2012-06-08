@@ -134,13 +134,13 @@ class Sco_Text_Format
 		{
 			if (self::$_matchMode & 2)
 			{
-				//printf('matchMode: %d'.LF, 2);
+				//printf('matchMode: %d'.NL, 2);
 
 				self::_printf_match2(&$format, &$matchs, &$args);
 			}
 			else
 			{
-				//printf('matchMode: %d'.LF, 1);
+				//printf('matchMode: %d'.NL, 1);
 
 				self::_printf_match(&$format, &$matchs, &$args);
 			}
