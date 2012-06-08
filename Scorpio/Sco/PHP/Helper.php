@@ -159,4 +159,36 @@ class Sco_PHP_Helper
 		return $method_name === null ? function_exists($object) : method_exists($object, $method_name);
 	}
 
+	public static function sprint()
+	{
+		return self::vprint(func_get_args());
+	}
+
+	public static function vprint($args, $sep = '', $append = '', $retstring = false)
+	{
+		if ($retstring)
+		{
+			$ret = implode($sep, $args) . $append;
+			echo $ret;
+
+			return $ret;
+		}
+		else
+		{
+			echo implode($sep, $args) . $append;
+
+			return true;
+		}
+	}
+
+	public static function sprintnl()
+	{
+		return self::vprint(func_get_args(), '', NL);
+	}
+
+	public static function vprintnl($args)
+	{
+		return self::vprint($args, '', NL);
+	}
+
 }
