@@ -19,7 +19,7 @@ for ($i = 0; $i < 1000; $i++)
 	str_f2h3($hex);
 }
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
 $time = microtime(true);
 
@@ -29,7 +29,7 @@ for ($i = 0; $i < 1000; $i++)
 	Sco_Text_Helper::str_f2h($hex);
 }
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
 $time = microtime(true);
 
@@ -39,7 +39,7 @@ for ($i = 0; $i < 1000; $i++)
 	str_f2h2($hex);
 }
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
 $time = microtime(true);
 
@@ -49,7 +49,7 @@ for ($i = 0; $i < 1000; $i++)
 	str_f2h($hex);
 }
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
 function str_f2h($str, $h2f = 0)
 {
