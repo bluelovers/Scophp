@@ -9,6 +9,7 @@ define('DIR_SEP', '/');
 
 define('LF', "\n");
 define('CR', "\r");
+define('CRLF', CR.LF);
 
 define('TAB', "\t");
 
