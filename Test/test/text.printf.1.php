@@ -35,90 +35,90 @@ class_exists('Sco_Text_Format');
 
 Sco_Text_Format::suppressArgvWarnings(true);
 
-echo $vprintf[0] . LF;
-echo str_repeat('-', 80) . LF;
+echo $vprintf[0] . NL;
+echo str_repeat('-', 80) . NL;
 
 $time = microtime(true);
 
-echo vsprintf($vprintf[0], $vprintf_argv[0]) . LF;
+echo vsprintf($vprintf[0], $vprintf_argv[0]) . NL;
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
-echo str_repeat('-', 80) . LF;
+echo str_repeat('-', 80) . NL;
 
 Sco_Text_Format::matchMode(1);
 
 $time = microtime(true);
 
-echo Sco_Text_Format::vsprintf($vprintf[0], $vprintf_argv[0]) . LF;
+echo Sco_Text_Format::vsprintf($vprintf[0], $vprintf_argv[0]) . NL;
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
-echo str_repeat('-', 80) . LF;
+echo str_repeat('-', 80) . NL;
 
 Sco_Text_Format::matchMode(2);
 
 $time = microtime(true);
 
-echo Sco_Text_Format::vsprintf($vprintf[0], $vprintf_argv[0]) . LF;
+echo Sco_Text_Format::vsprintf($vprintf[0], $vprintf_argv[0]) . NL;
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
-echo str_repeat('-', 80) . LF;
-
-$time = microtime(true);
-
-echo sprintfn2($vprintf[0], $vprintf_argv[0]) . LF;
-
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
-
-echo str_repeat('-', 80) . LF;
+echo str_repeat('-', 80) . NL;
 
 $time = microtime(true);
 
-echo Sco_Text_Format::vsprintf('=========Processed in %.8f second(s)=========', array(microtime(true) - $time)). LF;
+echo sprintfn2($vprintf[0], $vprintf_argv[0]) . NL;
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
-echo str_repeat('-', 80) . LF;
-
-$time = microtime(true);
-
-echo sprintf('=========Processed in %.8f second(s)=========', microtime(true) - $time) . LF;
-
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
-
-echo str_repeat('-', 80) . LF;
+echo str_repeat('-', 80) . NL;
 
 $time = microtime(true);
 
-echo sprintfn('second: %second$s ; first: %first$s', array('first' => '1st', 'second' => '2nd')) . LF;
+echo Sco_Text_Format::vsprintf('=========Processed in %.8f second(s)=========', array(microtime(true) - $time)). NL;
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
-echo str_repeat('-', 80) . LF;
-
-$time = microtime(true);
-
-echo sprintfn2('second: %(second)s ; first: %(first)s', array('first' => '1st', 'second' => '2nd')) . LF;
-
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
-
-echo str_repeat('-', 80) . LF;
+echo str_repeat('-', 80) . NL;
 
 $time = microtime(true);
 
-echo Sco_Text_Format::sprintf('%\'_10s %\'=10s %010d', 'ds', 'ds', 51) . LF;
+echo sprintf('=========Processed in %.8f second(s)=========', microtime(true) - $time) . NL;
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
-echo str_repeat('-', 80) . LF;
+echo str_repeat('-', 80) . NL;
 
 $time = microtime(true);
 
-echo Sco_Text_Format::vsprintf('%\'_10s %\'=10s %(v3)\'.-10d %0+10d', array('ds', 'ds', 'v3' => 51, 15, 75)) . LF;
+echo sprintfn('second: %second$s ; first: %first$s', array('first' => '1st', 'second' => '2nd')) . NL;
 
-printf('Processed in %.8f second(s)' . LF, microtime(true) - $time);
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
+
+echo str_repeat('-', 80) . NL;
+
+$time = microtime(true);
+
+echo sprintfn2('second: %(second)s ; first: %(first)s', array('first' => '1st', 'second' => '2nd')) . NL;
+
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
+
+echo str_repeat('-', 80) . NL;
+
+$time = microtime(true);
+
+echo Sco_Text_Format::sprintf('%\'_10s %\'=10s %010d', 'ds', 'ds', 51) . NL;
+
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
+
+echo str_repeat('-', 80) . NL;
+
+$time = microtime(true);
+
+echo Sco_Text_Format::vsprintf('%\'_10s %\'=10s %(v3)\'.-10d %0+10d', array('ds', 'ds', 'v3' => 51, 15, 75)) . NL;
+
+printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
 
 /**
  * version of sprintf for cases where named arguments are desired (php syntax)
