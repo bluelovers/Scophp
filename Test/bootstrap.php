@@ -43,3 +43,5 @@ function _shutdown_function()
 	$table->appendRow(array(sprintf('Processed in %.8f second(s), %d io, %s/%s.', microtime(true) - SCORPIO_MICROTIME, count($get_included_files), $size1, $size2)));
 	echo $table;
 }
+
+Sco_Spl_Helper::createFunction('printnl', 'Sco_PHP_Helper::sprintnl');
