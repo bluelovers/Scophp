@@ -40,6 +40,8 @@ else
 	Zend_Loader::loadFile('Const/Env.php', SCORPIO_PATH_SYS, true);
 }
 
+!defined('NL') && define('NL', LF);
+
 if (!class_exists('Sco_File_Format') || !class_exists('Sco_Loader_Autoloader') || !class_exists('Sco_Loader'))
 {
 	$exists = false;
