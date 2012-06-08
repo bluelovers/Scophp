@@ -29,7 +29,6 @@ if (!defined('SCORPIO_PATH_SYS'))
 
 	Zend_Loader::loadFile('Const/Env.php', $path, true);
 	!class_exists('Sco_File_Format') && Zend_Loader::loadClass('Sco_File_Format', $path, true);
-	;
 
 	define('SCORPIO_PATH_SYS', Sco_File_Format::path($path));
 
