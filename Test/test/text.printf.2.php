@@ -112,9 +112,9 @@ foreach ($test_list as $data)
 {
 	list($format, $args) = $data;
 
-	echo str_repeat('=', 80) . LF;
-	echo $format . LF;
-	echo str_repeat('-', 80) . LF;
+	echo str_repeat('=', 80) . NL;
+	echo $format . NL;
+	echo str_repeat('-', 80) . NL;
 
 	$args = (array )$args;
 
@@ -131,9 +131,9 @@ foreach ($test_list as $data)
 	$error = ($frame !== $orig || empty($frame));
 
 	var_dump($orig);
-	printf('Processed in %.8f second(s)' . LF, $time1 - $time);
+	printf('Processed in %.8f second(s)' . NL, $time1 - $time);
 	printf('<span style="color: %s">', $error ? 'red' : '#cccccc');
 	var_dump($frame);
 	echo ('</span>');
-	printf('Processed in %.8f second(s)' . LF, $time2 - $time1);
+	printf('Processed in %.8f second(s)' . NL, $time2 - $time1);
 }
