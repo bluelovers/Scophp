@@ -30,7 +30,7 @@ class Sco_Reflection_Helper
 	 *
 	 * @url http://hardforum.com/showthread.php?t=1480605
 	 */
-	function get_public_methods($class, $skip = array(), $over = false)
+	public static function get_public_methods($class, $skip = array(), $over = false, $include_static = false)
 	{
 		if (!self::$_enableCache || $over || !isset(self::$_cache[__FUNCTION__][$class]))
 		{
@@ -44,7 +44,7 @@ class Sco_Reflection_Helper
 				$reflect = new ReflectionMethod($class, $method);
 
 				/* For private, use isPrivate().  For protected, use isProtected() */
-				if ($reflect->isPublic() && !($reflect->isStatic() || $reflect->isConstructor() || $reflect->isDestructor()))
+				if ($reflect->isPublic() && !(!$include_static && $reflect->isStatic() || $reflect->isConstructor() || $reflect->isDestructor()))
 				{
 					if (!in_array($method, $_skip))
 					{
