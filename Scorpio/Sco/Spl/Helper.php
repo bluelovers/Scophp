@@ -8,6 +8,8 @@
 class Sco_Spl_Helper
 {
 
+	const REGEX_FUNCNAME = '/^[a-zA-Z_][a-zA-Z_0-9]*$/';
+
 	static $lambda = array();
 
 	public static function createFunction($func_name, $callback)
@@ -51,7 +53,26 @@ class Sco_Spl_Helper
 
 	public static function vaildFunctionName($func_name)
 	{
-		return preg_match('/^[a-zA-Z_][a-zA-Z_0-9]*$/', $func_name);
+		return preg_match(self::REGEX_FUNCNAME, $func_name);
+	}
+
+	public static function getFunction($func_name)
+	{
+		if (!self::vaildFunctionName($func_name))
+		{
+			throw new RuntimeException(sprintf('Fatal error: syntax error "%s" not a vaild Function name', (string )$func_name));
+			//trigger_error(sprintf('syntax error "%s" not a vaild Function name', (string)$func_name), E_USER_ERROR);
+			return;
+		}
+
+		if ($exists = isset(self::$lambda[$func_name]))
+		{
+			return self::$lambda[$func_name];
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 }
