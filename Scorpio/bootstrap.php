@@ -73,5 +73,7 @@ if (!class_exists('Sco_File_Format') || !class_exists('Sco_Loader_Autoloader') |
 
 Sco_Loader_Autoloader::getInstance()->pushAutoloader(SCORPIO_PATH_SYS, 'Sco_', true)->setDefaultAutoloader(array('Sco_Loader', 'loadClass'));
 
+Sco::instance();
+
 error_reporting($error_reporting);
 unset($get_include_path, $path, $exists, $error_reporting, $dir_parent);
