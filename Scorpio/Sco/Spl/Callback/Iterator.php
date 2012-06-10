@@ -25,7 +25,7 @@ class Sco_Spl_Callback_Iterator extends Sco_Array implements Sco_Spl_Callback_In
 		$argv = func_get_args();
 		$this->func(array_shift($argv));
 
-		$this->argv = (array)$argv;
+		$this->argv = (array )$argv;
 
 		return $this;
 	}
@@ -54,7 +54,7 @@ class Sco_Spl_Callback_Iterator extends Sco_Array implements Sco_Spl_Callback_In
 	{
 		if ($func !== null)
 		{
-			$this->exchangeArray((array)$func);
+			$this->exchangeArray((array )$func);
 		}
 
 		return $this;
@@ -64,7 +64,7 @@ class Sco_Spl_Callback_Iterator extends Sco_Array implements Sco_Spl_Callback_In
 	{
 		if ($this->disable) return;
 
-		$argv = func_num_args() > 0 ? func_get_args() : (array)$this->argv;
+		$argv = func_num_args() > 0 ? func_get_args() : (array )$this->argv;
 
 		return $this->exec_array($argv);
 	}
@@ -73,7 +73,7 @@ class Sco_Spl_Callback_Iterator extends Sco_Array implements Sco_Spl_Callback_In
 	{
 		if ($this->disable) return;
 
-		$argv = $argv !== null ? $argv : (array)$this->argv;
+		$argv = $argv !== null ? $argv : (array )$this->argv;
 
 		$this->result = null;
 
