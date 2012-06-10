@@ -13,7 +13,10 @@ class Sco_Array extends ArrayObject
 	 */
 	const ARRAY_PROP_BOTH = 3;
 
-	private $ARRAYOBJECT_OPTION = array('prop' => false, );
+	private $ARRAYOBJECT_OPTION = array(
+		'prop' => false,
+		'filter' => null,
+		);
 
 	function __construct($input = array(), $options = array(), $flags = self::ARRAY_PROP_BOTH)
 	{
@@ -28,8 +31,13 @@ class Sco_Array extends ArrayObject
 
 		if ($this->option('prop'))
 		{
-			$reflect = new HOF_Class_Reflection_Class($this);
-			$props = $reflect->getProperties(HOF_Class_Reflection_Property::IS_PROP | HOF_Class_Reflection_Property::IS_PUBLIC | (int)$this->option('filter'));
+			if ($this->option('filter') === null)
+			{
+				$this->option('filter', Sco_Reflection_Property::IS_PROP | Sco_Reflection_Property::IS_PUBLIC);
+			}
+
+			$reflect = new Sco_Reflection_Class($this);
+			$props = $reflect->getProperties((int)$this->option('filter'));
 			foreach ($props as $prop)
 			{
 				$k = (string )$prop->getName();
@@ -79,7 +87,7 @@ class Sco_Array extends ArrayObject
 	/*
 	public function toYaml($inline = Sco_Yaml::INLINE)
 	{
-		return Sco_Yaml::dump($this->toArray());
+	return Sco_Yaml::dump($this->toArray());
 	}
 	*/
 
@@ -229,6 +237,13 @@ class Sco_Array extends ArrayObject
 	public function insert($offset, $entry)
 	{
 		$this->array_splice($offset, 0, array($entry));
+
+		return $this;
+	}
+
+	public function append($entry)
+	{
+		parent::append($entry);
 
 		return $this;
 	}
