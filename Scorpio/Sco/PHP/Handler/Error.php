@@ -201,7 +201,7 @@ class Sco_PHP_Handler_Error implements Sco_PHP_Handler_Interface
 			return;
 		}
 
-		$typestr = Sco_PHP::errno_const($errno);
+		$typestr = Sco_PHP_Helper::errno_const($errno);
 
 		$file = Sco_File_Format::remove_root($errfile, SCORPIO_PATH_SYS . '../../');
 
