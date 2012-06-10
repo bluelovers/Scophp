@@ -194,4 +194,46 @@ class Sco_PHP_Handler_Error implements Sco_PHP_Handler_Interface
 		return true;
 	}
 
+	public static function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null)
+	{
+		if (0 && !(error_reporting() & $errno))
+		{
+			return;
+		}
+
+		$typestr = Sco_PHP::errno_const($errno);
+
+		$file = Sco_File_Format::remove_root($errfile, SCORPIO_PATH_SYS . '../../');
+
+		printf('<div>%s: %s in %s %d</div>', $typestr, $errstr, $file, $errline);
+
+		return true;
+	}
+
+	public static function fatal_error_handler()
+	{
+		if ($e = @error_get_last())
+		{
+			if ($e['type'] & E_FATAL)
+			{
+				$callback = null;
+
+				if (self::has_started())
+				{
+					list ($callback, ) = self::get(true);
+				}
+
+				if (!is_callable($callback))
+				{
+					$callback = array(__CLASS__, 'error_handler');
+				}
+
+				//self::error_handler($e['type'], $e['message'], $e['file'], $e['line']);
+				return call_user_func($callback, $e['type'], $e['message'], $e['file'], $e['line']);
+			}
+		}
+
+		return true;
+	}
+
 }
