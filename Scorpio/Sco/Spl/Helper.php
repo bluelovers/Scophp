@@ -43,9 +43,9 @@ class Sco_Spl_Helper
 				return;
 			}
 
-			$eval = 'function %s(){ return call_user_func_array(Sco_Spl_Helper::$lambda[\'%s\'], func_get_args()); }';
+			$eval = 'function %1$s(){ if (Sco_Spl_Helper::$lambda[\'%1$s\'] instanceof Sco_Spl_Callback_Interface) { return Sco_Spl_Helper::$lambda[\'%1$s\']->exec_array(func_get_args()); } else { return call_user_func_array(Sco_Spl_Helper::$lambda[\'%1$s\'], func_get_args()); } }';
 
-			eval(sprintf($eval, (string )$func_name, (string )$func_name));
+			eval(sprintf($eval, (string )$func_name));
 		}
 
 		return $func_name;
