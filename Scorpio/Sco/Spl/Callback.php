@@ -5,7 +5,7 @@
  * @copyright 2012
  */
 
-class Sco_Spl_Callback
+class Sco_Spl_Callback implements Sco_Spl_Callback_Interface
 {
 	var $argv;
 	var $func;
@@ -54,7 +54,7 @@ class Sco_Spl_Callback
 	{
 		$argv = func_num_args() > 0 ? func_get_args() : (array)$this->argv;
 
-		return call_user_func_array($this->func, $argv);
+		return $this->exec_array($argv);
 	}
 
 	public function exec_array($argv = null)
