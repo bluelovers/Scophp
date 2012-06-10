@@ -8,6 +8,9 @@
 class Sco_PHP
 {
 
+	protected static $_shutdown_handler;
+	protected static $_shutdown_registed;
+
 	public static function void()
 	{
 		return null;
@@ -86,6 +89,51 @@ class Sco_PHP
 		}
 
 		return $chk ? array($fail, $typestr, $errno) : $typestr;
+	}
+
+	/**
+	 * @return Sco_Spl_Callback_Iterator
+	 */
+	public static function shutdown_handler()
+	{
+		if (!isset(self::$_shutdown_handler))
+		{
+			self::$_shutdown_handler = new Sco_Spl_Callback_Iterator(array());
+		}
+
+		return self::$_shutdown_handler;
+	}
+
+	/**
+	 * Registers a callback to be executed after script execution finishes or exit() is called.
+	 */
+	public static function shutdown_register($shutdown_handler)
+	{
+		if ($shutdown_handler === true)
+		{
+			$callback = array('Sco_PHP_Handler_Error', 'fatal_error_handler');
+		}
+		/*
+		elseif ($shutdown_handler === false)
+		{
+			$callback = array(__CLASS__, 'void');
+		}
+		*/
+		else
+		{
+			$callback = $shutdown_handler;
+		}
+
+		$handler = self::shutdown_handler()->append($callback);
+
+		if (!self::$_shutdown_registed)
+		{
+			register_shutdown_function($handler->callback());
+
+			self::$_shutdown_registed = true;
+		}
+
+		return true;
 	}
 
 }
