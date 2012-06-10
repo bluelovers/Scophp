@@ -91,11 +91,14 @@ class Sco_PHP
 				break;
 			default:
 				$fail = true;
-				$typestr = 'E_UNKNOW['.$errno.']';
+				$typestr = 'E_UNKNOW[' . $errno . ']';
 				break;
 		}
 
-		return $chk ? array($fail, $typestr, $errno) : $typestr;
+		return $chk ? array(
+			$fail,
+			$typestr,
+			$errno) : $typestr;
 	}
 
 	/**
@@ -133,6 +136,11 @@ class Sco_PHP
 		else
 		{
 			$callback = $shutdown_handler;
+
+			if (!is_callable($callback, true, $callable_name))
+			{
+				throw new InvalidArgumentException(sprintf('Invalid shutdown callback \'%s\' passed', $callable_name));
+			}
 		}
 
 		$handler = self::shutdown_handler()->append($callback);
