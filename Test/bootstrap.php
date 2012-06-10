@@ -40,44 +40,14 @@ function _shutdown_function()
 	$table = new Zend_Text_Table(array('columnWidths' => array(80)));
 	$table->appendRow(array(sprintf('Processed in %.8f second(s), %d io, %s/%s. PHP %s %s', microtime(true) - SCORPIO_MICROTIME, count($get_included_files), $size1, $size2, PHP_VERSION, PHP_OS)));
 	echo $table;
-}
 
-function _error_handler($code, $msg, $file, $line)
-{
-	if (0 && !(error_reporting() & $code))
-	{
-		return;
-	}
-
-	$typestr = Sco_PHP::errno_const($code);
-
-	$file = Sco_File_Format::remove_root($file, SCORPIO_PATH_SYS . '../../');
-
-	printf('<div>%s: %s in %s %d</div>', $typestr, $msg, $file, $line);
-
-	return true;
-}
-
-function _fatal_error_handler()
-{
-	if ($e = @error_get_last())
-	{
-		if ($e['type'] & E_FATAL)
-		{
-			error_handler($e['type'], $e['message'], $e['file'], $e['line']);
-		}
-	}
-
-	shutdown_function();
-
-	exit;
 }
 
 Sco_Spl_Helper::createFunction('printnl', 'Sco_PHP_Helper::sprintnl');
 Sco_Spl_Helper::createFunction('shutdown_function', '_shutdown_function');
-Sco_Spl_Helper::createFunction('error_handler', '_error_handler');
-Sco_Spl_Helper::createFunction('fatal_error_handler', '_fatal_error_handler');
+Sco_Spl_Helper::createFunction('error_handler', 'Sco_PHP_Handler_Error::error_handler');
 
 $old = Sco_PHP_Handler_Error::start('error_handler');
 
-register_shutdown_function('fatal_error_handler');
+Sco_PHP::shutdown_register(true);
+Sco_PHP::shutdown_register('shutdown_function');
