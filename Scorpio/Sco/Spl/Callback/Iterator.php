@@ -13,6 +13,11 @@ class Sco_Spl_Callback_Iterator extends Sco_Array implements Sco_Spl_Callback_In
 
 	public $result;
 
+	/**
+	 * @return bool
+	 */
+	public $disable;
+
 	public function __construct($callback, $argv = null)
 	{
 		parent::__construct(array(), array('prop' => false));
@@ -57,6 +62,8 @@ class Sco_Spl_Callback_Iterator extends Sco_Array implements Sco_Spl_Callback_In
 
 	public function exec()
 	{
+		if ($this->disable) return;
+
 		$argv = func_num_args() > 0 ? func_get_args() : (array)$this->argv;
 
 		return $this->exec_array($argv);
@@ -64,6 +71,8 @@ class Sco_Spl_Callback_Iterator extends Sco_Array implements Sco_Spl_Callback_In
 
 	public function exec_array($argv = null)
 	{
+		if ($this->disable) return;
+
 		$argv = $argv !== null ? $argv : (array)$this->argv;
 
 		$this->result = null;
@@ -90,6 +99,13 @@ class Sco_Spl_Callback_Iterator extends Sco_Array implements Sco_Spl_Callback_In
 	public function result()
 	{
 		return $this->result;
+	}
+
+	public function disable($disable = true)
+	{
+		$this->disable = (bool)$disable;
+
+		return $this;
 	}
 
 }
