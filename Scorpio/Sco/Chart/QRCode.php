@@ -261,6 +261,9 @@ class Sco_Chart_QRCode
 		return (array )$this->_options;
 	}
 
+	/**
+	 * @return Sco_Chart_QRCode_Adapter_Abstract
+	 */
 	public function generate()
 	{
 		return $this->_adapter->setOptions($this->_options)->generate();
