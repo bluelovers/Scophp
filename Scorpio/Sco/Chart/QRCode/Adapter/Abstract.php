@@ -99,6 +99,8 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 
 	/**
 	 * generate()
+	 *
+	 * @return Sco_Chart_QRCode_Adapter_Abstract
 	 */
 	public function generate()
 	{
