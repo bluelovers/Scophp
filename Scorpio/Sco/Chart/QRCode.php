@@ -7,6 +7,7 @@
 
 /**
  * @link http://ar2rsawseen.users.phpclasses.org/package/6399-PHP-Generate-QR-Code-images-using-Google-Chart-API.html
+ * @link http://webcodingeasy.com/PHP-classes/QR-code-generator-class
  */
 class Sco_Chart_QRCode
 {
