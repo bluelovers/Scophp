@@ -18,13 +18,45 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 	 */
 	protected $_options = array();
 
+	/**
+	 * @var bool
+	 */
 	protected $_maked;
+
+	/**
+	 * @var Sco_Chart_QRCode
+	 */
+	protected $_qr;
 
 	public $uri;
 	public $im;
 	public $type;
 	public $file;
 	public $html;
+
+	/**
+	 * @param Sco_Chart_QRCode $qr_obj
+	 * @return self
+	 */
+	public function bindTo($qr_obj)
+	{
+		if (!$qr_obj instanceof Sco_Chart_QRCode)
+		{
+			throw new InvalidArgumentException('\'%s\' must instanceof %s', get_class($qr_obj), 'Sco_Chart_QRCode');
+		}
+
+		$this->_qr = $qr_obj;
+
+		return $this;
+	}
+
+	/**
+	 * @return Sco_Chart_QRCode
+	 */
+	public function getObject()
+	{
+		return $this->_qr;
+	}
 
 	/**
 	 * setContent()
