@@ -38,20 +38,23 @@ class Sco_Chart_QRCode
 	 */
 	const EC_H = 'H';
 
-	const SIZE_DEF = 150;
+	const SIZE_DEF = 120;
+
+	const CHARSET = 'UTF-8';
+	const IM_TYPE = 'png';
 
 	/**
 	 * @var Sco_Chart_QRCode_Adapter_Abstract
 	 */
 	protected static $_adapter_class = 'Sco_Chart_QRCode_Adapter_Google';
 	protected static $_adapter_size = self::SIZE_DEF;
-	protected static $_adapter_ec = self::EC_L;
+	protected static $_adapter_ec = self::EC_H;
 	protected static $_adapter_options = array(
 		'size' => self::SIZE_DEF,
-		'ec' => self::EC_L,
+		'ec' => self::EC_H,
+		'charset' => self::CHARSET,
+		'type' => self::IM_TYPE,
 		);
-
-	public static $charset = 'UTF-8';
 
 	/**
 	 * @var Sco_Chart_QRCode_Adapter_Abstract
@@ -73,12 +76,18 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function __construct($options = array(), $adapter_class = null)
+	public function __construct($content = null, $options = array(), $adapter_class = null)
 	{
-		$this->setOptions(array_merge(self::$_adapter_options, (array )$options), true);
 		$this->setAdapter($adapter_class);
+		$this->setOptions(array_merge(self::$_adapter_options, (array )$options), true);
+		$this->setContent($content);
 
 		return $this;
+	}
+
+	public static function newInstance($content = null, $options = array(), $adapter_class = null)
+	{
+		return new self($content, $options, $adapter_class);
 	}
 
 	/**
@@ -147,7 +156,9 @@ class Sco_Chart_QRCode
 		}
 
 		$old = $this->_adapter;
-		$adapter = null;
+
+		$null = null;
+		$adapter = &$null;
 
 		if (!is_object($adapter_class))
 		{
@@ -164,6 +175,8 @@ class Sco_Chart_QRCode
 		}
 
 		$this->_adapter = $adapter;
+
+		$this->_adapter->setOptions($this->_options);
 
 		return $old;
 	}
@@ -199,7 +212,7 @@ class Sco_Chart_QRCode
 		return $this->_adapter->getContent();
 	}
 
-	public function setSize($size)
+	public function &setSize($size)
 	{
 		if ($size === null)
 		{
@@ -214,13 +227,13 @@ class Sco_Chart_QRCode
 	{
 		if ($this->_options['size'] === null)
 		{
-			$this->_options['size'] = Sco_Chart_QRCode::getAdapterDefaultSize();
+			$this->setSize(null);
 		}
 
 		return $this->_options['size'];
 	}
 
-	public function setEc($ec)
+	public function &setEc($ec)
 	{
 		if ($ec === null)
 		{
@@ -235,13 +248,13 @@ class Sco_Chart_QRCode
 	{
 		if ($this->_options['ec'] === null)
 		{
-			$this->_options['ec'] = Sco_Chart_QRCode::getAdapterDefaultEc();
+			$this->setEc(null);
 		}
 
 		return $this->_options['ec'];
 	}
 
-	public function setOptions($options, $sync = false)
+	public function &setOptions($options, $sync = false)
 	{
 		foreach ($options as $k => $v)
 		{
@@ -261,12 +274,33 @@ class Sco_Chart_QRCode
 		return (array )$this->_options;
 	}
 
+	public function &setCharset($charset)
+	{
+		if ($charset === null)
+		{
+			$charset = Sco_Chart_QRCode::CHARSET;
+		}
+
+		$this->_options['charset'] = $charset;
+		return $this;
+	}
+
+	public function getCharset()
+	{
+		if ($this->_options['charset'] === null)
+		{
+			$this->setCharset(null);
+		}
+
+		return $this->_options['charset'];
+	}
+
 	/**
 	 * @return Sco_Chart_QRCode_Adapter_Abstract
 	 */
-	public function generate()
+	public function make()
 	{
-		return $this->_adapter->setOptions($this->_options)->generate();
+		return $this->_adapter->setOptions($this->_options)->make();
 	}
 
 	/**
@@ -274,7 +308,7 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function url($url)
+	public function do_url($url)
 	{
 		if (preg_match('/^https?:\/\//', $url))
 		{
@@ -293,7 +327,7 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function bookmark($title, $url)
+	public function do_bookmark($title, $url)
 	{
 		$this->setContent(sprintf(self::FORMAT_BOOKMARK, $title, $url));
 
@@ -305,7 +339,7 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function text($text)
+	public function do_text($text)
 	{
 		$this->setContent($text);
 
@@ -317,7 +351,7 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function smsto($phone, $text)
+	public function do_smsto($phone, $text)
 	{
 		$this->setContent(sprintf(self::FORMAT_SMSTO, $phone, $text));
 
@@ -329,7 +363,7 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function tel($phone)
+	public function do_tel($phone)
 	{
 		$this->setContent(sprintf(self::FORMAT_TEL, $phone));
 
@@ -341,7 +375,7 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function contact_info($name, $address, $phone, $email)
+	public function do_contact_info($name, $address, $phone, $email)
 	{
 		$this->setContent(sprintf(self::FORMAT_CONTACT_INFO, $name, $address, $phone, $email));
 
@@ -353,7 +387,7 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function mailto($email, $subject, $message)
+	public function do_mailto($email, $subject, $message)
 	{
 		$this->setContent(sprintf(self::FORMAT_MAILTO, $email, $subject, $message));
 
@@ -365,7 +399,7 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function geo($lat, $lon, $height)
+	public function do_geo($lat, $lon, $height)
 	{
 		$this->setContent(sprintf(self::FORMAT_GEO, $lat, $lon, $height));
 
@@ -377,7 +411,7 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function wifi($type, $ssid, $pass)
+	public function do_wifi($type, $ssid, $pass)
 	{
 		$this->setContent(sprintf(self::FORMAT_WIFI, $type, $ssid, $pass));
 
@@ -389,7 +423,7 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function iappli($adf, $cmd, $param)
+	public function do_iappli($adf, $cmd, $param)
 	{
 		$param_str = '';
 		foreach ($param as $val)
@@ -399,6 +433,26 @@ class Sco_Chart_QRCode
 		$this->setContent("LAPL:ADFURL:" . $adf . ";CMD:" . $cmd . ";" . $param_str . ";");
 
 		return $this;
+	}
+
+	public function createURI()
+	{
+		return call_user_func_array(array($this->_adapter, __FUNCTION__), func_get_args());
+	}
+
+	public function createImage()
+	{
+		return call_user_func_array(array($this->_adapter, __FUNCTION__), func_get_args());
+	}
+
+	public function createFile()
+	{
+		return call_user_func_array(array($this->_adapter, __FUNCTION__), func_get_args());
+	}
+
+	public function createHtml()
+	{
+		return call_user_func_array(array($this->_adapter, __FUNCTION__), func_get_args());
 	}
 
 }
