@@ -8,19 +8,21 @@
 /**
  * @link http://ar2rsawseen.users.phpclasses.org/package/6399-PHP-Generate-QR-Code-images-using-Google-Chart-API.html
  * @link http://webcodingeasy.com/PHP-classes/QR-code-generator-class
+ * @link http://zxing.appspot.com/generator
+ * @link http://zxing.org/w/decode.jspx
  */
 class Sco_Chart_QRCode
 {
 
 	const FORMAT_BOOKMARK = 'MEBKM:TITLE:%s;URL:%s;;';
-	const FORMAT_CONTACT_INFO = 'MECARD:N:%s;ADR:%s;TEL:%s;EMAIL:%s;;';
-	const FORMAT_GEO = 'GEO:%s,%s,%s';
+	const FORMAT_MECARD = 'MECARD:N:%s;ADR:%s;TEL:%s;EMAIL:%s;;';
+	const FORMAT_GEO = 'GEO:%s,%s?q=%s';
 	const FORMAT_MAILTO = 'MATMSG:TO:%s;SUB:%s;BODY:%s;;';
 	const FORMAT_SMSTO = 'SMSTO:%s:%s';
 	const FORMAT_TEL = 'TEL:%s';
 	const FORMAT_TEXT = '%s';
 	const FORMAT_URL = '%s';
-	const FORMAT_WIFI = 'WIFI:T:%s;S:%s;P:%s;;';
+	const FORMAT_WIFI = 'WIFI:S:%s;T:%s;P:%s;;';
 
 	/**
 	 * 7%
@@ -376,9 +378,9 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function do_contact_info($name, $address, $phone, $email)
+	public function do_mecard($name, $address, $phone, $email)
 	{
-		$this->setContent(sprintf(self::FORMAT_CONTACT_INFO, $name, $address, $phone, $email));
+		$this->setContent(sprintf(self::FORMAT_MECARD, $name, $address, $phone, $email));
 
 		return $this;
 	}
@@ -400,9 +402,9 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function do_geo($lat, $lon, $height)
+	public function do_geo($latitude, $longitude, $query = '')
 	{
-		$this->setContent(sprintf(self::FORMAT_GEO, $lat, $lon, $height));
+		$this->setContent(sprintf(self::FORMAT_GEO, $latitude, $longitude, $query));
 
 		return $this;
 	}
@@ -412,7 +414,7 @@ class Sco_Chart_QRCode
 	 *
 	 * @return self
 	 */
-	public function do_wifi($type, $ssid, $pass)
+	public function do_wifi($ssid, $type = 'nopass', $pass = '')
 	{
 		$this->setContent(sprintf(self::FORMAT_WIFI, $type, $ssid, $pass));
 
