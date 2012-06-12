@@ -79,8 +79,8 @@ class Sco_Chart_QRCode
 	 */
 	public function __construct($content = null, $options = array(), $adapter_class = null)
 	{
+		$this->setOptions(array_merge(self::$_adapter_options, (array )$options));
 		$this->setAdapter($adapter_class);
-		$this->setOptions(array_merge(self::$_adapter_options, (array )$options), true);
 		$this->setContent($content);
 
 		return $this;
