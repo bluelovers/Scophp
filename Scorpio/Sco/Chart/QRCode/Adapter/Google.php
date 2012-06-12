@@ -15,7 +15,7 @@ class Sco_Chart_QRCode_Adapter_Google extends Sco_Chart_QRCode_Adapter_Abstract
 	{
 		if ($this->_make() && isset($this->uri))
 		{
-			return $this->uri;
+			return (string )$this->uri;
 		}
 
 		return $this->uri = sprintf(self::URI . '?' . self::URI_ARGV, $this->_options['size'], $this->_options['ec'], urlencode($this->_content), $this->_options['margin'], $this->_options['charset']);
@@ -52,7 +52,7 @@ class Sco_Chart_QRCode_Adapter_Google extends Sco_Chart_QRCode_Adapter_Abstract
 	{
 		if ($this->_make() && isset($this->file))
 		{
-			return $this->file;
+			return (string )$this->file;
 		}
 
 		list($this->im, $this->type) = $this->createImage($type);
@@ -67,7 +67,7 @@ class Sco_Chart_QRCode_Adapter_Google extends Sco_Chart_QRCode_Adapter_Abstract
 	{
 		if ($this->_make() && isset($this->html))
 		{
-			return $this->html;
+			return (string )$this->html;
 		}
 
 		return $this->html = sprintf('<img src="%s" border="0" />', $this->createURI());
