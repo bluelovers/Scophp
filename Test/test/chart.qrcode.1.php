@@ -47,7 +47,7 @@ printnl($qr_adapter->getContent());
 printnl(http_build_query(array('chl' => $qr_adapter->getContent())));
 printnl($qr_adapter->createHtml());
 
-printnl($qr->do_wifi("WEP", "wifi_name", "password")->make()->createURI());
+printnl($qr->do_wifi("wifi_name", "WEP", "password")->make()->createURI());
 printnl($qr_adapter->getContent());
 printnl(http_build_query(array('chl' => $qr_adapter->getContent())));
 printnl($qr_adapter->createHtml());
