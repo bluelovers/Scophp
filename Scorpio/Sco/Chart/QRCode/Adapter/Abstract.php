@@ -18,13 +18,21 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 	 */
 	protected $_options = array();
 
+	protected $_maked;
+
+	public $uri;
+	public $im;
+	public $type;
+	public $file;
+	public $html;
+
 	/**
 	 * setContent()
 	 *
 	 * @param string $content
 	 * @return self
 	 */
-	public function setContent($content)
+	public function &setContent($content)
 	{
 		$this->_content = (string )$content;
 		return $this;
@@ -40,7 +48,7 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 		return (string )$this->_content;
 	}
 
-	public function setSize($size)
+	public function &setSize($size)
 	{
 		if ($size === null)
 		{
@@ -55,13 +63,13 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 	{
 		if ($this->_options['size'] === null)
 		{
-			$this->_options['size'] = Sco_Chart_QRCode::getAdapterDefaultSize();
+			$this->setSize(null);
 		}
 
 		return $this->_options['size'];
 	}
 
-	public function setEc($ec)
+	public function &setEc($ec)
 	{
 		if ($ec === null)
 		{
@@ -72,17 +80,17 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 		return $this;
 	}
 
-	public function getEc($size)
+	public function getEc()
 	{
 		if ($this->_options['ec'] === null)
 		{
-			$this->_options['ec'] = Sco_Chart_QRCode::getAdapterDefaultEc();
+			$this->setEc(null);
 		}
 
 		return $this->_options['ec'];
 	}
 
-	public function setOptions($options)
+	public function &setOptions($options)
 	{
 		foreach ($options as $k => $v)
 		{
@@ -97,16 +105,96 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 		return (array )$this->_options;
 	}
 
+	public function &setCharset($charset)
+	{
+		if ($charset === null)
+		{
+			$charset = Sco_Chart_QRCode::CHARSET;
+		}
+
+		$this->_options['charset'] = $charset;
+		return $this;
+	}
+
+	public function getCharset()
+	{
+		if ($this->_options['charset'] === null)
+		{
+			$this->setCharset(null);
+		}
+
+		return $this->_options['charset'];
+	}
+
 	/**
-	 * generate()
+	 * make()
 	 *
 	 * @return Sco_Chart_QRCode_Adapter_Abstract
 	 */
-	public function generate()
+	public function make()
 	{
-		$this->setSize($this->_options['size'])->setEc($this->_options['ec']);
+		$this->_maked = false;
+
+		unset($this->uri);
+		unset($this->im);
+		unset($this->type);
+		unset($this->file);
+		unset($this->html);
+
+		$this->setSize($this->_options['size'])->setEc($this->_options['ec'])->setCharset($this->_options['charset']);
+
+		$this->_maked = true;
 
 		return $this;
+	}
+
+	protected function _make()
+	{
+		if (!$this->_maked)
+		{
+			$this->make();
+
+			return false;
+		}
+
+		return true;
+	}
+
+	protected function _file($file)
+	{
+		if ($file === null)
+		{
+			if ($this->_options['file'])
+			{
+				$file = $this->_options['file'];
+			}
+			else
+			{
+				$file = 'qrcode.' . $this->type;
+			}
+		}
+
+		return $this->file = $file;
+	}
+
+	public function createURI()
+	{
+		throw new BadMethodCallException(sprintf('%s::%s() not defined', get_class($this), __FUNCTION__ ));
+	}
+
+	public function createImage($type = null)
+	{
+		throw new BadMethodCallException(sprintf('%s::%s() not defined', get_class($this), __FUNCTION__ ));
+	}
+
+	public function createFile($file = null, $type = null)
+	{
+		throw new BadMethodCallException(sprintf('%s::%s() not defined', get_class($this), __FUNCTION__ ));
+	}
+
+	public function createHtml()
+	{
+		throw new BadMethodCallException(sprintf('%s::%s() not defined', get_class($this), __FUNCTION__ ));
 	}
 
 }
