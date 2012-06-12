@@ -177,8 +177,7 @@ class Sco_Chart_QRCode
 
 		$this->_adapter = $adapter;
 
-		$this->_adapter->bindTo($this);
-		$this->_adapter->setOptions($this->_options);
+		$this->_adapter->bindTo($this)->setOptions($this->_options);
 
 		return $old;
 	}
