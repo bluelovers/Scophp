@@ -56,7 +56,7 @@ class Sco_Chart_QRCode_Adapter_Google extends Sco_Chart_QRCode_Adapter_Abstract
 		}
 
 		list($this->im, $this->type) = $this->createImage($type);
-		$this->_file($file);
+		$this->file = $this->_file($file);
 
 		file_put_contents($this->file, $this->im, LOCK_EX);
 
