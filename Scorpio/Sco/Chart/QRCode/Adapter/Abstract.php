@@ -174,7 +174,7 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 			}
 		}
 
-		return $this->file = $file;
+		return $file;
 	}
 
 	public function createURI()
