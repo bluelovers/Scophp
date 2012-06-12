@@ -45,6 +45,9 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 			throw new InvalidArgumentException('\'%s\' must instanceof %s', get_class($qr_obj), 'Sco_Chart_QRCode');
 		}
 
+		$null = null;
+		$this->_qr = &$null;
+
 		$this->_qr = $qr_obj;
 
 		$this->setOptions($this->_qr->getOptions())->make();
