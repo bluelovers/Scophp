@@ -112,7 +112,7 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 			$charset = Sco_Chart_QRCode::CHARSET;
 		}
 
-		$this->_options['charset'] = $charset;
+		$this->_options['charset'] = (string)$charset;
 		return $this;
 	}
 
@@ -174,7 +174,7 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 			}
 		}
 
-		return $file;
+		return (string)$file;
 	}
 
 	public function createURI()
