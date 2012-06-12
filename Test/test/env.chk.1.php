@@ -7,7 +7,7 @@
 
 require_once ('../bootstrap.php');
 
-$chk_list = array('apache_request_headers', );
+$chk_list = array('apache_request_headers', 'mb_detect_encoding', 'iconv');
 
 _Env::run($chk_list);
 
@@ -108,7 +108,7 @@ class _Env
 		{
 			$color = $result ? '' : 'red';
 
-			printnl(sprintf('[%s] <span style="display: inline-block; color: %s;">%s</span>', $method, $color, self::_var_string($result)));
+			printnl(sprintf('<span style="display: inline-block; color: %3$s;">[%1$s] %2$s</span>', $method, self::_var_string($result), $color));
 		}
 	}
 
@@ -129,7 +129,7 @@ class _Env
 	{
 		if ($var === null)
 		{
-			return 'Null';
+			return 'NULL';
 		}
 		elseif (is_bool($var))
 		{
