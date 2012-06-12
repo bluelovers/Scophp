@@ -47,6 +47,8 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 
 		$this->_qr = $qr_obj;
 
+		$this->setOptions($this->_qr->getOptions())->make();
+
 		return $this;
 	}
 
@@ -80,6 +82,9 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 		return (string )$this->_content;
 	}
 
+	/**
+	 * @return Sco_Chart_QRCode_Adapter_Abstract
+	 */
 	public function &setSize($size)
 	{
 		if ($size === null)
@@ -101,6 +106,9 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 		return $this->_options['size'];
 	}
 
+	/**
+	 * @return Sco_Chart_QRCode_Adapter_Abstract
+	 */
 	public function &setEc($ec)
 	{
 		if ($ec === null)
@@ -122,6 +130,9 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 		return $this->_options['ec'];
 	}
 
+	/**
+	 * @return Sco_Chart_QRCode_Adapter_Abstract
+	 */
 	public function &setOptions($options)
 	{
 		foreach ($options as $k => $v)
@@ -137,6 +148,9 @@ abstract class Sco_Chart_QRCode_Adapter_Abstract
 		return (array )$this->_options;
 	}
 
+	/**
+	 * @return Sco_Chart_QRCode_Adapter_Abstract
+	 */
 	public function &setCharset($charset)
 	{
 		if ($charset === null)
