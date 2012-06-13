@@ -40,7 +40,7 @@ class Sco_Chart_QRCode_Adapter_Google extends Sco_Chart_QRCode_Adapter_Abstract
 		curl_setopt($ch, CURLOPT_POSTFIELDS, sprintf(self::URI_ARGV, $this->_options['size'], $this->_options['ec'], urlencode($this->_content), $this->_options['margin'], $this->_options['charset']));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_HEADER, false);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 2);
 
 		$this->im = curl_exec($ch);
 		curl_close($ch);
