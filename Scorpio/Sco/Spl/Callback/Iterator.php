@@ -73,7 +73,10 @@ class Sco_Spl_Callback_Iterator extends Sco_Array implements Sco_Spl_Callback_In
 	{
 		if ($this->disable) return;
 
-		$argv = $argv !== null ? $argv : (array )$this->argv;
+		if ($argv === null)
+		{
+			$argv = (array )$this->argv;
+		}
 
 		$this->result = null;
 
