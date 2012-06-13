@@ -59,7 +59,10 @@ class Sco_Spl_Callback implements Sco_Spl_Callback_Interface
 
 	public function exec_array($argv = null)
 	{
-		$argv = $argv !== null ? $argv : (array)$this->argv;
+		if ($argv === null)
+		{
+			$argv = (array )$this->argv;
+		}
 
 		return call_user_func_array($this->func, $argv);
 	}
