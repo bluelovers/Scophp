@@ -123,4 +123,26 @@ class Sco_Hook_Event extends Sco_Array
 		return !empty($hook_name);
 	}
 
+	/**
+	 * @return Sco_Hook
+	 */
+	public static function get($hook_name, $namespace = null)
+	{
+		return self::getInstance($namespace)->offsetGet($hook_name);
+	}
+
+	public static function exec($hook_name, $namespace = null)
+	{
+		$argv = func_num_args() > 2 ? array_slice(func_get_args(), 2) : array();
+
+		return self::exec_array($hook_name, $namespace, $argv);
+	}
+
+	public static function exec_array($hook_name, $namespace = null, $argv)
+	{
+		$_EVENT = self::getInstance($namespace);
+
+		return $_EVENT->offsetGet($hook_name)->setEvent($_EVENT)->exec_array($argv);
+	}
+
 }
