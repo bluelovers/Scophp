@@ -9,6 +9,11 @@ final class Sco
 {
 
 	/**
+	 * this framework need php version >= 5.2.0
+	 */
+	const PHP_VERSION = '5.2.0';
+
+	/**
 	 * @var Sco
 	 */
 	protected static $_instance;
