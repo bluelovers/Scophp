@@ -21,4 +21,4 @@ define('TAB', "\t");
 define('E_FATAL', E_ERROR | E_USER_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_RECOVERABLE_ERROR);
 define('ERROR_REPORTING', E_ALL | E_STRICT);
 
-?>
+define('NS_DEFAULT', 'Default');
