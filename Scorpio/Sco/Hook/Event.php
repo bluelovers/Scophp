@@ -10,6 +10,9 @@ class Sco_Hook_Event extends Sco_Array
 
 	protected static $namespace = NS_DEFAULT;
 
+	/**
+	 * @var Sco_Hook_Event
+	 */
 	protected static $_instance;
 
 	/**
@@ -19,6 +22,9 @@ class Sco_Hook_Event extends Sco_Array
 	 */
 	protected $_namespace = NS_DEFAULT;
 
+	/**
+	 * @return Sco_Hook_Event
+	 */
 	public function __construct($namespace = null)
 	{
 		if ($namespace === null)
@@ -42,6 +48,9 @@ class Sco_Hook_Event extends Sco_Array
 		return $this;
 	}
 
+	/**
+	 * @return Sco_Hook_Event
+	 */
 	public static function getInstance($namespace = null)
 	{
 		if ($namespace === null)
@@ -57,6 +66,9 @@ class Sco_Hook_Event extends Sco_Array
 		return new self();
 	}
 
+	/**
+	 * @param Sco_Hook $hook_name
+	 */
 	public function offsetSet($k, $hook_name)
 	{
 		$hook = null;
@@ -76,9 +88,14 @@ class Sco_Hook_Event extends Sco_Array
 			throw new InvalidArgumentException(sprintf('index key %s invaild or class %s not instanceof Sco_Hook', $k, get_class($hook)));
 		}
 
+		$hook->setEvent($this);
+
 		return parent::offsetSet($k, $hook);
 	}
 
+	/**
+	 * @return Sco_Hook
+	 */
 	public function offsetGet($k)
 	{
 		if (!isset($this[$k]))
