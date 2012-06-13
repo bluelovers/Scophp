@@ -157,7 +157,7 @@ class Sco_Spl_Callback_Hook extends Sco_Spl_Callback
 		/* We put the first data element on, if needed. */
 		if ($have_data)
 		{
-			$hook_args = array($data);
+			$hook_args = (array)$data;
 			//$hook_args = array_merge(array($data), self::$args[$event]);
 		}
 		else
@@ -212,6 +212,8 @@ class Sco_Spl_Callback_Hook extends Sco_Spl_Callback
 		{
 			$argv = (array )$this->argv;
 		}
+
+		array_splice($argv, 1, 0, array($this->callback_argv));
 
 		return call_user_func_array($this->func, $argv);
 	}
