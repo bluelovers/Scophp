@@ -16,10 +16,33 @@ class Sco_Spl_Closure
 	var $code;
 	var $env;
 
+	protected $_this;
+
 	public function __construct($code, $env)
 	{
 		$this->code = $code;
 		$this->env = $env;
+	}
+
+	/**
+	 * @return Sco_Spl_Closure
+	 */
+	public static function bind($closure , $newthis, $newscope = 'static')
+	{
+		return $closure->bindTo($newthis, $newscope);
+	}
+
+	/**
+	 * @return Sco_Spl_Closure
+	 */
+	public function bindTo($newthis, $newscope = 'static')
+	{
+		$null = null;
+		$this->_this = &$null;
+
+		$this->_this = $newthis;
+
+		return $this;
 	}
 
 	public function call($__args = NULL)
