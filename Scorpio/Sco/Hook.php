@@ -21,6 +21,8 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 
 	protected $hook_name;
 
+	public $data;
+
 	/**
 	 * @return Sco_Hook_Event
 	 */
@@ -31,11 +33,13 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 	 */
 	var $func;
 
-	public function __construct($hook_name)
+	public function __construct($hook_name, $argv = null)
 	{
 		parent::__construct(array(), array('prop' => false));
 
 		$this->setName($hook_name);
+
+		$this->argv = array_slice(func_get_args(), 1);
 
 		return $this;
 	}
@@ -60,9 +64,10 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 	/**
 	 * @param Sco_Hook_Event $hook_name
 	 */
-	public function setEvent($hook_event)
+	public function setEvent($hook_event, $data = array())
 	{
 		$this->hook_event = $hook_event;
+		$this->setData($data);
 
 		return $this;
 	}
@@ -73,6 +78,21 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 	public function getEvent()
 	{
 		return $this->hook_event;
+	}
+
+	public function setData(&$data)
+	{
+		$null = null;
+		$this->data = &$null;
+
+		$this->data = $data;
+
+		return $this;
+	}
+
+	public function getData()
+	{
+		return $this->data;
 	}
 
 	public static function throwException($flag = null)
@@ -112,7 +132,13 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 			$argv = (array )$this->argv;
 		}
 
-		array_unshift($argv, $this);
+		$_EVENT = array(
+			'_EVENT' => $this->hook_event,
+			'_HOOK' => $this,
+			'data' => &$this->data,
+			);
+
+		array_unshift($argv, &$_EVENT);
 
 		foreach ($this as $func)
 		{
@@ -141,7 +167,7 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 					throw new Exception($this->result);
 				}
 
-				return self::RET_ERROR;
+				return array(self::RET_ERROR, $_EVENT['data'], $this->result);
 			}
 			elseif ($this->result === self::RET_FAILED)
 			{
@@ -161,11 +187,11 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 			}
 			elseif ($this->result === self::RET_STOP)
 			{
-				return self::RET_STOP;
+				return array(self::RET_STOP, $_EVENT['data']);
 			}
 		}
 
-		return self::RET_SUCCESS;
+		return array(self::RET_SUCCESS, $_EVENT['data']);
 	}
 
 }
