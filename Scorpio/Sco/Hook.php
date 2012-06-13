@@ -45,9 +45,6 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 		return new self($hook_name);
 	}
 
-	/**
-	 * @param Sco_Hook_Event $hook_name
-	 */
 	public function setName($hook_name)
 	{
 		$this->hook_name = $hook_name;
@@ -60,6 +57,9 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 		return $this->hook_name;
 	}
 
+	/**
+	 * @param Sco_Hook_Event $hook_name
+	 */
 	public function setEvent($hook_event)
 	{
 		$this->hook_event = $hook_event;
@@ -67,6 +67,9 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 		return $this;
 	}
 
+	/**
+	 * @return Sco_Hook_Event
+	 */
 	public function getEvent()
 	{
 		return $this->hook_event;
@@ -127,7 +130,7 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 				$badhookmsg = $e->getMessage();
 			}
 
-			var_dump($this->func, $this->result, $e);
+			//var_dump($this->func, $this->result, $e);
 
 			/* String return is an error; false return means stop processing. */
 			//TODO: add hook ret object
