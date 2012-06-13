@@ -7,6 +7,8 @@
 
 require_once ('../bootstrap.php');
 
+apache_request_headers();
+
 $chk_list = array('apache_request_headers', 'mb_detect_encoding', 'iconv');
 
 _Env::run($chk_list);
@@ -176,6 +178,33 @@ class _Env
 		printnl(sprintf('[%s][%d] reset to %s', __FUNCTION__, ++$i, $zone));
 
 		return true;
+	}
+
+	public static function version_compare()
+	{
+		$chk_set = array(
+			Sco::PHP_VERSION,
+			'5.2.0',
+			'5.3.0',
+			);
+
+		$chk_set = array_unique($chk_set);
+
+		$i = 0;
+
+		foreach ($chk_set as $v)
+		{
+			$result = version_compare(PHP_VERSION, $v, '>=');
+
+			if ($i == 0)
+			{
+				$ret = $result;
+			}
+
+			printnl(sprintf('[%s][%d] PHP Version %s >= %s : %s', __FUNCTION__, ++$i, PHP_VERSION, $v, self::_var_string($result)));
+		}
+
+		return $ret;
 	}
 
 }
