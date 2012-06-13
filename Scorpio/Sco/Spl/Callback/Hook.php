@@ -102,7 +102,7 @@ class Sco_Spl_Callback_Hook extends Sco_Spl_Callback
 			elseif (is_string($this->hook_data[0]) && $this->hook_data[0] == 'func' && count($this->hook_data) == 3)
 			{
 				// 追加 $_EVENT 來允許存取 Sco_Event::instance($this->hook_name)->data)
-				$func = create_function('$_EVENT, ' . $this->hook_data[1], $this->hook_data[2]);
+				$func = create_function('$_EVENT, $_ARGV, ' . $this->hook_data[1], $this->hook_data[2]);
 
 				$have_eval = true;
 				// bluelovers
@@ -157,7 +157,7 @@ class Sco_Spl_Callback_Hook extends Sco_Spl_Callback
 		/* We put the first data element on, if needed. */
 		if ($have_data)
 		{
-			$hook_args = (array)$data;
+			$hook_args = $data;
 			//$hook_args = array_merge(array($data), self::$args[$event]);
 		}
 		else
