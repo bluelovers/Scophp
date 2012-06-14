@@ -26,8 +26,13 @@ class Sco_CodeGenerator_Php_Parameters extends Zend_CodeGenerator_Php_Abstract
 	 * @param array $parameters
 	 * @return Zend_CodeGenerator_Php_Method
 	 */
-	public function setParameters(Array $parameters)
+	public function setParameters($parameters)
 	{
+		if ($parameters instanceof Sco_CodeGenerator_Php_Parameters)
+		{
+			$parameters = $parameters->getParameters();
+		}
+
 		foreach ($parameters as $parameter)
 		{
 			$this->setParameter($parameter);
