@@ -14,11 +14,6 @@ class Sco_CodeGenerator_Php_Function extends Zend_CodeGenerator_Php_Abstract
 	protected $_docblock = null;
 
 	/**
-	 * @var bool
-	 */
-	protected $_isFinal = false;
-
-	/**
 	 * @var array
 	 */
 	protected $_parameters = array();
@@ -33,11 +28,69 @@ class Sco_CodeGenerator_Php_Function extends Zend_CodeGenerator_Php_Abstract
 	 */
 	protected $_name = null;
 
-	public function __construct($options = array())
+	/**
+	 * @var bool
+	 */
+	protected $_returnsReference = false;
+
+	/**
+	 * _init() - is called at construction time
+	 *
+	 */
+	protected function _init()
 	{
 		$this->_parameters = new Sco_CodeGenerator_Php_Parameters();
+	}
 
-		parent::__construct($options);
+	/**
+	 * fromReflection()
+	 *
+	 * @param Zend_Reflection_Function $reflectionFunction
+	 * @return Zend_CodeGenerator_Php_Function
+	 */
+	public static function fromReflection(Sco_Reflection_Function $reflectionFunction)
+	{
+		$filename = $reflectionFunction->getFileName();
+
+		if ($reflectionFunction->isInternal() || empty($filename))
+		{
+			throw new Zend_CodeGenerator_Php_Exception('cannot fromReflection ' . $reflectionFunction->getName());
+		}
+
+		$method = new self();
+
+		$method->setSourceContent($reflectionFunction->getContents(false));
+		$method->setSourceDirty(false);
+
+		if ($reflectionFunction->getDocComment() != '')
+		{
+			$method->setDocblock(Zend_CodeGenerator_Php_Docblock::fromReflection($reflectionFunction->getDocblock()));
+		}
+
+		$method->setName($reflectionFunction->getName());
+
+		foreach ($reflectionFunction->getParameters() as $reflectionParameter)
+		{
+			$method->setParameter(Zend_CodeGenerator_Php_Parameter::fromReflection($reflectionParameter));
+		}
+
+		$method->setBody($reflectionFunction->getBody());
+
+		$method->setReturnsReference($reflectionFunction->returnsReference());
+
+		return $method;
+	}
+
+	public function setReturnsReference($flag = true)
+	{
+		$this->_returnsReference = $flag;
+
+		return $this;
+	}
+
+	public function getReturnsReference()
+	{
+		return $this->_returnsReference;
 	}
 
 	/**
@@ -105,9 +158,16 @@ class Sco_CodeGenerator_Php_Function extends Zend_CodeGenerator_Php_Abstract
 	 * @param array $parameters
 	 * @return Zend_CodeGenerator_Php_Method
 	 */
-	public function setParameters(Array $parameters)
+	public function setParameters($parameters)
 	{
-		$this->_parameters->setParameters($parameters);
+		if ($parameters instanceof Sco_CodeGenerator_Php_Parameters)
+		{
+			$this->_parameters = $parameters;
+		}
+		else
+		{
+			$this->_parameters->setParameters($parameters);
+		}
 
 		return $this;
 	}
@@ -167,36 +227,39 @@ class Sco_CodeGenerator_Php_Function extends Zend_CodeGenerator_Php_Abstract
 	 *
 	 * @return string
 	 */
-	public function generate()
+	public function generate($space2tab = null)
 	{
 		$output = '';
 
 		$indent = $this->getIndentation();
 
+		if ($space2tab)
+		{
+			$indent = Sco_CodeGenerator_Helper::space2tab($indent, 4);
+		}
+
 		if (($docblock = $this->getDocblock()) !== null)
 		{
-			$docblock->setIndentation($indent);
+			$docblock->setIndentation('');
 			$output .= $docblock->generate();
 		}
 
-		$output .= $indent;
-
-		$output .= ' function ' . $this->getName() . '(';
+		$output .= 'function ' . ($this->getReturnsReference() ? '&' : '') . $this->getName() . '(';
 
 		$output .= $this->getParametersString();
 
-		$output .= ')' . self::LINE_FEED . $indent . '{' . self::LINE_FEED;
+		$output .= ')' . self::LINE_FEED . '{' . self::LINE_FEED;
 
 		if ($this->_body && $this->isSourceDirty())
 		{
-			$output .= '        ' . str_replace(self::LINE_FEED, self::LINE_FEED . $indent . $indent, trim($this->_body)) . self::LINE_FEED;
+			$output .= $indent . str_replace(self::LINE_FEED, self::LINE_FEED . $indent, trim($this->_body)) . self::LINE_FEED;
 		}
 		elseif ($this->_body)
 		{
 			$output .= $this->_body . self::LINE_FEED;
 		}
 
-		$output .= $indent . '}' . self::LINE_FEED;
+		$output .= '}' . self::LINE_FEED;
 
 		return $output;
 	}
