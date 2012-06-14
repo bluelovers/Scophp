@@ -167,7 +167,7 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 					throw new Exception($this->result);
 				}
 
-				return array(self::RET_ERROR, $_EVENT['data'], $this->result);
+				return array('ret' => self::RET_ERROR, 'data' => $_EVENT['data'], 'result' => $this->result);
 			}
 			elseif ($this->result === self::RET_FAILED)
 			{
@@ -187,11 +187,11 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 			}
 			elseif ($this->result === self::RET_STOP)
 			{
-				return array(self::RET_STOP, $_EVENT['data']);
+				return array('ret' => self::RET_STOP, 'data' => $_EVENT['data']);
 			}
 		}
 
-		return array(self::RET_SUCCESS, $_EVENT['data']);
+		return array('ret' => self::RET_SUCCESS, 'data' => $_EVENT['data'], 'result' => $this->result);
 	}
 
 }
