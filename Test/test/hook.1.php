@@ -29,6 +29,8 @@ $hook->append(function ()
 	$_EVENT = array_shift($args);
 	var_dump(__FUNCTION__);
 
+	$_EVENT['data'] += 1;
+
 	return Sco_Hook::RET_SUCCESS;
 });
 
@@ -38,7 +40,9 @@ $hook->append(function ()
 	$_EVENT = array_shift($args);
 	var_dump(__FUNCTION__, 2);
 
-	return Sco_Hook::RET_STOP;
+	$_EVENT['data'] += 1;
+
+	return Sco_Hook::RET_SUCCESS;
 });
 
 printf('Processed in %.8f second(s)' . NL, microtime(true) - $time);
