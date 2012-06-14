@@ -12,6 +12,7 @@ define('CR', "\r");
 define('CRLF', CR . LF);
 
 define('TAB', "\t");
+define('SPACE', ' ');
 
 !defined('E_DEPRECATED') and define('E_DEPRECATED', 8192);
 
