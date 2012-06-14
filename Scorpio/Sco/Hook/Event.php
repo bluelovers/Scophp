@@ -113,14 +113,14 @@ class Sco_Hook_Event extends Sco_Array
 		return parent::offsetGet($k);
 	}
 
-	public static function chkNamespace($namespace)
+	public static function chkNamespace($v)
 	{
-		return !empty($namespace);
+		return (bool)!(empty($v) || !is_string($v) || is_numeric($v));
 	}
 
-	public static function chkName($hook_name)
+	public static function chkName($v)
 	{
-		return !empty($hook_name);
+		return (bool)!(empty($v) || !is_string($v) || is_numeric($v));
 	}
 
 	/**
