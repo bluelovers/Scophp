@@ -428,28 +428,85 @@ class Sco_Text_Format
 	public static function bytes($bytes, $force_unit = NULL, $format = NULL, $si = TRUE)
 	{
 		// Format string
-		$format = ($format === NULL) ? '%01.2f %s' : (string) $format;
+		$format = ($format === NULL) ? '%01.2f %s' : (string )$format;
 
 		// IEC prefixes (binary)
 		if ($si == FALSE OR strpos($force_unit, 'i') !== FALSE)
 		{
-			$units = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB');
-			$mod   = 1024;
+			$units = array(
+				'B',
+				'KiB',
+				'MiB',
+				'GiB',
+				'TiB',
+				'PiB');
+			$mod = 1024;
 		}
 		// SI prefixes (decimal)
 		else
 		{
-			$units = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
-			$mod   = 1000;
+			$units = array(
+				'B',
+				'kB',
+				'MB',
+				'GB',
+				'TB',
+				'PB');
+			$mod = 1000;
 		}
 
 		// Determine unit to use
-		if (($power = array_search( (string) $force_unit, $units)) === FALSE)
+		if (($power = array_search((string )$force_unit, $units)) === FALSE)
 		{
 			$power = ($bytes > 0) ? floor(log($bytes, $mod)) : 0;
 		}
 
 		return sprintf($format, $bytes / pow($mod, $power), $units[$power]);
+	}
+
+	/**
+	 * Parses input from a string according to a format
+	 *
+	 * @see http://www.php.net/manual/zh/function.sscanf.php
+	 */
+	function vsscanf($str, $format, array $keys)
+	{
+		$array = array();
+		$return = sscanf($str, $format);
+
+		while ($return)
+		{
+			$key = array_shift($keys);
+
+			if ($key === null)
+			{
+				$array[] = array_shift($return);
+			}
+			elseif (array_key_exists($key, $array))
+			{
+				trigger_error(sprintf('Cannot redeclare array key \'%s\' previously declared', $key), E_USER_WARNING);
+			}
+			else
+			{
+				$array[$key] = array_shift($return);
+			}
+		}
+
+		while ($keys)
+		{
+			$key = array_shift($keys);
+
+			if (array_key_exists($key, $array))
+			{
+				trigger_error(sprintf('Cannot redeclare array key \'%s\' previously declared', $key), E_USER_WARNING);
+			}
+			else
+			{
+				$array[$key] = null;
+			}
+		}
+
+		return $array;
 	}
 
 }
