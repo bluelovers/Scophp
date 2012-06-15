@@ -10,6 +10,35 @@ class Sco_Text_Helper
 
 	public static $map_h2f;
 
+	/**
+	 * @see http://www.php.net/manual/en/function.preg-replace.php#87816
+	 */
+	public static function lf($str, $eol = NL, $search = CR)
+	{
+		/*
+		http://www.php.net/manual/en/function.preg-replace.php#87816
+
+		$sql = preg_replace("/(?<!\\n)\\r+(?!\\n)/", "\r\n", $sql);
+		$sql = preg_replace("/(?<!\\r)\\n+(?!\\r)/", "\r\n", $sql);
+		$sql = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", "\r\n", $sql);
+		*/
+
+		($search === null || $search === false) && $search = CR;
+
+		if (strpos($str, $search) !== false)
+		{
+			$str = preg_replace("/(?<!\\n)\\r+(?!\\n)/", CRLF, $str);
+			$str = preg_replace("/(?<!\\r)\\n+(?!\\r)/", CRLF, $str);
+			$str = preg_replace("/(?<!\\r)\\n\\r+(?!\\n)/", CRLF, $str);
+
+			($eol === null || $eol === false) && $eol = NL;
+
+			($eol != CRLF) && $str = str_replace(CRLF, $eol, $str);
+		}
+
+		return $str;
+	}
+
 	public static function str2hex($string)
 	{
 		$hex = '';
