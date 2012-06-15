@@ -46,18 +46,18 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 	 * @param  string $class
 	 * @return bool
 	 */
-	protected function _autoload($class, $autoloader = null, $ns = null)
+	protected function _autoload($class, $autoloader = null, $ns = null, $noerror = false)
 	{
 		$callback = $this->getDefaultAutoloader();
 		try
 		{
 			if ($this->suppressNotFoundWarnings())
 			{
-				@call_user_func($callback, $class, $autoloader, $ns);
+				@call_user_func($callback, $class, $autoloader, $ns, null, $noerror);
 			}
 			else
 			{
-				call_user_func($callback, $class, $autoloader, $ns);
+				call_user_func($callback, $class, $autoloader, $ns, null, $noerror);
 			}
 			return $class;
 		}
@@ -114,6 +114,15 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 
 		if (empty($autoloaders) || empty($ns)) return false;
 
+		$count = count($autoloaders);
+
+		/*
+		if (strpos($class, 'Iterator'))
+		{
+			var_dump($count, $class, $ns, $self->_internalAutoloader);
+		}
+		*/
+
 		foreach ($autoloaders as $autoloader)
 		{
 			if ($autoloader instanceof Zend_Loader_Autoloader_Interface)
@@ -134,12 +143,13 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 			{
 				$skip = true;
 
-				if (call_user_func($self->_internalAutoloader, $class, $autoloader, $ns))
+				if (call_user_func($self->_internalAutoloader, $class, $autoloader, $ns, $count > 1))
 				{
 					return true;
 				}
-
 			}
+
+			$count--;
 		}
 
 		if (!$skip && !in_array($self->_internalAutoloader, $autoloaders))
