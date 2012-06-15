@@ -82,9 +82,44 @@ if (!class_exists('Sco_File_Format') || !class_exists('Sco_Loader_Autoloader') |
 	//var_dump(get_include_path());
 }
 
-Sco_Loader_Autoloader::getInstance()->pushAutoloader(SCORPIO_PATH_SYS, 'Sco_', true)->setDefaultAutoloader(array('Sco_Loader', 'loadClass'));
+$autoloader = Sco_Loader_Autoloader::getInstance();
+
+$autoloader->setDefaultAutoloader(array('Sco_Loader', 'loadClass'));
+
+$exists = false;
+$get_include_path = '';
+foreach(scandir(SCORPIO_PATH_SYS.'Compatible/', 1) as $_)
+{
+	if ($_ == '.' || $_ == '..' || !is_dir($_dir = SCORPIO_PATH_SYS.'Compatible/'.$_))
+	{
+		continue;
+	}
+
+	if (version_compare(PHP_VERSION, $_, '>=') && preg_match('/^\d+\.\d+(?:\.\d+)$/', $_))
+	{
+		//$exists = true;
+		//$get_include_path = Sco_File_Format::path($_dir) . PATH_SEPARATOR . $get_include_path;
+		$autoloader->pushAutoloader($_dir, 'Sco_');
+	}
+}
+
+$autoloader->pushAutoloader(SCORPIO_PATH_SYS, 'Sco_', true);
+
+/*
+if ($exists)
+{
+	set_include_path($get_include_path . get_include_path());
+}
+*/
+
+//$autoloader->suppressNotFoundWarnings(true);
 
 Sco::instance();
 
+//$autoloader->suppressNotFoundWarnings(false);
+
+$null = null;
+$autoloader = &$null;
+
 error_reporting($error_reporting);
-unset($get_include_path, $path, $exists, $error_reporting, $dir_parent);
+unset($_, $autoloader, $_dir, $null, $get_include_path, $path, $exists, $error_reporting, $dir_parent);
