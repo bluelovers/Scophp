@@ -67,7 +67,7 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 	public function setEvent($hook_event, $data = array())
 	{
 		$this->hook_event = $hook_event;
-		$this->setData($data);
+		$this->setData(&$data);
 
 		return $this;
 	}
@@ -85,7 +85,7 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 		$null = null;
 		$this->data = &$null;
 
-		$this->data = $data;
+		$this->data = &$data;
 
 		return $this;
 	}
@@ -134,7 +134,8 @@ class Sco_Hook extends Sco_Spl_Callback_Iterator
 
 		$_EVENT = array(
 			'_EVENT' => $this->hook_event,
-			'_HOOK' => $this,
+			'_ARGV' => &$argv,
+			'_HOOK' => &$this,
 			'data' => &$this->data,
 			);
 
