@@ -8,21 +8,39 @@
 class Sco_Spl_Callback_Eval extends Sco_Spl_Callback
 {
 
-	public function exec()
+	public function func($func = null)
 	{
-		$this->_tmp['func_get_args'] = func_get_args();
-		$this->_tmp['args'] = array_combine((array)$this->argv, $this->_tmp['func_get_args']);
+		if ($func !== null)
+		{
+			$this->func = $func;
+			unset($this->_tmp);
+		}
 
-		extract($this->_tmp['args'], EXTR_REFS | EXTR_OVERWRITE);
-
-		unset($this->_tmp['func_get_args'], $this->_tmp['args']);
-
-		return eval($this->func);
+		return $this;
 	}
 
-	public function exec_array($argv = array())
+	public function exec()
 	{
-		return call_user_func_array(array($this, 'exec'), $argv);
+		if (!isset($this->_tmp))
+		{
+			$this->_tmp = create_function(implode(',', $this->argv), $this->func);
+		}
+
+		$argv = func_get_args();
+
+		return call_user_func_array($this->_tmp, $argv);
+
+		return $this->exec_array(func_get_args());
+	}
+
+	public function exec_array($argv)
+	{
+		if (!isset($this->_tmp))
+		{
+			$this->_tmp = create_function(implode(',', $this->argv), $this->func);
+		}
+
+		return call_user_func_array($this->_tmp, $argv);
 	}
 
 }
