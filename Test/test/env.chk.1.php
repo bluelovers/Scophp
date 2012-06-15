@@ -7,9 +7,7 @@
 
 require_once ('../bootstrap.php');
 
-apache_request_headers();
-
-$chk_list = array('apache_request_headers', 'mb_detect_encoding', 'iconv');
+$chk_list = array('apache_request_headers', 'mb_detect_encoding', 'iconv', 'http_build_url', 'class_alias');
 
 _Env::run($chk_list);
 
