@@ -74,7 +74,11 @@ class Sco_Yaml extends Symfony_Component_Yaml_Yaml
 
 	public static function setDefaultDumpFilter($callback)
 	{
+		$old = self::$_defaultDumpFilter;
+
 		self::$_defaultDumpFilter = $callback;
+
+		return $old;
 	}
 
 	public static function enableDefaultDumpFilter($flag = null)
