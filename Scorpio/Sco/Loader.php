@@ -83,7 +83,7 @@ class Sco_Loader extends Zend_Loader
 		return (bool)(class_exists($class, $autoload) || interface_exists($class, $autoload));
 	}
 
-	public static function loadClass($class, $dirs = null, $ns = null, $class_sep = self::CLASS_SEP)
+	public static function loadClass($class, $dirs = null, $ns = null, $class_sep = self::CLASS_SEP, $noerror = false)
 	{
 		if (self::existsClass($class, false))
 		{
@@ -98,11 +98,13 @@ class Sco_Loader extends Zend_Loader
 
 		$chk = false;
 
-		list($return, $file) = self::_loadClass($class, $dirs, $class_sep, $chk = ($ns && substr($class, 0, $_len = strlen($ns)) == $ns));
+		$class_sep === null && $class_sep = self::CLASS_SEP;
 
-		if ($chk && !self::existsClass($class, false))
+		list($return, $file) = self::_loadClass($class, $dirs, $class_sep, ($chk = ($ns && substr($class, 0, $_len = strlen($ns)) == $ns)) || $noerror);
+
+		if ($chk && $class != $ns && !self::existsClass($class, false))
 		{
-			list($return, $file, $dirs) = self::_loadClass(substr($class, $_len), $dirs, $class_sep);
+			list($return, $file, $dirs) = self::_loadClass(substr($class, $_len), $dirs, $class_sep, $noerror);
 		}
 
 		if (self::existsClass($class, false))
