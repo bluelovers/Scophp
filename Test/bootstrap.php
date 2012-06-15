@@ -15,6 +15,7 @@ header('content-type: text/html; charset: ' . 'UTF-8');
 echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><pre>';
 
 Sco_Loader_Autoloader::getInstance()->pushAutoloader('D:\Users\Documents\The Project\symfony\symfony1\Yaml', 'Symfony_Component_Yaml_');
+Sco_Loader_Autoloader::getInstance()->pushAutoloader('D:\Users\Documents\The Project\symfony\symfony\src\Symfony', 'Symfony\\');
 
 function _shutdown_function()
 {
