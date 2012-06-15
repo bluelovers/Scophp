@@ -22,6 +22,8 @@ class Sco_Hook_Event extends Sco_Array
 	 */
 	protected $_namespace = NS_DEFAULT;
 
+	protected $hook_data;
+
 	/**
 	 * @return Sco_Hook_Event
 	 */
@@ -51,7 +53,7 @@ class Sco_Hook_Event extends Sco_Array
 	/**
 	 * @return Sco_Hook_Event
 	 */
-	public static function getInstance($namespace = null)
+	public static function &getInstance($namespace = null)
 	{
 		if ($namespace === null)
 		{
@@ -126,23 +128,128 @@ class Sco_Hook_Event extends Sco_Array
 	/**
 	 * @return Sco_Hook
 	 */
-	public static function get($hook_name, $namespace = null)
+	public function getHook($hook_name, $namespace = null)
 	{
-		return self::getInstance($namespace)->offsetGet($hook_name);
+		if (isset($this))
+		{
+			return $this->offsetGet($hook_name);
+		}
+		else
+		{
+			return self::getInstance($namespace)->offsetGet($hook_name);
+		}
 	}
 
-	public static function exec($hook_name, $namespace = null)
+	/**
+	 * @return Sco_Hook_Event
+	 */
+	public function setHook($hook_name, $namespace = null, $hook = array())
 	{
-		$argv = func_num_args() > 2 ? array_slice(func_get_args(), 2) : array();
+		if (isset($this))
+		{
+			$this->offsetGet($hook_name)->append($namespace);
 
-		return self::exec_array($hook_name, $namespace, $argv);
+			return $this;
+		}
+		else
+		{
+			$_EVENT = self::getInstance($namespace);
+
+			$_EVENT->offsetGet($hook_name)->append($hook);
+
+			return $_EVENT;
+		}
 	}
 
-	public static function exec_array($hook_name, $namespace = null, $argv)
+	public function setData($hook_name, $data, $namespace = null)
 	{
-		$_EVENT = self::getInstance($namespace);
+		if (isset($this))
+		{
+			$this->hook_data[$hook_name] = &$data;
 
-		return $_EVENT->offsetGet($hook_name)->setEvent($_EVENT)->exec_array($argv);
+			return $this;
+		}
+		else
+		{
+			$_EVENT = self::getInstance($namespace);
+
+			$_EVENT->hook_data[$hook_name] = &$data;
+
+			return $_EVENT;
+		}
+	}
+
+	public function getData($hook_name, $namespace = null)
+	{
+		if (isset($this))
+		{
+			return $this->offsetGet($hook_name)->getData();
+		}
+		else
+		{
+			$_EVENT = self::getInstance($namespace);
+
+			return $_EVENT->offsetGet($hook_name)->getData();
+		}
+	}
+
+	public function exec($hook_name, $namespace = null)
+	{
+		if (isset($this))
+		{
+			$argv = func_num_args() > 1 ? array_slice(func_get_args(), 1) : array();
+
+			return $this->exec_array($hook_name, $argv);
+		}
+		else
+		{
+			$argv = func_num_args() > 2 ? array_slice(func_get_args(), 2) : array();
+
+			return self::exec_array($hook_name, $namespace, $argv);
+		}
+	}
+
+	public function exec_array($hook_name, $namespace = null, $argv = array())
+	{
+		if (isset($this))
+		{
+			//var_dump($this);
+			$_EVENT = &$this;
+			$_HOOK = $_EVENT->offsetGet($hook_name);
+
+			if (isset($_EVENT->hook_data[$hook_name]))
+			{
+				$data = &$_EVENT->hook_data[$hook_name];
+				$null = null;
+				$_EVENT->hook_data[$hook_name] = &$null;
+			}
+			else
+			{
+				$data = array();
+			}
+
+			return $_HOOK->setEvent($_EVENT, &$data)->exec_array($namespace);
+		}
+		else
+		{
+			$_EVENT = self::getInstance($namespace);
+			$_HOOK = $_EVENT->offsetGet($hook_name);
+
+			//var_dump($_EVENT);
+
+			if (isset($_EVENT->hook_data[$hook_name]))
+			{
+				$data = &$_EVENT->hook_data[$hook_name];
+				$null = null;
+				$_EVENT->hook_data[$hook_name] = &$null;
+			}
+			else
+			{
+				$data = array();
+			}
+
+			return $_HOOK->setEvent($_EVENT, &$data)->exec_array($argv);
+		}
 	}
 
 }
