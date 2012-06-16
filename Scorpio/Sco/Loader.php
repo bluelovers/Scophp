@@ -85,7 +85,7 @@ class Sco_Loader extends Zend_Loader
 
 	public static function loadClass($class, $dirs = null, $ns = null, $class_sep = self::CLASS_SEP, $noerror = false)
 	{
-		if (self::existsClass($class, false))
+		if (!$class || self::existsClass($class, false))
 		{
 			return;
 		}
