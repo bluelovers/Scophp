@@ -59,7 +59,15 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 			{
 				call_user_func($callback, $class, $autoloader, $ns, null, $noerror);
 			}
-			return $class;
+
+			if (class_exists($class, false) || interface_exists($class, false))
+			{
+				return $class;
+			}
+			else
+			{
+				return false;
+			}
 		}
 		catch (Zend_Exception $e)
 		{
@@ -115,13 +123,6 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 		if (empty($autoloaders) || empty($ns)) return false;
 
 		$count = count($autoloaders);
-
-		/*
-		if (strpos($class, 'Iterator'))
-		{
-			var_dump($count, $class, $ns, $self->_internalAutoloader);
-		}
-		*/
 
 		foreach ($autoloaders as $autoloader)
 		{
