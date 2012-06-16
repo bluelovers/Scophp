@@ -111,7 +111,7 @@ class Sco_Loader extends Zend_Loader
 		{
 			return true;
 		}
-		elseif (!self::$_suppressNotFoundWarnings)
+		elseif (!self::$_suppressNotFoundWarnings && !$noerror)
 		{
 			require_once 'Zend/Exception.php';
 			throw new Zend_Exception("File \"$file\" does not exist or class \"$class\" was not found in the file");
