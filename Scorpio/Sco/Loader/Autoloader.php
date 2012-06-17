@@ -9,6 +9,8 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 {
 	protected static $_instance;
 
+	const NS_EMPTY = '*';
+
 	static $error = null;
 
 	/**
