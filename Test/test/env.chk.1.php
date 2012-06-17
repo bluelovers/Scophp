@@ -7,7 +7,16 @@
 
 require_once ('../bootstrap.php');
 
-$chk_list = array('apache_request_headers', 'mb_detect_encoding', 'iconv', 'http_build_url', 'class_alias', 'json_encode', 'json_decode', 'lcfirst');
+$chk_list = array(
+	'apache_request_headers',
+	'mb_detect_encoding',
+	'iconv',
+	'http_build_url',
+	'class_alias',
+	'json_encode',
+	'json_decode',
+	'lcfirst',
+	'spl_object_hash',);
 
 _Env::run($chk_list);
 
@@ -28,7 +37,10 @@ class _Env
 
 		//$ref = new Sco_Reflection_Class(self::$_instance);
 
-		foreach (Sco_Reflection_Helper::get_public_methods(self::$_instance, array(__FUNCTION__, 'result', '_var_string'), null, true) as $method)
+		foreach (Sco_Reflection_Helper::get_public_methods(self::$_instance, array(
+			__FUNCTION__,
+			'result',
+			'_var_string'), null, true) as $method)
 		{
 			self::$_instance->setp[$method] = null;
 
@@ -114,7 +126,7 @@ class _Env
 
 	public static function result()
 	{
-		return (array)self::$_instance->setp;
+		return (array )self::$_instance->setp;
 	}
 
 	protected function __construct()
@@ -200,6 +212,30 @@ class _Env
 			}
 
 			printnl(sprintf('[%s][%d] PHP Version %s >= %s : %s', __FUNCTION__, ++$i, PHP_VERSION, $v, self::_var_string($result)));
+		}
+
+		return $ret;
+	}
+
+	public static function xdebug()
+	{
+		$chk_set = array(
+			'xdebug_disable',
+			'xdebug_stop_code_coverage',
+			);
+
+		$ret = null;
+
+		foreach ($chk_set as $v)
+		{
+			$result = function_exists($v);
+
+			if ($ret === null || $ret)
+			{
+				$ret = $result;
+			}
+
+			printnl(sprintf('[%s][%d] %s : %s', __FUNCTION__, ++$i, $v, self::_var_string($result)));
 		}
 
 		return $ret;
