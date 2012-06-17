@@ -179,4 +179,14 @@ class Sco_IdentityCard_ROC implements Sco_IdentityCard_Interface
 		return $arr;
 	}
 
+	public function filter($value)
+    {
+    	if (preg_match(self::REGEX_FILTER, $value, $m))
+    	{
+    		return strtoupper($m[0]);
+    	}
+
+        return null;
+    }
+
 }
