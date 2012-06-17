@@ -104,7 +104,7 @@ foreach(scandir(SCORPIO_PATH_SYS.'Compatible/', 1) as $_)
 }
 
 $autoloader->pushAutoloader(SCORPIO_PATH_SYS, 'Sco_', true);
-$autoloader->pushAutoloader(SCORPIO_PATH_SYS.'Compatible/SPL/', '*');
+$autoloader->pushAutoloader(SCORPIO_PATH_SYS.'Compatible/SPL/', Sco_Loader_Autoloader::NS_EMPTY);
 
 /*
 if ($exists)
