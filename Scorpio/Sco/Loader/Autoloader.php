@@ -120,7 +120,15 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 			}
 		}
 
-		if (empty($autoloaders) || empty($ns)) return false;
+		if (empty($autoloaders) || empty($ns))
+		{
+			if (!$autoloaders = $self->getNamespaceAutoloaders('*'))
+			{
+				return false;
+			}
+
+			$ns = null;
+		}
 
 		$count = count($autoloaders);
 
