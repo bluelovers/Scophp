@@ -8,3 +8,5 @@
 require_once ('../bootstrap.php');
 
 var_dump(Sco_PHP_Handler_Error::last_result(), Sco_PHP_Handler_Error::get(), Sco_PHP_Handler_Error::state(), Sco_PHP_Handler_Error::has_started(), Sco_PHP_Handler_Error::restore(), Sco_PHP_Handler_Error::get(), Sco_PHP_Handler_Error::get(true));
+
+var_dump(E_ERROR & E_FATAL);
