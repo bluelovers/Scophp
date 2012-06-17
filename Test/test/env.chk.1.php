@@ -20,6 +20,10 @@ $chk_list = array(
 
 _Env::run($chk_list);
 
+printnl('');
+
+print_r(get_included_files());
+
 class _Env
 {
 
@@ -241,4 +245,30 @@ class _Env
 		return $ret;
 	}
 
+	public static function spl()
+	{
+		$chk_set = array(
+			'CallbackFilterIterator',
+			);
+
+		$ret = null;
+
+		foreach ($chk_set as $v)
+		{
+			$result = class_exists($v);
+
+			if ($ret === null || $ret)
+			{
+				$ret = $result;
+			}
+
+			printnl(sprintf('[%s][%d] %s : %s', __FUNCTION__, ++$i, $v, self::_var_string($result)));
+		}
+
+		return $ret;
+
+	}
+
 }
+
+
