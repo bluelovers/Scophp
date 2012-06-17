@@ -79,6 +79,7 @@ class Sco_IdentityCard_ROC implements Sco_IdentityCard_Interface
 	const GENDER_FEMALE = 2;
 
 	const REGEX = '/^[a-zA-Z][1-2][0-9]{8}$/';
+	const REGEX_FILTER = '/([a-zA-Z][1-2][0-9]{8})/';
 
 	public function generate($city = null, $gender = null)
 	{
