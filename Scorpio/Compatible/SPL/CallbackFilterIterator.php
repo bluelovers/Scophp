@@ -5,7 +5,7 @@
  * @copyright 2012
  */
 
-if (!class_exists('CallbackFilterIterator'))
+if (!class_exists('CallbackFilterIterator', false))
 {
 	/**
 	 * 同时执行过滤和回调操作，在找到一个匹配的元素之后会调用回调函数。
