@@ -16,23 +16,16 @@ final class Sco
 	/**
 	 * @var Sco
 	 */
-	protected static $_instance;
+	private static $_instance;
 	/**
 	 * @var bool
 	 */
 	private static $_instanced;
 
 	/**
-	 * destruct callback
-	 *
-	 * @var Sco_Spl_Callback_Iterator
-	 */
-	protected $destruct_handler;
-
-	/**
 	 * @var Sco_Registry
 	 */
-	protected $registry;
+	private $registry;
 
 	public function __construct()
 	{
@@ -44,33 +37,29 @@ final class Sco
 
 		self::$_instance = &$this;
 		self::$_instanced = true;
-
-		$this->destruct_handler = new Sco_Spl_Callback_Iterator(array());
-
-		$this->registry = new Sco_Registry();
-
-		//Zend_Registry::setInstance($this->registry);
 	}
 
 	/**
 	 * exec registed destruct callback
 	 */
 	public static function destruct()
-    {
-    	//echo __METHOD__;
-
-		self::$_instance->destruct_handler->exec();
-		self::$_instance->destruct_handler->disable(true);
-    }
+	{
+		if (isset(self::$_instance->registry) && isset(self::$_instance->registry->destruct_handler) && self::$_instance->registry->destruct_handler instanceof Sco_Spl_Callback_Interface)
+		{
+			self::$_instance->registry->destruct_handler->exec();
+			self::$_instance->registry->destruct_handler->disable(true);
+		}
+	}
 
 	public static function instance()
-    {
-        if (!self::$_instanced) {
-            new self();
-        }
+	{
+		if (!self::$_instanced)
+		{
+			new self();
+		}
 
-        return true;
-    }
+		return true;
+	}
 
 	public function __destruct()
 	{
@@ -92,6 +81,23 @@ final class Sco
 	{
 		self::$_instance = null;
 		exit(sprintf('Fatal error: Cannot redeclare %s() previously declared', __CLASS__));
+	}
+
+	public static function &registry()
+	{
+		if (!isset(self::$_instance->registry))
+		{
+			self::$_instance->registry = new Sco_Registry();
+
+			/**
+			 * destruct callback
+			 *
+			 * @var Sco_Spl_Callback_Iterator
+			 */
+			self::$_instance->registry->destruct_handler = new Sco_Spl_Callback_Iterator(array());
+		}
+
+		return self::$_instance->registry;
 	}
 
 }
