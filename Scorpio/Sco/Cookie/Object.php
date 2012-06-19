@@ -5,7 +5,7 @@
  * @copyright 2012
  */
 
-class Sco_Cookie_Object extends ArrayObject
+class Sco_Cookie_Object extends ArrayObject implements Sco_Cookie_Interface
 {
 
 	protected $_config = array(
