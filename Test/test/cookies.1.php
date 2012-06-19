@@ -9,14 +9,15 @@ require_once ('../bootstrap.php');
 
 var_dump($_COOKIE);
 
-Sco_Cookie_Object::set('abc', 123);
+Sco_Cookie::set('abc', 123);
+Sco_Cookie::set('a2', 123);
 
-var_dump(Sco_Cookie_Object::get('abc'));
+var_dump(Sco_Cookie::get('abc'));
 
-Sco_Cookie_Object::set('abc', null);
+Sco_Cookie::set('abc', null);
 
-Sco_Cookie_Object::save();
+Sco_Cookie::save();
 
 var_dump($_COOKIE);
 
-var_dump(headers_list());
+var_dump(headers_list(), Sco_Cookie::getInstance());
