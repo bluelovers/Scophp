@@ -18,18 +18,18 @@ abstract class Sco_Cookie
 
 	/**
 	 * Registry object provides storage for shared objects.
-	 * @var Sco_Cookie_Object
+	 * @var Sco_Cookie_Interface
 	 */
 	private static $_registry = null;
 
 	/**
 	 * Retrieves the default registry instance.
 	 *
-	 * @return Sco_Cookie_Object
+	 * @return Sco_Cookie_Interface
 	 */
 	public static function &getInstance($registry = null)
 	{
-		if (self::$_registry === null)
+		if (!isset(self::$_registry))
 		{
 			self::init($registry);
 		}
@@ -37,11 +37,16 @@ abstract class Sco_Cookie
 		return self::$_registry;
 	}
 
-	public static function setInstance(Sco_Cookie_Object $registry)
+	public static function setInstance(Sco_Cookie_Interface $registry)
 	{
 		if (self::$_registry !== null)
 		{
 			throw new Exception('Cookie is already initialized');
+		}
+
+		if (!$registry instanceof Sco_Cookie_Interface)
+		{
+			throw new Exception("Sco_Cookie_Interface");
 		}
 
 		self::setClassName(get_class($registry));
