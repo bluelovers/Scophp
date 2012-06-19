@@ -5,7 +5,7 @@
  * @copyright 2012
  */
 
-class Sco_Cookie
+abstract class Sco_Cookie
 {
 
 	const EXPIRE_NOW = -1;
