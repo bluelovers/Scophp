@@ -9,6 +9,7 @@ require_once ('../bootstrap.php');
 
 $chk_list = array(
 	'apache_request_headers',
+	'apache_response_headers',
 	'mb_detect_encoding',
 	'iconv',
 	'http_build_url',
