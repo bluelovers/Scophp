@@ -40,8 +40,7 @@ if (!function_exists('apache_request_headers'))
 		{
 			if (strpos($key, 'HTTP_') === 0)
 			{
-				$key = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5)))));
-				$out[$key] = $value;
+				$out[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($key, 5)))))] = $value;
 			}
 		}
 		return $out;
