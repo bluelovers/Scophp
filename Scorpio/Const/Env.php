@@ -24,4 +24,4 @@ define('ERROR_REPORTING', E_ALL | E_STRICT);
 
 define('NS_DEFAULT', 'Default');
 
-defined('HEADER_SEP', ':');
+define('HEADER_SEP', ':');
