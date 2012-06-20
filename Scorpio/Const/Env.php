@@ -23,3 +23,5 @@ define('E_FATAL', E_ERROR | E_USER_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ER
 define('ERROR_REPORTING', E_ALL | E_STRICT);
 
 define('NS_DEFAULT', 'Default');
+
+defined('HEADER_SEP', ':');
