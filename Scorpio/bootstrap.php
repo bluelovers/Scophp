@@ -115,6 +115,12 @@ if ($exists)
 
 //$autoloader->suppressNotFoundWarnings(true);
 
+if (version_compare(PHP_VERSION, Sco::PHP_VERSION, '<'))
+{
+	@ob_clean();
+	exit(sprintf('Scorpio Framework need PHP >= %s', Sco::PHP_VERSION));
+}
+
 Sco::instance();
 
 //$autoloader->suppressNotFoundWarnings(false);
