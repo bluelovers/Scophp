@@ -28,8 +28,8 @@ class Sco_Crypto_Int extends Sco_Crypto_Base implements Sco_Crypto_DecodeInterfa
 	 */
 	public function encode($int)
 	{
-		$str = md5($int);
-		$sarr = str_split($str);
+		$str = md5($int.(isset($this) ? $this->salt : ''));
+		//$sarr = str_split($str);
 		$stai = (ord($str) + 8) % 10;
 		if ($stai == 0) $stai = 8;
 		$idstr = base_convert($int * $stai, 10, 32);
@@ -51,7 +51,7 @@ class Sco_Crypto_Int extends Sco_Crypto_Base implements Sco_Crypto_DecodeInterfa
 		$idstr = substr(substr($str, 2), 0, -5);
 		$ji = base_convert($idstr, 32, 10);
 		$si = (int)substr($str, -3, -2);
-		return floor($ji / $si);
+		return (int)floor($ji / $si);
 	}
 
 }
