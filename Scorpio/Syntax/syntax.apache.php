@@ -47,3 +47,11 @@ if (!function_exists('apache_request_headers'))
 		return $out;
 	}
 }
+
+if (!function_exists('getallheaders'))
+{
+	function getallheaders()
+	{
+		return apache_request_headers();
+	}
+}
