@@ -17,6 +17,7 @@ class Sco_Cookie_Object extends ArrayObject implements Sco_Cookie_Interface
 		'default_httponly' => false,
 
 		'autosave' => true,
+		'header_remove_cookies' => true,
 
 		);
 
@@ -72,6 +73,11 @@ class Sco_Cookie_Object extends ArrayObject implements Sco_Cookie_Interface
 
 	public function save()
 	{
+		if ($this->_config['header_remove_cookies'])
+		{
+			Sco_Cookie_Helper::header_remove_cookies();
+		}
+
 		$map = array(
 			'expire',
 			'path',
