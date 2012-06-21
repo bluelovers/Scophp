@@ -11,6 +11,14 @@
 class Sco_Crypto_XOR extends Sco_Crypto_Base implements Sco_Crypto_DecodeInterface
 {
 
+	/**
+	 * @return self
+	 */
+	public static function newInstance($salt = null)
+	{
+		return new self($salt);
+	}
+
 	function encode($string)
 	{
 		$string = (string)$string;
