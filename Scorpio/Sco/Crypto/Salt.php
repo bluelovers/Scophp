@@ -12,7 +12,7 @@ class Sco_Crypto_Salt
 	{
 		if ($seed === null)
 		{
-			self::random(10);
+			$seed = self::random(10);
 		}
 
 		return uniqid($seed, true);
@@ -24,7 +24,7 @@ class Sco_Crypto_Salt
 		$hash = '';
 		$max = strlen($seed) - 1;
 		for($i = 0; $i < $length; $i++) {
-			$hash .= $seed{mt_rand(0, $max)};
+			$hash .= $seed[mt_rand(0, $max)];
 		}
 		return $hash;
 	}
