@@ -15,6 +15,14 @@ class Sco_Crypto_RC4 extends Sco_Crypto_Base implements Sco_Crypto_DecodeInterfa
 {
 
 	/**
+	 * @return self
+	 */
+	public static function newInstance($salt = null)
+	{
+		return new self($salt);
+	}
+
+	/**
 	 * @param string $pwd 密钥
 	 * @param string $data 要加密的数据
 	 */
