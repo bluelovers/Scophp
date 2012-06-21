@@ -15,6 +15,8 @@
 class Sco_Crypto_Vigenere extends Sco_Crypto_Base implements Sco_Crypto_DecodeInterface
 {
 
+	const WORD_EN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
 	/**
 	 * @return self
 	 */
@@ -27,7 +29,7 @@ class Sco_Crypto_Vigenere extends Sco_Crypto_Base implements Sco_Crypto_DecodeIn
 	{
 		if ($salt === null)
 		{
-			$salt = md5(Sco_Crypto_Salt::uniqid());
+			$salt = strtoupper(md5(Sco_Crypto_Salt::uniqid()));
 		}
 
 		return $salt;
