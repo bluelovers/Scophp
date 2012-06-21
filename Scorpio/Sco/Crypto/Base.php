@@ -12,8 +12,11 @@ abstract class Sco_Crypto_Base implements Sco_Crypto_EncodeInterface
 
 	public function __construct($salt = null)
 	{
-		$salt = $this->_salt($salt);
+		$this->setSalt($this->_salt($salt));
+	}
 
+	protected function setSalt($salt)
+	{
 		$this->salt = $salt;
 	}
 
