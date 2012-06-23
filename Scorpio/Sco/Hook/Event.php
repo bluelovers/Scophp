@@ -65,7 +65,7 @@ class Sco_Hook_Event extends Sco_Array
 			return self::$_instance[$namespace];
 		}
 
-		return new self();
+		return new self($namespace);
 	}
 
 	/**
