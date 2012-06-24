@@ -12,7 +12,7 @@ require_once (dirname(__FILE__) . '/../Scorpio/bootstrap.php');
 mb_internal_encoding('UTF-8');
 header('content-type: text/html; charset: ' . 'UTF-8');
 
-echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><pre>';
+echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><style>html, table { font-size: 100%; } body{ font-size: 9pt; }</style><pre>';
 
 Sco_Loader_Autoloader::getInstance()->pushAutoloader('D:\Users\Documents\The Project\symfony\symfony1\Yaml', 'Symfony_Component_Yaml_');
 Sco_Loader_Autoloader::getInstance()->pushAutoloader('D:\Users\Documents\The Project\symfony\symfony\src\Symfony', 'Symfony\\');
