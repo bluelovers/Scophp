@@ -270,6 +270,17 @@ class _Env
 
 	}
 
+	public static function php()
+	{
+		$phpinfo = Sco_PHP_Helper::phpinfo_array();
+
+		printnl(sprintf('[%s] %s / PHP v%s, %s, %s', __FUNCTION__, PHP_OS, PHP_VERSION, reset(explode(' ', $phpinfo['General']['Compiler'])), $phpinfo['General']['Thread Safety'] == 'enabled' ? 'TS' : 'NTS'));
+		printnl(sprintf('[%s] %s', __FUNCTION__, $phpinfo['General']['Server API']));
+		printnl(sprintf('[%s] %s', __FUNCTION__, xdebug_call_class()));
+
+		return true;
+	}
+
 }
 
 
