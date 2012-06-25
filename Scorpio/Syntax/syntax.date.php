@@ -5,6 +5,13 @@
  * @copyright 2012
  */
 
+/**
+ * This work of Lionel SAURON (http://sauron.lionel.free.fr:80) is licensed under the
+ * Creative Commons Attribution 2.0 France License.
+ *
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by/2.0/fr/
+ * or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+ */
 if (function_exists('strptime') == false)
 {
 	/**
