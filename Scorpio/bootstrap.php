@@ -8,7 +8,7 @@
 $error_reporting = error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
 define('SCORPIO_MICROTIME', microtime(true));
-define('SCORPIO_TIME', (int)SCORPIO_MICROTIME);
+define('SCORPIO_TIME', floor(SCORPIO_MICROTIME));
 
 /**
  * try use and vaild $_SERVER['REQUEST_TIME_FLOAT']
@@ -88,9 +88,9 @@ $autoloader->setDefaultAutoloader(array('Sco_Loader', 'loadClass'));
 
 $exists = false;
 $get_include_path = '';
-foreach(scandir(SCORPIO_PATH_SYS.'Compatible/', 1) as $_)
+foreach (scandir(SCORPIO_PATH_SYS . 'Compatible/', 1) as $_)
 {
-	if ($_ == '.' || $_ == '..' || !is_dir($_dir = SCORPIO_PATH_SYS.'Compatible/'.$_))
+	if ($_ == '.' || $_ == '..' || !is_dir($_dir = SCORPIO_PATH_SYS . 'Compatible/' . $_))
 	{
 		continue;
 	}
@@ -104,12 +104,12 @@ foreach(scandir(SCORPIO_PATH_SYS.'Compatible/', 1) as $_)
 }
 
 $autoloader->pushAutoloader(SCORPIO_PATH_SYS, 'Sco_', true);
-$autoloader->pushAutoloader(SCORPIO_PATH_SYS.'Compatible/SPL/', Sco_Loader_Autoloader::NS_EMPTY);
+$autoloader->pushAutoloader(SCORPIO_PATH_SYS . 'Compatible/SPL/', Sco_Loader_Autoloader::NS_EMPTY);
 
 /*
 if ($exists)
 {
-	set_include_path($get_include_path . get_include_path());
+set_include_path($get_include_path . get_include_path());
 }
 */
 
