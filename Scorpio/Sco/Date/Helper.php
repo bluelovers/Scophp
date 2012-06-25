@@ -95,4 +95,54 @@ class Sco_Date_Helper
 		return $format;
 	}
 
+	/**
+	 * Formats the elapsed time as a string.
+	 *
+	 * @param float $time
+	 * @return string
+	 *
+	 * @author https://github.com/sebastianbergmann/php-timer
+	 *
+	 * @assert (0) = '0 seconds'
+	 * @assert (1) = '1 second'
+	 * @assert (2) = '2 seconds'
+	 * @assert (60) = '01:00'
+	 * @assert (61) = '01:01'
+	 * @assert (120) = '02:00'
+	 * @assert (121) = '02:01'
+	 * @assert (3600) = '01:00:00'
+	 * @assert (3601) = '01:00:01'
+	 */
+	public static function secondsToTimeString($time)
+	{
+		$buffer = '';
+
+		$hours = sprintf('%02d', ($time >= 3600) ? floor($time / 3600) : 0);
+		$minutes = sprintf('%02d', ($time >= 60) ? floor($time / 60) - 60 * $hours : 0);
+		$seconds = sprintf('%02d', $time - 60 * 60 * $hours - 60 * $minutes);
+
+		if ($hours == 0 && $minutes == 0)
+		{
+			$seconds = sprintf('%1d', $seconds);
+
+			$buffer .= $seconds . ' second';
+
+			if ($seconds != '1')
+			{
+				$buffer .= 's';
+			}
+		}
+		else
+		{
+			if ($hours > 0)
+			{
+				$buffer = $hours . ':';
+			}
+
+			$buffer .= $minutes . ':' . $seconds;
+		}
+
+		return $buffer;
+	}
+
 }
