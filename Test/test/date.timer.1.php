@@ -8,7 +8,7 @@
 require_once ('../bootstrap.php');
 
 var_dump(Sco_Date_Helper::secondsToTimeString('0 seconds'));
-var_dump(Sco_Date_Interval::createFromDateString('10 days, 015 microseconds'));
+var_dump(Sco_Date_Interval::createFromDateString('10 days, 015 microseconds'), Sco_Date_Interval::createFromTimestamp(-3610));
 
 $interval_spec = 'P1WT3H5M360S015U';
 //$interval_spec = 'P1W3DT015U';
