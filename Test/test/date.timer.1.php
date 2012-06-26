@@ -18,11 +18,13 @@ $interval = new Sco_Date_Interval($interval_spec);
 
 var_dump($interval, $interval->getSpec(), $interval->formatRelative(), $interval->getTimestamp());
 
-exit;
+var_dump($interval->format('%m month, %D days, %R%a days %U, %u, %w week'));
 
-$interval2 = new DateInterval($interval_spec);
+//exit;
 
-var_dump($interval2, $interval2->format('%a days'));
+$interval2 = new DateInterval($interval->getSpec(null, false));
+
+var_dump($interval2, $interval2->format('%m month, %D days, %R%a days %U, %u, %w week'));
 
 var_export((array)$interval2);
 
