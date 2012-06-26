@@ -145,4 +145,16 @@ class Sco_Date_Helper
 		return $buffer;
 	}
 
+	public static function getDateTimeZoneGMT()
+	{
+		static $DateTimeZoneGMT;
+
+		if (!isset($DateTimeZoneGMT))
+		{
+			$DateTimeZoneGMT = new DateTimeZone('GMT');
+		}
+
+		return $DateTimeZoneGMT;
+	}
+
 }
