@@ -31,6 +31,9 @@ class Sco_Date_Interval extends ArrayObject
 		'php_week' => false,
 		);
 
+	/**
+	 * Creates new DateInterval object
+	 */
 	public function __construct($interval_spec)
 	{
 		parent::__construct(array(
@@ -63,6 +66,9 @@ class Sco_Date_Interval extends ArrayObject
 		}
 	}
 
+	/**
+	 * Sets up a DateInterval from the relative parts of the string
+	 */
 	public static function createFromDateString($time)
 	{
 		$DateTimeZone = Sco_Date_Helper::getDateTimeZoneGMT();
@@ -127,6 +133,9 @@ class Sco_Date_Interval extends ArrayObject
 		return $this->invert;
 	}
 
+	/**
+	 * Formats the interval
+	 */
 	public function format($format)
 	{
 		return $format;
