@@ -93,12 +93,44 @@ class Sco_Date_Interval extends ArrayObject
 
 		$timestamp = $end->getTimestamp() - $now;
 
+		/*
 		$invert = ($timestamp < 0);
 
-		$timestamp = abs($timestamp);
+		$timestamp = abs((int)$timestamp);
 
 		$interval = new self("PT{$timestamp}S");
 		$microsecond && $interval->setMicrosecond($microsecond);
+
+		$interval->calSpec();
+
+		$interval->setInvert($invert);
+		*/
+		$interval = self::createFromTimestamp((int)$timestamp, $microsecond);
+
+		return $interval;
+	}
+
+	public static function createFromTimestamp($time, $microsecond = null)
+	{
+		$invert = ($time < 0);
+		$time = abs($time);
+
+		if ($microsecond !== null || is_int($time))
+		{
+			$interval = new self("PT{$time}S");
+			$interval->setMicrosecond($microsecond);
+		}
+		elseif (is_float($time))
+		{
+			$microtime = Sco_Date_Helper::microtime(null, $time);
+
+			$interval = new self("PT{$microtime[1]}S");
+			$interval->setMicrosecond($microtime[0]);
+		}
+		else
+		{
+			$interval = new self("PT{$time}S");
+		}
 
 		$interval->calSpec();
 		$interval->setInvert($invert);
@@ -255,8 +287,14 @@ class Sco_Date_Interval extends ArrayObject
 	{
 		$old = $this->u;
 
-		$this->u = sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $microsecond);
-		;
+		if ($microsecond === null)
+		{
+			$this->u = null;
+		}
+		else
+		{
+			$this->u = sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $microsecond);
+		}
 
 		return $old;
 	}
@@ -307,7 +345,7 @@ class Sco_Date_Interval extends ArrayObject
 
 	public static function formatSpec($arr, $spec_microtime = true)
 	{
-		$arr = (array)$arr;
+		$arr = (array )$arr;
 
 		return sprintf('P%dY%dM%dDT%dH%dM%dS', $arr['y'], $arr['m'], $arr['d'], $arr['h'], $arr['i'], $arr['s']) . (($spec_microtime && $arr['u'] > 0) ? sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $arr['u']) . 'U' : '');
 	}
