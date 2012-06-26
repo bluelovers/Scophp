@@ -15,6 +15,9 @@ class Sco_Date_Interval extends ArrayObject
 	const MINUTE = 60;
 	const SECOND = 1;
 
+	const REGEX_PRINTF = '/(?<!%)(?:%%)*(%([YyMmDdaHhIiSsRr]))/';
+	const REGEX_PRINTF2 = '/(?<!%)(?:%%)*(%([YyMmDdaHhIiSsRrUuw]))/';
+
 	protected $_timestamp;
 
 	protected $_interval_spec;
@@ -135,9 +138,93 @@ class Sco_Date_Interval extends ArrayObject
 
 	/**
 	 * Formats the interval
+	 *
+	 * @see http://www.php.net/manual/zh/dateinterval.format.php
 	 */
 	public function format($format)
 	{
+		$pos = 0;
+		$cache = array();
+
+		while (preg_match(self::REGEX_PRINTF2, $format, $match, PREG_OFFSET_CAPTURE, $pos))
+		{
+			//var_dump($format, $match, $pos);
+
+			$r = null;
+			$k = $match[2][0];
+
+			if (isset($cache[$k]))
+			{
+				$r = $cache[$k];
+			}
+			else
+			{
+				switch ($k)
+				{
+					case 'a':
+						$r = floor($this->getTimestamp() / self::DAY);
+						break;
+					case 'w':
+						$r = floor($this->getTimestamp() / self::WEEK);
+						break;
+					case 'R':
+						$r = $this->invert ? '-' : '+';
+						break;
+					case 'r':
+						$r = $this->invert ? '-' : '';
+						break;
+					case 'y':
+					case 'm':
+					case 'd':
+					case 'h':
+					case 'i':
+					case 's':
+						$r = $this->$k;
+						break;
+					case 'Y':
+					case 'M':
+					case 'D':
+					case 'H':
+					case 'I':
+					case 'S':
+						$_k = strtolower($k);
+
+						$r = $this->$_k;
+
+						if ($r < 10)
+						{
+							$r = '0' . $r;
+						}
+
+						break;
+					case 'U':
+						$r = $this->u;
+						break;
+					case 'u':
+						$r = sprintf(Sco_Date_Helper::DATE_U_PRINTF, $this->u);
+						break;
+
+				}
+
+				$cache[$k] = $r;
+			}
+
+			//var_dump($r);
+
+			if (isset($r))
+			{
+				$format = substr_replace($format, $r, $match[1][1], strlen($match[1][0]));
+
+				$pos = $match[1][1] + strlen($r);
+			}
+			else
+			{
+				$pos = $match[1][1] + strlen($match[1][0]);
+			}
+		}
+
+		//var_dump($format, $match, $pos);
+
 		return $format;
 	}
 
