@@ -250,20 +250,23 @@ class _Env
 	{
 		$chk_set = array(
 			'CallbackFilterIterator',
+			'DateInterval',
 			);
 
 		$ret = null;
 
 		foreach ($chk_set as $v)
 		{
-			$result = class_exists($v);
+			$result = class_exists($v, false);
 
 			if ($ret === null || $ret)
 			{
 				$ret = $result;
 			}
 
-			printnl(sprintf('[%s][%d] %s : %s', __FUNCTION__, ++$i, $v, self::_var_string($result)));
+			$result2 = class_exists($v);
+
+			printnl(sprintf('[%s][%d] %s : %s / %s', __FUNCTION__, ++$i, $v, self::_var_string($result), self::_var_string($result2)));
 		}
 
 		return $ret;
