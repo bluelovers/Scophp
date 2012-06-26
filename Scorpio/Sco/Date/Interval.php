@@ -307,6 +307,8 @@ class Sco_Date_Interval extends ArrayObject
 
 	public static function formatSpec($arr, $spec_microtime = true)
 	{
+		$arr = (array)$arr;
+
 		return sprintf('P%dY%dM%dDT%dH%dM%dS', $arr['y'], $arr['m'], $arr['d'], $arr['h'], $arr['i'], $arr['s']) . (($spec_microtime && $arr['u'] > 0) ? sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $arr['u']) . 'U' : '');
 	}
 
