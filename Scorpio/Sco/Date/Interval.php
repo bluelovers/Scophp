@@ -20,8 +20,16 @@ class Sco_Date_Interval extends ArrayObject
 	protected $_interval_spec;
 
 	protected $_options = array(
-		'microtime' => true,
-	);
+		'spec_microtime' => true,
+
+		/**
+		 * if true use php mode handle week & day
+		 * weeks. These get converted into days, so can not be combined with D.
+		 *
+		 * @see http://www.php.net/manual/en/dateinterval.construct.php
+		 */
+		'php_week' => false,
+		);
 
 	public function __construct($interval_spec)
 	{
@@ -51,19 +59,72 @@ class Sco_Date_Interval extends ArrayObject
 
 		if ($timestamp < 0)
 		{
-			$this->invert = 1;
+			$this->setInvert(1);
 		}
 	}
 
 	public static function createFromDateString($time)
 	{
+		$DateTimeZone = Sco_Date_Helper::getDateTimeZoneGMT();
+
 		$now = time();
 
-		$end = strtotime($time, $now);
+		$microsecond = null;
 
-		$timestamp = $end - $now;
+		if (preg_match('/([0-9]+)\s*microseconds?/', $time, $match, PREG_OFFSET_CAPTURE))
+		{
+			$microsecond = sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $match[1][0]);
 
-		return new self("PT{$timestamp}S");
+			$time = substr_replace($time, '', $match[0][1], strlen($match[0][0]));
+		}
+
+		//var_dump($time, $match);
+
+		$end = new DateTime($time, $DateTimeZone);
+
+		$timestamp = $end->getTimestamp() - $now;
+
+		$invert = ($timestamp < 0);
+
+		$timestamp = abs($timestamp);
+
+		$interval = new self("PT{$timestamp}S");
+		$microsecond && $interval->setMicrosecond($microsecond);
+
+		$interval->calSpec();
+		$interval->setInvert($invert);
+
+		return $interval;
+	}
+
+	public function setOptions($options)
+	{
+		foreach ($options as $k => $v)
+		{
+			$this->_options[$k] = $v;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Is 1 if the interval is inverted and 0 otherwise. See DateInterval::format().
+	 */
+	public function setInvert($flag)
+	{
+		$old = $this->invert;
+
+		$this->invert = $flag ? 1 : 0;
+
+		return $old;
+	}
+
+	/**
+	 * Is 1 if the interval is inverted and 0 otherwise. See DateInterval::format().
+	 */
+	public function getInvert()
+	{
+		return $this->invert;
 	}
 
 	public function format($format)
@@ -71,24 +132,86 @@ class Sco_Date_Interval extends ArrayObject
 		return $format;
 	}
 
-	public function getSpec($recalculate = false, $microtime = null)
+	public function getTimestamp()
 	{
-		if ($microtime === null)
+		$DateTimeZone = Sco_Date_Helper::getDateTimeZoneGMT();
+
+		$now = time();
+
+		$modify = new DateTime('@' . $now, $DateTimeZone);
+		$modify->modify($this->formatRelative());
+
+		$timestamp = $modify->getTimestamp() - $now;
+
+		if ($this->u)
 		{
-			$microtime = $this->_options['microtime'];
+			$invert = $this->invert ? -1 : 1;
+
+			$microsecond = '0.' . $this->u;
+
+			$timestamp += ((float)$microsecond * $invert);
+		}
+
+		return $timestamp;
+	}
+
+	public function setMicrosecond($microsecond)
+	{
+		$old = $this->u;
+
+		$this->u = sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $microsecond);
+		;
+
+		return $old;
+	}
+
+	public function getMicrosecond()
+	{
+		return $this->u;
+	}
+
+	/**
+	 * @see http://www.php.net/manual/zh/datetime.formats.relative.php
+	 */
+	public function formatRelative()
+	{
+		$invert = $this->invert ? -1 : 1;
+
+		$arr = array(
+			'y' => 0,
+			'm' => 0,
+			'd' => 0,
+			'h' => 0,
+			'i' => 0,
+			's' => 0,
+			);
+
+		foreach (array_keys($arr) as $k)
+		{
+			$arr[$k] = $this->$k * $invert;
+		}
+
+		return vsprintf('%+d years, %+d months, %+d days, %+d hours, %+d minutes, %+d seconds', $arr);
+	}
+
+	public function getSpec($recalculate = false, $spec_microtime = null)
+	{
+		if ($spec_microtime === null)
+		{
+			$spec_microtime = $this->_options['spec_microtime'];
 		}
 
 		if ($recalculate)
 		{
-			return self::formatSpec($this->calSpec(false), $microtime);
+			return self::formatSpec($this->calSpec(false), $spec_microtime);
 		}
 
-		return self::formatSpec($this, $microtime);
+		return self::formatSpec($this, $spec_microtime);
 	}
 
-	public static function formatSpec($arr, $microtime = true)
+	public static function formatSpec($arr, $spec_microtime = true)
 	{
-		return sprintf('P%dY%dM%dDT%dH%dM%dS', $arr['y'], $arr['m'], $arr['d'], $arr['h'], $arr['i'], $arr['s']).(($microtime && $arr['u'] > 0) ? sprintf(Sco_Date_Helper::MICROTIME_PRINTF.'U', $arr['u']) : '');
+		return sprintf('P%dY%dM%dDT%dH%dM%dS', $arr['y'], $arr['m'], $arr['d'], $arr['h'], $arr['i'], $arr['s']) . (($spec_microtime && $arr['u'] > 0) ? sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $arr['u']) . 'U' : '');
 	}
 
 	public function calSpec($update = true)
@@ -197,7 +320,7 @@ class Sco_Date_Interval extends ArrayObject
 
 					if ($u == 'u')
 					{
-						$r[$u] = $match[1][0];
+						$r[$u] = sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $match[1][0]);
 					}
 					else
 					{
@@ -208,7 +331,7 @@ class Sco_Date_Interval extends ArrayObject
 				}
 			}
 
-			if ($r['w'])
+			if ($r['w'] && (!isset($r['d']) || !$this->_options['php_week']))
 			{
 				$r['d'] += $r['w'] * 7;
 				unset($r['w']);
