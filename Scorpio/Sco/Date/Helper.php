@@ -103,15 +103,15 @@ class Sco_Date_Helper
 	 *
 	 * @author https://github.com/sebastianbergmann/php-timer
 	 *
-	 * @assert (0) = '0 seconds'
-	 * @assert (1) = '1 second'
-	 * @assert (2) = '2 seconds'
-	 * @assert (60) = '01:00'
-	 * @assert (61) = '01:01'
-	 * @assert (120) = '02:00'
-	 * @assert (121) = '02:01'
-	 * @assert (3600) = '01:00:00'
-	 * @assert (3601) = '01:00:01'
+	 * @assert (0) == '0 seconds'
+	 * @assert (1) == '1 second'
+	 * @assert (2) == '2 seconds'
+	 * @assert (60) == '01:00'
+	 * @assert (61) == '01:01'
+	 * @assert (120) == '02:00'
+	 * @assert (121) == '02:01'
+	 * @assert (3600) == '01:00:00'
+	 * @assert (3601) == '01:00:01'
 	 */
 	public static function secondsToTimeString($time)
 	{
