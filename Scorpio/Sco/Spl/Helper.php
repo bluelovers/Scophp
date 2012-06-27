@@ -75,4 +75,12 @@ class Sco_Spl_Helper
 		}
 	}
 
+	/**
+	 * Return TRUE if the given function has been defined
+	 */
+	public static function function_exists($function)
+	{
+		return (function_exists($function) || is_callable($function));
+	}
+
 }
