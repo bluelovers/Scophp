@@ -154,7 +154,7 @@ class Sco_Loader_Autoloader extends Zend_Loader_Autoloader
 			{
 				$skip = true;
 
-				if (call_user_func($self->_internalAutoloader, $class, $autoloader, $ns, $count > 1))
+				if (call_user_func($self->_internalAutoloader, $class, $autoloader, $ns, ($ns === null || $count > 1)))
 				{
 					return true;
 				}
