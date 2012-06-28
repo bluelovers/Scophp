@@ -9,6 +9,8 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
 require_once (dirname(__FILE__) . '/../Scorpio/bootstrap.php');
 
+bcscale(10);
+
 mb_internal_encoding('UTF-8');
 header('content-type: text/html; charset: ' . 'UTF-8');
 
