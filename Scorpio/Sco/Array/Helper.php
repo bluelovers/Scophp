@@ -127,18 +127,59 @@ class Sco_Array_Helper
 	 *
 	 * @return array
 	 */
-	static function array_search_match($needle, array $haystack, $strict = false) {
+	public static function array_search_match($needle, array $haystack, $strict = false)
+	{
 		$array = array();
 
-		foreach ($haystack as $k => $v) {
-			if (!$strict && $haystack[$k] == $needle) {
+		foreach ($haystack as $k => $v)
+		{
+			if (!$strict && $haystack[$k] == $needle)
+			{
 				$array[] = $k;
-			} elseif ($strict && $haystack[$k] === $needle) {
+			}
+			elseif ($strict && $haystack[$k] === $needle)
+			{
 				$array[] = $k;
 			}
 		}
 
 		return $array;
+	}
+
+	/**
+	 * Sco_Array_Helper::seek - Seeks to a position
+	 * Seeks to a given position in the iterator.
+	 *
+	 * @param array $array
+	 * @param integer $offset The position to seek to.
+	 *
+	 * @return mixed
+	 */
+	public static function seek(&$array, $offset)
+	{
+		if ($offset == Sco_Array::SEEK_RESET)
+		{
+			return reset($array);
+		}
+		elseif ($offset > Sco_Array::SEEK_RESET)
+		{
+			if ($offset >= count($array))
+			{
+				throw new OutOfBoundsException(sprintf('Seek position %d is out of range', $offset));
+			}
+
+			reset($array);
+			$offset--;
+			for ($i = Sco_Array::SEEK_RESET; $i < $offset; $i++)
+			{
+				next($array);
+			}
+			return next($array);
+		}
+		else
+		{
+			return end($array);
+		}
 	}
 
 }
