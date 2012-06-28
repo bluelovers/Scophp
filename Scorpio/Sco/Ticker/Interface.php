@@ -8,8 +8,8 @@
 interface Sco_Ticker_Interface
 {
 
-	public function __toString();
+	function __toString();
 
-	public function getValue();
+	function getValue();
 
 }
