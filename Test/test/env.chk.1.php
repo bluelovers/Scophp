@@ -251,6 +251,7 @@ class _Env
 		$chk_set = array(
 			'CallbackFilterIterator',
 			'DateInterval',
+			'Counter',
 			);
 
 		$ret = null;
@@ -264,7 +265,7 @@ class _Env
 				$ret = $result;
 			}
 
-			$result2 = class_exists($v);
+			$result2 = @class_exists($v);
 
 			printnl(sprintf('[%s][%d] %s : %s / %s', __FUNCTION__, ++$i, $v, self::_var_string($result), self::_var_string($result2)));
 		}
