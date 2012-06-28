@@ -8,6 +8,9 @@
 class Sco_Array extends ArrayObject
 {
 
+	const SEEK_RESET = 0;
+	const SEEK_END = -1;
+
 	/**
 	 * self::ARRAY_PROP_BOTH = (ArrayObject::STD_PROP_LIST | ArrayObject::ARRAY_AS_PROPS);
 	 */
