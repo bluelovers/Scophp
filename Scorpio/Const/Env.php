@@ -25,3 +25,10 @@ define('ERROR_REPORTING', E_ALL | E_STRICT);
 define('NS_DEFAULT', 'Default');
 
 define('HEADER_SEP', ':');
+
+define('CMP_KEEP', 0);
+define('CMP_NEXT', -1);
+define('CMP_BACK', 1);
+
+define('CMP_STACK', 1);
+define('CMP_QUEUE', 2);
