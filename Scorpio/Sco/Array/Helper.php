@@ -182,4 +182,57 @@ class Sco_Array_Helper
 		}
 	}
 
+	/**
+	 * Exchange the array for another one.
+	 *
+	 * @param array|ArrarObject|Traversable|ArrayIterator &$array
+	 * @param array $exchangeArray
+	 *
+	 * @return array|ArrarObject|Traversable|ArrayIterator $array
+	 */
+	public static function array_exchange(&$array, $exchangeArray = array())
+	{
+		if (is_array($array))
+		{
+			$array = $exchangeArray;
+		}
+		elseif (is_object($array))
+		{
+			if ($array instanceof ArrarObject || method_exists($array, 'exchangeArray'))
+			{
+				$array->exchangeArray($exchangeArray);
+			}
+			elseif ($array instanceof Traversable)
+			{
+				foreach ($array as $k => &$v)
+				{
+					unset($array[$k]);
+				}
+
+				if ($exchangeArray)
+				{
+					foreach ($exchangeArray as $k => &$v)
+					{
+						$array[$k] = &$v;
+					}
+				}
+			}
+			else
+			{
+				$thowerror = true;
+			}
+		}
+		else
+		{
+			$thowerror = true;
+		}
+
+		if ($thowerror)
+		{
+			throw new Exception();
+		}
+
+		return $array;
+	}
+
 }
