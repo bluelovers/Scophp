@@ -15,6 +15,11 @@ class Sco_File_Format
 		return ($chdir) ? self::path($path, $chdir) : self::path($path);
 	}
 
+	/**
+	 * @assert ('../test/.././test/./.\/\/\/') == '../test/'
+	 * @assert ('../test/.././test/./.\/\/\.') == '../test/.'
+	 * @assert ('../test/.././test/./.\/\/\test.txt') == '../test/test.txt'
+	 */
 	public static function fix($url)
 	{
 		// FIXME - fix url::fix regex
@@ -72,16 +77,21 @@ class Sco_File_Format
 		return $ret;
 	}
 
+	/**
+	 * @assert ('../test/.././test/./.\/\/\/') == '../test/'
+	 * @assert ('../test/.././test/./.\/\/\test.txt') == '../test/test.txt/'
+	 */
 	public static function path()
 	{
-		$paths = func_get_args();
-		return rtrim(self::fix(self::_path_join($paths)), DIR_SEP) . DIR_SEP;
+		return rtrim(self::fix(self::_path_join(func_get_args())), DIR_SEP) . DIR_SEP;
 	}
 
+	/**
+	 * @assert ('../test/.././test/./.\/\/\test.txt') == '../test/test.txt'
+	 */
 	public static function file()
 	{
-		$paths = func_get_args();
-		return rtrim(self::fix(self::_path_join($paths)), DIR_SEP);
+		return rtrim(self::fix(self::_path_join(func_get_args())), DIR_SEP);
 	}
 
 	public static function remove_root($path, $root)
