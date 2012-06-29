@@ -5,7 +5,9 @@
  * @copyright 2012
  */
 
-define('DIR_SEP', '/');
+define('DIR_SEP_WIN', '\\');
+define('DIR_SEP_LINUX', '/');
+define('DIR_SEP', DIR_SEP_LINUX);
 
 define('LF', "\n");
 define('CR', "\r");
