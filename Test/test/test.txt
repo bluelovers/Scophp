@@ -1,0 +1,9 @@
+When a user upload a file(users can upload multiple files)
+
+exec('nohup php /main/apache2/work/upload/run.php &');
+
+I am using nohup as the it needs to be executed in the back end.
+
+In my original design run.php scans the directory using scandir everytime it's executed. Get an exclusive lock LOCK_EX on the file using flock and use LOCK_NB to skip the file if it has a lock and go the next one. If a file has a lock //Do logic. The problem is that the server is missing fcntl() library and since flock uses that library to execute the locking mechanism, flock won't work at the moment. It's going to take a month or two to get that installed(I have no control over that).
+
+So my work around for that is have a temporary file lock.txt that acts a lock. If the filename exists in lock.txt skip the file and go to the next one.
