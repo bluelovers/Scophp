@@ -62,14 +62,6 @@ class Sco_Ticker implements Sco_Ticker_Interface
 	}
 
 	/**
-	 * @return integer
-	 */
-	public function getValue()
-	{
-		return $this->_value;
-	}
-
-	/**
 	 * @return Sco_Timer_Counter
 	 */
 	public function setValue($offset)
@@ -77,6 +69,14 @@ class Sco_Ticker implements Sco_Ticker_Interface
 		$this->_value = $offset;
 
 		return $this;
+	}
+
+	/**
+	 * @return integer
+	 */
+	public function getValue()
+	{
+		return $this->_value;
 	}
 
 	/**
