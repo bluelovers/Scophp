@@ -82,7 +82,7 @@ class Sco_Date_Interval extends ArrayObject
 
 		if (preg_match('/([0-9]+)\s*microseconds?/', $time, $match, PREG_OFFSET_CAPTURE))
 		{
-			$microsecond = sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $match[1][0]);
+			$microsecond = sprintf(Sco_Date_Helper::MICROSECOND_PRINTF, $match[1][0]);
 
 			$time = substr_replace($time, '', $match[0][1], strlen($match[0][0]));
 		}
@@ -293,7 +293,7 @@ class Sco_Date_Interval extends ArrayObject
 		}
 		else
 		{
-			$this->u = sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $microsecond);
+			$this->u = sprintf(Sco_Date_Helper::MICROSECOND_PRINTF, $microsecond);
 		}
 
 		return $old;
@@ -347,7 +347,7 @@ class Sco_Date_Interval extends ArrayObject
 	{
 		$arr = (array )$arr;
 
-		return sprintf('P%dY%dM%dDT%dH%dM%dS', $arr['y'], $arr['m'], $arr['d'], $arr['h'], $arr['i'], $arr['s']) . (($spec_microtime && $arr['u'] > 0) ? sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $arr['u']) . 'U' : '');
+		return sprintf('P%dY%dM%dDT%dH%dM%dS', $arr['y'], $arr['m'], $arr['d'], $arr['h'], $arr['i'], $arr['s']) . (($spec_microtime && $arr['u'] > 0) ? sprintf(Sco_Date_Helper::MICROSECOND_PRINTF, $arr['u']) . 'U' : '');
 	}
 
 	public function calSpec($update = true)
@@ -456,7 +456,7 @@ class Sco_Date_Interval extends ArrayObject
 
 					if ($u == 'u')
 					{
-						$r[$u] = sprintf(Sco_Date_Helper::MICROTIME_PRINTF, $match[1][0]);
+						$r[$u] = sprintf(Sco_Date_Helper::MICROSECOND_PRINTF, $match[1][0]);
 					}
 					else
 					{
