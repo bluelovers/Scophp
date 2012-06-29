@@ -7,8 +7,6 @@
 
 require_once ('../bootstrap.php');
 
-require_once 'Benchmark/Iterate.php';
-
 $ticker = new Sco_Ticker_Iterator();
 
 $ticker->a->addValue(9);
