@@ -8,9 +8,14 @@
 class Sco_File_Format
 {
 
+	/**
+	 * @assert ('../test/.././test/./.\/\/\test.txt') == '../test/test.txt/'
+	 * @assert ('../test/.././test/./.\/\/\test.txt', '', true) == '../test/'
+	 * @assert ('../test/.././test/./.\/\/\test.txt', '../', true) == '../'
+	 */
 	public static function dirname($path, $chdir = '', $dirnamefunc = false)
 	{
-		if ($dirnamefunc) $path = dirname($path);
+		if ($dirnamefunc) $path = dirname($path).DIR_SEP;
 
 		return ($chdir) ? self::path($path, $chdir) : self::path($path);
 	}
