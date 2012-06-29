@@ -54,3 +54,7 @@ $old = Sco_PHP_Handler_Error::start('error_handler');
 
 Sco_PHP::shutdown_register(true);
 Sco_PHP::shutdown_register('shutdown_function');
+
+require_once 'Benchmark/Iterate.php';
+$benchmark = new Sco_Benchmark_Iterate;
+
