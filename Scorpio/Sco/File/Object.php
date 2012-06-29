@@ -39,14 +39,12 @@ class Sco_File_Object extends SplFileObject
 		{
 			if ($this->flock($operation))
 			{
-				stream_set_write_buffer($this, 0);
-
 				return true;
 			}
 
 			// 0.01秒
 			usleep(10000);
-		} while ($retry-- > 0);
+		} while (0 < $retry--);
 
 		return false;
 	}
@@ -93,6 +91,27 @@ class Sco_File_Object extends SplFileObject
 		}
 
 		return $contents;
+	}
+
+	protected function _path($path)
+	{
+		//return str_replace(array('/./', '//'), DIR_SEP, str_replace(array(DIR_SEP_WIN, DIR_SEP_LINUX), DIR_SEP, $path));
+		return Sco_File_Format::file($path);
+	}
+
+	public function getPath()
+	{
+		return self::_path(parent::getPath());
+	}
+
+	public function getPathname()
+	{
+		return self::_path(parent::getPathname());
+	}
+
+	public function getRealPath()
+	{
+		return self::_path(parent::getRealPath());
 	}
 
 }
