@@ -44,8 +44,6 @@ var_dump(current($data));
 var_dump(Sco_Array_Helper::seek($data, Sco_Array::SEEK_END));
 var_dump(current($data));
 
-exit;
-
 require_once 'Benchmark/Iterate.php';
 
 class_exists('Sco_Array_Comparer_Helper');
@@ -120,6 +118,8 @@ function undec(&$v, $k)
 {
 	$v = $v[0];
 }
+
+echo '---------------------------';
 
 array_walk($data, 'dec'); // decorate
 uasort(&$data, 'sort_some_people'); // sort
