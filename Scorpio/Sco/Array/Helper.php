@@ -61,9 +61,9 @@ class Sco_Array_Helper
 	 * @param   mixed    value to check
 	 * @return  boolean
 	 */
-	public static function is_array($value)
+	public static function is_array($value, $skip_traversable = false)
 	{
-		return (bool)(is_array($value) || (is_object($value) and $value instanceof Traversable));
+		return (bool)(is_array($value) || (!$skip_traversable && $value instanceof Traversable));
 	}
 
 	/**
@@ -157,6 +157,8 @@ class Sco_Array_Helper
 	 * @param integer $offset The position to seek to.
 	 *
 	 * @return mixed
+	 *
+	 * @assert (array(0, 1, 2, 3, 4, 5), 3) == 3
 	 */
 	public static function seek(&$array, $offset)
 	{
