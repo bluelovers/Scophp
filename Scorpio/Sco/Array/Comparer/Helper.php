@@ -8,10 +8,20 @@
 class Sco_Array_Comparer_Helper
 {
 
+	public static function cmp($a, $b)
+	{
+		if ($a == $b)
+		{
+			return CMP_KEEP;
+		}
+
+		return ($a < $b) ? CMP_NEXT : CMP_BACK;
+	}
+
 	/**
 	 * @todo
 	 */
-	public function cmpStack($a, $b)
+	public static function cmpStack($a, $b)
 	{
 		if ($a == $b)
 		{
@@ -24,7 +34,7 @@ class Sco_Array_Comparer_Helper
 	/**
 	 * @todo this func only maybe work on first time
 	 */
-	public function cmpQueue($a, $b)
+	public static function cmpQueue($a, $b)
 	{
 		if ($a == $b)
 		{
