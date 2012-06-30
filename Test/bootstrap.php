@@ -9,6 +9,9 @@ error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 
 require_once (dirname(__FILE__) . '/../Scorpio/bootstrap.php');
 
+define('TEST_PATH', Sco_File_Format::dirname(__FILE__, '', true));
+define('TEST_PATH_FIXTURES', TEST_PATH.'Fixtures'.DIR_SEP);
+
 bcscale(10);
 
 mb_internal_encoding('UTF-8');
