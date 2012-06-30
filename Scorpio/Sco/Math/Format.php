@@ -31,7 +31,7 @@ class Sco_Math_Format
 	 * @assert ('1.2500000000') === '1.25'
 	 * @assert ('1340959614.07259200') === '1340959614.072592'
 	 */
-	function clean_decimal($number)
+	public static function clean_decimal($number)
 	{
 		$number = explode('.', $number, 2);
 
