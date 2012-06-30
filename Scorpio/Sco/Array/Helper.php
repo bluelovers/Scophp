@@ -238,18 +238,18 @@ class Sco_Array_Helper
 		return $array;
 	}
 
-	public static function recursive2array($array, &$return = null)
+	public static function recursive2array($array, &$return = null, $skip_traversable = false)
 	{
-		if (func_num_args() <= 2 || !func_get_arg(2))
+		if (func_num_args() <= 3 || !func_get_arg(3))
 		{
 			$return = array();
 		}
 
 		foreach ($array as $entry)
 		{
-			if (is_array($entry))
+			if (is_array($entry) || (!$skip_traversable && $entry instanceof Traversable))
 			{
-				self::recursive2array($entry, &$return, true);
+				self::recursive2array($entry, &$return, $skip_traversable, true);
 			}
 			else
 			{
