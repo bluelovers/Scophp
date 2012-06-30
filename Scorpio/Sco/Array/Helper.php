@@ -129,6 +129,7 @@ class Sco_Array_Helper
 	 */
 	public static function array_search_match($needle, array $haystack, $strict = false)
 	{
+		/*
 		$array = array();
 
 		foreach ($haystack as $k => $v)
@@ -142,6 +143,8 @@ class Sco_Array_Helper
 				$array[] = $k;
 			}
 		}
+		*/
+		$array = array_keys($array, $needle, $strict);
 
 		return $array;
 	}
@@ -233,6 +236,28 @@ class Sco_Array_Helper
 		}
 
 		return $array;
+	}
+
+	public static function recursive2array($array, &$return = null)
+	{
+		if (func_num_args() <= 2 || !func_get_arg(2))
+		{
+			$return = array();
+		}
+
+		foreach ($array as $entry)
+		{
+			if (is_array($entry))
+			{
+				self::recursive2array($entry, &$return, true);
+			}
+			else
+			{
+				$return[] = $entry;
+			}
+		}
+
+		return $return;
 	}
 
 }
