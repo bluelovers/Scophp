@@ -246,29 +246,35 @@ class Sco_PHP_Helper
 			$errno) : $typestr;
 	}
 
-	function phpinfo_array($what = INFO_ALL)
+	public static function phpinfo_array($what = INFO_ALL)
 	{
 		ob_start();
 		phpinfo($what);
 		$info_arr = array();
-		$info_lines = explode("\n", strip_tags(ob_get_clean(), "<tr><td><h2>"));
-		$cat = "General";
+		$info_lines = explode(LF, strip_tags(ob_get_clean(), '<tr><td><h2>'));
+		$cat = 'General';
 		foreach ($info_lines as $line)
 		{
 			// new cat?
-			preg_match("~<h2>(.*)</h2>~", $line, $title) ? $cat = $title[1] : null;
-			if (preg_match("~<tr><td[^>]+>\s*([^<]*)\s*</td><td[^>]+>\s*([^<]*)\s*</td></tr>~", $line, $val))
+			preg_match('~<h2>(.*)</h2>~', $line, $title) ? $cat = $title[1] : null;
+			if (preg_match('~<tr><td[^>]+>\s*([^<]*)\s*</td><td[^>]+>\s*([^<]*)\s*</td></tr>~', $line, $val))
 			{
 				$info_arr[$cat][trim($val[1])] = trim($val[2]);
 			}
-			elseif (preg_match("~<tr><td[^>]+>\s*([^<]*)\s*</td><td[^>]+>\s*([^<]*)\s*</td><td[^>]+>\s*([^<]*)\s*</td></tr>~", $line, $val))
+			elseif (preg_match('~<tr><td[^>]+>\s*([^<]*)\s*</td><td[^>]+>\s*([^<]*)\s*</td><td[^>]+>\s*([^<]*)\s*</td></tr>~', $line, $val))
 			{
-				$info_arr[$cat][trim($val[1])] = array("local" => trim($val[2]), "master" => trim($val[3]));
+				$info_arr[$cat][trim($val[1])] = array('local' => trim($val[2]), 'master' => trim($val[3]));
 			}
 		}
 		return $info_arr;
 	}
 
-
+	/**
+	 * Defines a named constant at runtime.
+	 */
+	public static function define($name, $value)
+	{
+		return define(strtoupper($name), $value);
+	}
 
 }
