@@ -8,25 +8,32 @@
 class Sco_Array_Sorter_Helper
 {
 
-	public static function merge_sort(&$array, $cmp_function = 'strcmp')
+	public static function merge_sort(&$array, $cmp_function = null)
 	{
+		$count = count($array);
+
 		// Arrays of size < 2 require no action.
-		if (count($array) < 2) return;
+		if ($count < 2) return;
 
 		// Split the array in half
-		$halfway = count($array) / 2;
+		$halfway = (int)($count / 2);
 		$array1 = array_slice($array, 0, $halfway);
 		$array2 = array_slice($array, $halfway);
+
+		if (!isset($cmp_function))
+		{
+			$cmp_function = array('Sco_Array_Comparer_Helper', 'cmp');
+		}
 
 		// Recurse to sort the two halves
 		self::merge_sort(&$array1, $cmp_function);
 		self::merge_sort(&$array2, $cmp_function);
 
 		// If all of $array1 is <= all of $array2, just append them.
-		if (call_user_func($cmp_function, end($array1), $array2[0]) < 1)
+		if (call_user_func($cmp_function, end($array1), reset($array2)) < 1)
 		{
 			$array = array_merge($array1, $array2);
-			return;
+			return $array;
 		}
 
 		// Merge the two sorted arrays into a single sorted array
@@ -48,10 +55,10 @@ class Sco_Array_Sorter_Helper
 		while ($ptr1 < count($array1)) $array[] = $array1[$ptr1++];
 		while ($ptr2 < count($array2)) $array[] = $array2[$ptr2++];
 
-		return;
+		return $array;
 	}
 
-	public static function merge_sort_assoc(&$array, $cmp_function = 'strcmp')
+	public static function merge_sort_assoc(&$array, $cmp_function = null)
 	{
 		$count = count($array);
 
@@ -63,6 +70,11 @@ class Sco_Array_Sorter_Helper
 		$array1 = array_slice($array, 0, $halfway, true);
 		$array2 = array_slice($array, $halfway, $count - $halfway, true);
 
+		if (!isset($cmp_function))
+		{
+			$cmp_function = array('Sco_Array_Comparer_Helper', 'cmp');
+		}
+
 		// Recurse to sort the two halves
 		self::merge_sort_assoc(&$array1, $cmp_function);
 		self::merge_sort_assoc(&$array2, $cmp_function);
@@ -70,8 +82,9 @@ class Sco_Array_Sorter_Helper
 		// If all of $array1 is <= all of $array2, just append them.
 		if (call_user_func($cmp_function, end($array1), reset($array2)) < 1)
 		{
-			$array = array_merge($array1, $array2);
-			return;
+			//$array = array_merge($array1, $array2);
+			$array = $array1 + $array2;
+			return $array;
 		}
 
 		// Merge the two sorted arrays into a single sorted array
@@ -114,7 +127,78 @@ class Sco_Array_Sorter_Helper
 			$entry2 = each($array2);
 		}
 
-		return;
+		return $array;
+	}
+
+	public static function stable_asort($array, $sort_flags = 0)
+	{
+		$arr = $array;
+		asort($arr, $sort_flags);
+
+		$arr2 = array();
+
+		foreach ($arr as $k => $v)
+		{
+			if (array_key_exists($k, $arr2)) continue;
+
+			foreach (array_keys($array, $v, true) as $k)
+			{
+				$arr2[$k] = &$array[$k];
+			}
+		}
+
+		$array = $arr2;
+
+		return $array;
+	}
+
+	public static function stable_asort2($array, $sort_flags = 0)
+	{
+		$keys = array_keys($array);
+		asort($array, $sort_flags);
+
+		$return = $list = array();
+
+		foreach ($array as $key => &$value)
+		{
+			if ($value !== $last)
+			{
+				if ($list)
+				{
+					ksort($list);
+
+					foreach ($list as $idx)
+					{
+						$return[] = $idx;
+					}
+				}
+
+				$list = array();
+			}
+
+			$list[array_search($key, $keys)] = $key;
+
+			$last = $value;
+		}
+
+		if ($list)
+		{
+			ksort($list);
+
+			foreach ($list as $idx)
+			{
+				$return[] = $idx;
+			}
+		}
+
+		$list = array();
+
+		foreach ($return as $k)
+		{
+			$list[$k] = $array[$k];
+		}
+
+		return $list;
 	}
 
 }
