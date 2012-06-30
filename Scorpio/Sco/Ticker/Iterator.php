@@ -69,15 +69,4 @@ class Sco_Ticker_Iterator extends ArrayObject
 		return $this;
 	}
 
-	public function sort2()
-	{
-		$list = $this->getArrayCopy();
-
-		Sco_Array_Sorter_Helper::merge_sort_assoc(&$list);
-
-		$this->exchangeArray($list);
-
-		return $this;
-	}
-
 }
