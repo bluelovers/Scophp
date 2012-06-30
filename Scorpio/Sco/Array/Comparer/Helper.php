@@ -8,6 +8,9 @@
 class Sco_Array_Comparer_Helper
 {
 
+	/**
+	 * eazy comparer all type
+	 */
 	public static function cmp($a, $b)
 	{
 		if ($a == $b)
