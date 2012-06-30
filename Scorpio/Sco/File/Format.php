@@ -15,7 +15,7 @@ class Sco_File_Format
 	 */
 	public static function dirname($path, $chdir = '', $dirnamefunc = false)
 	{
-		if ($dirnamefunc) $path = dirname($path).DIR_SEP;
+		if ($dirnamefunc) $path = dirname($path);
 
 		return ($chdir) ? self::path($path, $chdir) : self::path($path);
 	}
@@ -45,35 +45,48 @@ class Sco_File_Format
 
 	protected static function _path_join()
 	{
-		$args = func_get_args();
+		if (func_num_args() > 1 || is_array($array = func_get_arg(0)))
+		{
+			self::_recursive2array(func_get_args(), $array);
+		}
 
+		/*
 		if (func_num_args() > 1)
 		{
-			$array = $args;
+		//$array = $args;
+
+		foreach ($args as $arg)
+		{
+		if (is_array($arg))
+		{
+
+		}
+		}
 		}
 		else
 		{
-			$array = $args[0];
-			if (is_array($array[0]))
-			{
-				$array = $array[0];
-			}
+		$array = $args[0];
+		if (is_array($array[0]))
+		{
+		$array = $array[0];
 		}
+		}
+		*/
 
 		if (is_string($array)) return $array;
 
 		$ret = '';
-		while (empty($ret) && $ret !== 0 && $ret !== '0')
+		do
 		{
 			$ret = array_shift($array);
-		}
+		} while (self::_empty($ret));
 
 		if (!empty($array))
 		{
 			foreach ($array as $_v)
 			{
 				$_v = trim($_v);
-				if (empty($_v) && $_v !== 0 && $_v !== '0') continue;
+				if (self::_empty($_v)) continue;
 
 				$ret .= DIR_SEP . $_v;
 			}
@@ -82,13 +95,19 @@ class Sco_File_Format
 		return $ret;
 	}
 
+	protected static function _empty($ret)
+	{
+		return (empty($ret) && $ret !== 0 && $ret !== '0');
+	}
+
 	/**
 	 * @assert ('../test/.././test/./.\/\/\/') == '../test/'
+	 * @assert ('../test/.././test/./.\/\/\/.') == '../test/'
 	 * @assert ('../test/.././test/./.\/\/\test.txt') == '../test/test.txt/'
 	 */
 	public static function path()
 	{
-		return rtrim(self::fix(self::_path_join(func_get_args())), DIR_SEP) . DIR_SEP;
+		return rtrim(self::fix(self::_path_join(func_get_args(), DIR_SEP)), DIR_SEP) . DIR_SEP;
 	}
 
 	/**
@@ -99,6 +118,9 @@ class Sco_File_Format
 		return rtrim(self::fix(self::_path_join(func_get_args())), DIR_SEP);
 	}
 
+	/**
+	 * @assert ('../test/.././test/./.\/\/\test.txt', '..') == 'test/test.txt'
+	 */
 	public static function remove_root($path, $root)
 	{
 		$root = self::path($root);
@@ -112,6 +134,28 @@ class Sco_File_Format
 	public static function basename($path, $suffix = '')
 	{
 		return basename(array_shift(preg_split('/(\?|#)/', $path)), $suffix);
+	}
+
+	protected static function _recursive2array($array, &$return = null)
+	{
+		if (func_num_args() <= 2 || !func_get_arg(2))
+		{
+			$return = array();
+		}
+
+		foreach ($array as $entry)
+		{
+			if (is_array($entry))
+			{
+				self::_recursive2array($entry, &$return, true);
+			}
+			else
+			{
+				$return[] = $entry;
+			}
+		}
+
+		return $return;
 	}
 
 }
