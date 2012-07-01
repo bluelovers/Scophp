@@ -47,7 +47,7 @@ class Sco_Ticker_Iterator extends ArrayObject
 
 		foreach ($this as $k => &$v)
 		{
-			$arr[(string )$v][$k] = &$v;
+			$arr[(string)$v][$k] = &$v;
 		}
 
 		ksort($arr);
