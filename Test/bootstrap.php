@@ -21,6 +21,7 @@ echo '<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><styl
 
 Sco_Loader_Autoloader::getInstance()->pushAutoloader('D:\Users\Documents\The Project\symfony\symfony1\Yaml', 'Symfony_Component_Yaml_');
 Sco_Loader_Autoloader::getInstance()->pushAutoloader('D:\Users\Documents\The Project\symfony\symfony\src\Symfony', 'Symfony\\');
+Sco_Loader_Autoloader::getInstance()->pushAutoloader('D:\xampp\php\PEAR', '*');
 
 function _shutdown_function()
 {
