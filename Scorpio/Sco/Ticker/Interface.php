@@ -10,6 +10,7 @@ interface Sco_Ticker_Interface
 
 	function __toString();
 
-	function getValue();
+	function currentTicker();
+	function resetTicker();
 
 }
