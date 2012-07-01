@@ -9,19 +9,19 @@ require_once ('../bootstrap.php');
 
 $ticker = new Sco_Ticker_Iterator();
 
-$ticker->a->addValue(9);
+$ticker->a->addTicker(9);
 
-$ticker->b->subValue(5);
+$ticker->b->subTicker(5);
 
-$ticker->f->addValue(1);
-$ticker->c->addValue(10);
-$ticker->d->addValue(1);
+$ticker->f->addTicker(1);
+$ticker->c->addTicker(10);
+$ticker->d->addTicker(1);
 $ticker->append(2);
 $ticker->append(12);
 $ticker->append(20);
 $ticker->append(1);
 $ticker->append(1);
-$ticker->e->addValue(1);
+$ticker->e->addTicker(1);
 $ticker->append(1);
 $ticker->append(2);
 $ticker->append(12);
@@ -50,15 +50,8 @@ $benchmark->run(100, array($ticker, 'sort'));
 $result = $benchmark->get();
 var_dump($result['mean']);
 
-class_exists('Sco_Array_Comparer_Helper');
-
-$benchmark->run(100, array($ticker, 'sort2'));
-
-$result = $benchmark->get();
-var_dump($result['mean']);
-
 var_dump(count($ticker));
-print_r($ticker);
+print_r($ticker->toArrayValues());
 
 //$benchmark->run(100, array($ticker, 'asort'));
 //
