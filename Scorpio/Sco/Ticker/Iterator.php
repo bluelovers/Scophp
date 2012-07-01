@@ -23,7 +23,7 @@ class Sco_Ticker_Iterator extends ArrayObject
 			return parent::offsetSet($offset, new $this->_offsetClass($value));
 		}
 
-		if (!$value instanceof Sco_Ticker_Interface)
+		if (!$value instanceof Sco_Ticker_Interface || !$value instanceof $this->_offsetClass)
 		{
 			throw new InvalidArgumentException();
 		}
