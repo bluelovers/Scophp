@@ -39,10 +39,53 @@ class Sco_Array_HelperTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testSeek()
 	{
-		$this->assertEquals(
-				3
-				, Sco_Array_Helper::seek($a = array(0, 1, 2, 3, 4, 5), 3)
-		);
+		$this->assertEquals(3, Sco_Array_Helper::seek($a = array(
+			0,
+			1,
+			2,
+			3,
+			4,
+			5), 3));
+	}
+
+	/**
+	 * Generated from @assert (array(0, 1, 2, 3, 4, 5), 3) == 3.
+	 *
+	 * @covers Sco_Array_Helper::seek_key
+	 */
+	public function testSeek_key()
+	{
+		$this->assertEquals(0, Sco_Array_Helper::seek_key($a = array(
+			"item1" => -1,
+			"item2" => -1,
+			"item3" => -1,
+			"item4" => 0,
+			"item5" => 2,
+			"item6" => 2,
+			"item7" => 1,
+			), 'item4'));
+	}
+
+	/**
+	 * Generated from @assert (array(0, 1, 2, 3, 4, 5), 3) == 3.
+	 *
+	 * @covers Sco_Array_Helper::seek_key
+	 */
+	public function testSeek_key2()
+	{
+		$a = array(
+			"item1" => -1,
+			"item2" => -1,
+			"item3" => -1,
+			"item4" => 0,
+			"item5" => 2,
+			"item6" => 2,
+			"item7" => 1,
+			);
+
+		Sco_Array_Helper::seek_key($a, 'item4');
+
+		$this->assertEquals('item4', key($a));
 	}
 
 	/**
@@ -52,9 +95,7 @@ class Sco_Array_HelperTest extends PHPUnit_Framework_TestCase
 	public function testArray_shuffle()
 	{
 		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-				'This test has not been implemented yet.'
-		);
+		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	/**
@@ -64,9 +105,7 @@ class Sco_Array_HelperTest extends PHPUnit_Framework_TestCase
 	public function testIs_assoc()
 	{
 		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-				'This test has not been implemented yet.'
-		);
+		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	/**
@@ -76,9 +115,7 @@ class Sco_Array_HelperTest extends PHPUnit_Framework_TestCase
 	public function testIs_array()
 	{
 		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-				'This test has not been implemented yet.'
-		);
+		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	/**
@@ -88,9 +125,7 @@ class Sco_Array_HelperTest extends PHPUnit_Framework_TestCase
 	public function testArray_unshift_assoc()
 	{
 		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-				'This test has not been implemented yet.'
-		);
+		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	/**
@@ -100,9 +135,7 @@ class Sco_Array_HelperTest extends PHPUnit_Framework_TestCase
 	public function testArray_push_assoc()
 	{
 		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-				'This test has not been implemented yet.'
-		);
+		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	/**
@@ -112,9 +145,7 @@ class Sco_Array_HelperTest extends PHPUnit_Framework_TestCase
 	public function testArray_remove_key()
 	{
 		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-				'This test has not been implemented yet.'
-		);
+		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	/**
@@ -124,9 +155,7 @@ class Sco_Array_HelperTest extends PHPUnit_Framework_TestCase
 	public function testArray_search_match()
 	{
 		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-				'This test has not been implemented yet.'
-		);
+		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	/**
@@ -136,9 +165,7 @@ class Sco_Array_HelperTest extends PHPUnit_Framework_TestCase
 	public function testArray_exchange()
 	{
 		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-				'This test has not been implemented yet.'
-		);
+		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 	/**
@@ -148,11 +175,10 @@ class Sco_Array_HelperTest extends PHPUnit_Framework_TestCase
 	public function testRecursive2array()
 	{
 		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-				'This test has not been implemented yet.'
-		);
+		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 
 }
+
 
 ?>
