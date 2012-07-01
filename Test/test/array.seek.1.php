@@ -21,4 +21,10 @@ var_dump(Sco_Array_Helper::seek($data, 3));
 
 var_dump(current($data));
 
+var_dump('-------------------');
+
+var_dump(Sco_Array_Helper::seek_key($data, 'item4'));
+var_dump(key($data));
+
 var_dump(@Sco_Array_Helper::seek($a = array(0, 1, 2, 3, 4, 5), 3));
+
