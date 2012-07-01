@@ -43,7 +43,7 @@ class Sco_Ticker implements Sco_Ticker_Interface
 		return (string )$this->currentTicker();
 	}
 
-	public function currentTicker()
+	public function currentTicker($args = array())
 	{
 		return $this->getTicker();
 	}
