@@ -45,13 +45,13 @@ var_dump(count($ticker));
 
 $benchmark = new Benchmark_Iterate;
 
-$benchmark->run(100, array($ticker, 'sort'));
-
-$result = $benchmark->get();
-var_dump($result['mean']);
+//$benchmark->run(100, array($ticker, 'sort'));
+//
+//$result = $benchmark->get();
+//var_dump($result['mean']);
 
 var_dump(count($ticker));
-print_r($ticker->toArrayValues());
+var_export($ticker->toArrayValues());
 
 //$benchmark->run(100, array($ticker, 'asort'));
 //
