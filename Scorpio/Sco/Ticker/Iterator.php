@@ -83,7 +83,7 @@ class Sco_Ticker_Iterator extends ArrayObject
 			*/
 		}
 
-		$this->exchangeArray($arr2);
+		$this->_exchangeArray($arr2);
 
 		return $this;
 	}
@@ -111,18 +111,18 @@ class Sco_Ticker_Iterator extends ArrayObject
 			*/
 		}
 
-		$this->exchangeArray($arr2);
+		$this->_exchangeArray($arr2);
 
 		return $this;
 	}
 
-	public function toArrayValues()
+	public function toArrayValues($args = array())
 	{
 		$array = array();
 
 		foreach ($this as $k => &$v)
 		{
-			$array[$k] = $v->currentTicker();
+			$array[$k] = $v->currentTicker($args);
 		}
 
 		return $array;
