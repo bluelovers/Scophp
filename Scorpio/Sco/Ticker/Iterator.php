@@ -69,4 +69,16 @@ class Sco_Ticker_Iterator extends ArrayObject
 		return $this;
 	}
 
+	public function toArrayValues()
+	{
+		$array = array();
+
+		foreach ($this as $k => &$v)
+		{
+			$array[$k] = $v->currentTicker();
+		}
+
+		return $array;
+	}
+
 }
