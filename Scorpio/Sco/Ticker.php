@@ -40,7 +40,7 @@ class Sco_Ticker implements Sco_Ticker_Interface
 
 	public function __toString()
 	{
-		return (string)$this->currentTicker();
+		return (string )$this->currentTicker();
 	}
 
 	public function currentTicker()
@@ -92,6 +92,8 @@ class Sco_Ticker implements Sco_Ticker_Interface
 
 	/**
 	 * @return integer
+	 *
+	 * @assert (3) == 3
 	 */
 	public function addTicker($offset)
 	{
@@ -104,6 +106,8 @@ class Sco_Ticker implements Sco_Ticker_Interface
 
 	/**
 	 * @return integer
+	 *
+	 * @assert (3) == -3
 	 */
 	public function subTicker($offset)
 	{
@@ -113,6 +117,13 @@ class Sco_Ticker implements Sco_Ticker_Interface
 
 		return $this->_value;
 	}
+
+	/*
+	public function _test(&$i)
+	{
+	$i+= 5;
+	}
+	*/
 
 	public function reflashTicker()
 	{
