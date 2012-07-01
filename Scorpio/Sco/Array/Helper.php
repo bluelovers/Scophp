@@ -134,14 +134,14 @@ class Sco_Array_Helper
 
 		foreach ($haystack as $k => $v)
 		{
-			if (!$strict && $haystack[$k] == $needle)
-			{
-				$array[] = $k;
-			}
-			elseif ($strict && $haystack[$k] === $needle)
-			{
-				$array[] = $k;
-			}
+		if (!$strict && $haystack[$k] == $needle)
+		{
+		$array[] = $k;
+		}
+		elseif ($strict && $haystack[$k] === $needle)
+		{
+		$array[] = $k;
+		}
 		}
 		*/
 		$array = array_keys($array, $needle, $strict);
