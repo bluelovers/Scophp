@@ -188,6 +188,30 @@ class Sco_Array_Helper
 	}
 
 	/**
+	 * Sco_Array_Helper::seek - Seeks to a position
+	 * Seeks to a given position in the iterator.
+	 *
+	 * @param array $array
+	 * @param integer $offset The position to seek to.
+	 *
+	 * @return mixed
+	 */
+	public static function seek_key(&$array, $offset)
+	{
+		reset($array);
+
+		while ($k = each($array))
+		{
+			if ($k[0] == $offset)
+			{
+				return prev($array);
+			}
+		}
+
+		throw new OutOfBoundsException(sprintf('Seek position \'%s\' is out of range', $offset));
+	}
+
+	/**
 	 * Exchange the array for another one.
 	 *
 	 * @param array|ArrarObject|Traversable|ArrayIterator &$array
