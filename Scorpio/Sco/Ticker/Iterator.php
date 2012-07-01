@@ -10,9 +10,11 @@ class Sco_Ticker_Iterator extends ArrayObject
 
 	protected $_offsetClass = 'Sco_Ticker';
 
-	public function __construct()
+	public function __construct($data = array())
 	{
 		parent::__construct(array(), self::ARRAY_AS_PROPS);
+
+		$data && $this->exchangeArray($data);
 	}
 
 	public function offsetSet($offset, $value)
@@ -41,6 +43,23 @@ class Sco_Ticker_Iterator extends ArrayObject
 		return parent::offsetGet($offset);
 	}
 
+	protected function _exchangeArray($array)
+	{
+		return parent::exchangeArray($array);
+	}
+
+	public function exchangeArray($array)
+	{
+		$old = parent::exchangeArray(array());
+
+		foreach ($array as $offset => $value)
+		{
+			$this->offsetSet($offset, $value);
+		}
+
+		return $old;
+	}
+
 	public function sort()
 	{
 		$arr2 = $arr = array();
@@ -59,7 +78,35 @@ class Sco_Ticker_Iterator extends ArrayObject
 			/*
 			foreach ($list as $k => &$v)
 			{
-				$arr2[$k] = $v;
+			$arr2[$k] = $v;
+			}
+			*/
+		}
+
+		$this->exchangeArray($arr2);
+
+		return $this;
+	}
+
+	public function usort($cmp_function)
+	{
+		$arr2 = $arr = array();
+
+		foreach ($this as $k => &$v)
+		{
+			$arr[(string )$v][$k] = &$v;
+		}
+
+		uksort($arr, $cmp_function);
+
+		foreach ($arr as &$list)
+		{
+			$arr2 += $list;
+
+			/*
+			foreach ($list as $k => &$v)
+			{
+			$arr2[$k] = $v;
 			}
 			*/
 		}
@@ -79,6 +126,32 @@ class Sco_Ticker_Iterator extends ArrayObject
 		}
 
 		return $array;
+	}
+
+	/**
+	 * iterator_apply — Call a function for every element in an iterator
+	 */
+	public function apply_exec($method)
+	{
+		return $this->apply($method, array_slice(func_get_args(), 1));
+	}
+
+	/**
+	 * iterator_apply — Call a function for every element in an iterator
+	 */
+	public function apply($method, $args = array())
+	{
+		if (!method_exists($this->_offsetClass, $method))
+		{
+			throw new BadMethodCallException();
+		}
+
+		foreach ($this as $ticker)
+		{
+			call_user_func_array(array($ticker, $method), &$args);
+		}
+
+		return $args;
 	}
 
 }
