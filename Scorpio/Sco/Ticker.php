@@ -33,14 +33,19 @@ class Sco_Ticker implements Sco_Ticker_Interface
 	public function __construct($initial_value = self::VALUE_DEF, $name = null)
 	{
 		$this->setName($name);
-		$this->setValue($initial_value);
+		$this->setTicker($initial_value);
 
 		return $this;
 	}
 
 	public function __toString()
 	{
-		return (string)$this->getValue();
+		return (string)$this->currentTicker();
+	}
+
+	public function currentTicker()
+	{
+		return $this->getTicker();
 	}
 
 	/**
@@ -61,12 +66,11 @@ class Sco_Ticker implements Sco_Ticker_Interface
 		return $this->_name;
 	}
 
-	/**
-	 * @return Sco_Timer_Counter
-	 */
-	public function setValue($offset)
+	public function setTicker($offset)
 	{
 		$this->_value = $offset;
+
+		$this->reflashTicker();
 
 		return $this;
 	}
@@ -74,15 +78,12 @@ class Sco_Ticker implements Sco_Ticker_Interface
 	/**
 	 * @return integer
 	 */
-	public function getValue()
+	public function getTicker()
 	{
 		return $this->_value;
 	}
 
-	/**
-	 * @return Sco_Timer_Counter
-	 */
-	public function resetValue()
+	public function resetTicker()
 	{
 		$this->_value = self::VALUE_DEF;
 
@@ -92,9 +93,11 @@ class Sco_Ticker implements Sco_Ticker_Interface
 	/**
 	 * @return integer
 	 */
-	public function addValue($offset)
+	public function addTicker($offset)
 	{
 		$this->_value += $offset;
+
+		$this->reflashTicker();
 
 		return $this->_value;
 	}
@@ -102,29 +105,32 @@ class Sco_Ticker implements Sco_Ticker_Interface
 	/**
 	 * @return integer
 	 */
-	public function subValue($offset)
+	public function subTicker($offset)
 	{
 		$this->_value -= $offset;
+
+		$this->reflashTicker();
 
 		return $this->_value;
 	}
 
-	protected function fixRange()
+	public function reflashTicker()
 	{
-		if (isset($this->_range[1]) && $this->_value >= $this->_range[1])
+		$this->_fixRange(&$this->_value);
+	}
+
+	protected function _fixRange($value)
+	{
+		if (isset($this->_range[1]) && $value >= $this->_range[1])
 		{
-			$this->_value = $this->_range[1];
+			$value = $this->_range[1];
 		}
-		elseif (isset($this->_range[0]) && $this->_value <= $this->_range[0])
+		elseif (isset($this->_range[0]) && $value <= $this->_range[0])
 		{
-			$this->_value = $this->_range[0];
-		}
-		else
-		{
-			return false;
+			$value = $this->_range[0];
 		}
 
-		return true;
+		return $value;
 	}
 
 }
