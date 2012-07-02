@@ -47,24 +47,24 @@ class Sco_Math_Func_Distance
 	}
 
 	/**
-	 * @assert (+0, +0) == 0
-	 * @assert (+0, +1) == 90
-	 * @assert (+1, +1) == 45
-	 * @assert (+1, +0) == 0
-	 * @assert (+0, -1) == -90
-	 * @assert (-1, -1) == -135
-	 * @assert (-1, +0) == 180
-	 * @assert (-1, -1) == -135
+	 * @assert (+0, +0) === false
+	 * @assert (+0, +1) === 90.0
+	 * @assert (+1, +1) === 45.0
+	 * @assert (+1, +0) === 0.0
+	 * @assert (+0, -1) === -90.0
+	 * @assert (-1, -1) === -135.0
+	 * @assert (-1, +0) === 180.0
+	 * @assert (-1, -1) === -135.0
 	 *
-	 * @assert (5, 5) == 45
-	 * @assert (-5, 5) == 135
-	 * @assert (5, -5) == -45
-	 * @assert (-5, -5) == -135
+	 * @assert (5, 5) === 45.0
+	 * @assert (-5, 5) === 135.0
+	 * @assert (5, -5) === -45.0
+	 * @assert (-5, -5) === -135.0
 	 *
-	 * @assert (5, 5, 0, 0, 1) == 45
-	 * @assert (-5, 5, 0, 0, 1) == 135
-	 * @assert (5, -5, 0, 0, 1) == 315
-	 * @assert (-5, -5, 0, 0, 1) == 225
+	 * @assert (5, 5, 0, 0, 1) === 45.0
+	 * @assert (-5, 5, 0, 0, 1) === 135.0
+	 * @assert (5, -5, 0, 0, 1) === 315.0
+	 * @assert (-5, -5, 0, 0, 1) === 225.0
 	 *
 	 * @see http://www.php.net/manual/zh/function.atan2.php
 	 * @see http://blog.csdn.net/meetlunay/article/details/7683593
@@ -74,12 +74,19 @@ class Sco_Math_Func_Distance
 		$x = $x2 - $x1;
 		$y = $y2 - $y1;
 
-		//$p = 360 * (atan2($y, $x) / (2 * pi()));
-		$p = rad2deg(atan2($y, $x));
-
-		if ($abs && $p < 0)
+		if ($x || $y)
 		{
-			$p += 360;
+			//$p = 360 * (atan2($y, $x) / (2 * pi()));
+			$p = rad2deg(atan2($y, $x));
+
+			if ($abs && $p < 0)
+			{
+				$p += 360;
+			}
+		}
+		else
+		{
+			$p = false;
 		}
 
 		if ($return)
@@ -131,18 +138,33 @@ class Sco_Math_Func_Distance
 	 *
 	 * @see http://www.php.net/manual/zh/function.atan2.php#88119
 	 *
+	 * @assert (+0, +0) === false
+	 * @assert (+0, +1) === 0.0
+	 * @assert (+1, +1) === 45.0
+	 * @assert (+1, +0) === 90.0
+	 * @assert (+0, -1) === 180.0
+	 * @assert (-1, -1) === -135.0
+	 * @assert (-1, +0) === -90.0
+	 * @assert (-1, -1) === -135.0
 	 */
-	public static function azimuth_compass2($x2, $y2, $x1 = 0, $y1 = 0, $abs = false, $return = false)
+	public static function azimuth_compass_2($x2, $y2, $x1 = 0, $y1 = 0, $abs = false, $return = false)
 	{
 		$x = $x2 - $x1;
 		$y = $y2 - $y1;
 
-		//$p = 360 * (atan2($y, $x) / (2 * pi()));
-		$p = rad2deg(atan2($x, $y));
-
-		if ($abs && $p < 0)
+		if ($x || $y)
 		{
-			$p += 360;
+			//$p = 360 * (atan2($y, $x) / (2 * pi()));
+			$p = rad2deg(atan2($x, $y));
+
+			if ($abs && $p < 0)
+			{
+				$p += 360;
+			}
+		}
+		else
+		{
+			$p = false;
 		}
 
 		if ($return)
@@ -159,16 +181,17 @@ class Sco_Math_Func_Distance
 	/**
 	 * @see http://www.php.net/manual/zh/function.atan2.php#88119
 	 *
-	 * @assert (0, 1) == 'N'
-	 * @assert (1, 0) == 'E'
-	 * @assert (0, -1) == 'S'
-	 * @assert (-1, 0) == 'W'
-	 * @assert (1, 1) == 'NE'
-	 * @assert (-1, 1) == 'NW'
-	 * @assert (1, -1) == 'SE'
-	 * @assert (-1, -1) == 'SW'
+	 * @assert (0, 0) === ''
+	 * @assert (0, 1) === 'N'
+	 * @assert (1, 0) === 'E'
+	 * @assert (0, -1) === 'S'
+	 * @assert (-1, 0) === 'W'
+	 * @assert (1, 1) === 'NE'
+	 * @assert (-1, 1) === 'NW'
+	 * @assert (1, -1) === 'SE'
+	 * @assert (-1, -1) === 'SW'
 	 */
-	function polar($x, $y)
+	public static function polar($x, $y)
 	{
 		$N = ($y > 0) ? 'N' : '';
 		$S = ($y < 0) ? 'S' : '';
@@ -176,6 +199,49 @@ class Sco_Math_Func_Distance
 		$W = ($x < 0) ? 'W' : '';
 
 		return $N . $S . $E . $W;
+	}
+
+	/**
+	 * use 22.5 split
+	 *
+	 * @assert (0, 0) === ''
+	 * @assert (0, 1) === 'N'
+	 * @assert (1, 1) === 'NE'
+	 * @assert (1, 0) === 'E'
+	 * @assert (0, -1) === 'S'
+	 * @assert (-1, -1) === 'SW'
+	 * @assert (-1, 0) === 'W'
+	 * @assert (-1, -1) === 'SW'
+	 */
+	public static function polar_2($x, $y)
+	{
+		if ($x == 0 && $y == 0)
+		{
+			return '';
+		}
+
+		$p = self::azimuth_compass_2($x, $y, 0, 0, true);
+
+		$list = array(
+			'N' => 337.5,
+			'NW' => 292.5,
+			'W' => 247.5,
+			'SW' => 202.5,
+			'S' => 157.5,
+			'SE' => 112.5,
+			'E' => 67.5,
+			'NE' => 22.5,
+			);
+
+		foreach ($list as $k => $v)
+		{
+			if ($p >= $v)
+			{
+				return $k;
+			}
+		}
+
+		return 'N';
 	}
 
 }
