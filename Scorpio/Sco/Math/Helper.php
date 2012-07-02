@@ -93,4 +93,16 @@ class Sco_Math_Helper
 		return $n ? $n : 0;
 	}
 
+	public static function sign($n)
+	{
+		if ($n)
+		{
+			return $n / abs($n);
+		}
+		else
+		{
+			return 0;
+		}
+	}
+
 }
