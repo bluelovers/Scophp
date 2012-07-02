@@ -8,8 +8,8 @@
 class Sco_Math_Format
 {
 
-	const PRINTF_INT = '%.0f';
-	const PRINTF_FLOAT = '%.8f';
+	const PRINTF_INT = '%+.0f';
+	const PRINTF_FLOAT = '%+.8f';
 
 	public static function int($number)
 	{
@@ -18,7 +18,7 @@ class Sco_Math_Format
 
 	public static function float($number, $scale = null)
 	{
-		return sprintf($scale === null ? self::PRINTF_FLOAT : "%.{$scale}f", $number);
+		return sprintf($scale === null ? self::PRINTF_FLOAT : "%+.{$scale}f", $number);
 	}
 
 	/**
