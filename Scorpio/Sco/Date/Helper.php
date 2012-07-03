@@ -160,13 +160,13 @@ class Sco_Date_Helper
 	}
 
 	/**
-     * Wrapper for microtime().
-     *
-     * @return float
-     */
+	 * Wrapper for microtime().
+	 *
+	 * @return float
+	 */
 	public static function getMicrotime()
-    {
-        return microtime(true);
-    }
+	{
+		return microtime(true);
+	}
 
 }
