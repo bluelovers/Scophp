@@ -9,6 +9,7 @@ class Sco_Ticker_Timer implements Sco_Ticker_Interface
 {
 
 	protected $_timestamp;
+	protected $_timestamp_stop;
 
 	public function __construct($timestamp = null)
 	{
@@ -29,7 +30,7 @@ class Sco_Ticker_Timer implements Sco_Ticker_Interface
 	 */
 	public function currentTicker($args = array())
 	{
-		$now = ($args['now']) ? $args['now'] : microtime(true);
+		$now = $this->_timestamp_stop !== null ? $this->_timestamp_stop : (($args['now']) ? $args['now'] : microtime(true));
 
 		return $now - $this->_timestamp;
 	}
@@ -55,6 +56,20 @@ class Sco_Ticker_Timer implements Sco_Ticker_Interface
 	public function getTicker()
 	{
 		return $this->_timestamp;
+	}
+
+	public function stopTicker($flag = true)
+	{
+		if ($flag)
+		{
+			$this->_timestamp_stop = microtime(true);
+		}
+		else
+		{
+			$this->_timestamp_stop = null;
+		}
+
+		return $this;
 	}
 
 }
