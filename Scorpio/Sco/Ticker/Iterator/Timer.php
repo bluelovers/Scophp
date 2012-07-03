@@ -8,13 +8,16 @@
 class Sco_Ticker_Iterator_Timer extends Sco_Ticker_Iterator
 {
 
+	const NS_START = 'Start';
+	const NS_STOP = 'Stop';
+
 	protected $_offsetClass = 'Sco_Ticker_Timer';
 
 	public function __construct($data = array())
 	{
 		parent::__construct($data);
 
-		$this->offsetGet('Start');
+		$this->offsetGet(self::NS_START);
 	}
 
 	/**
@@ -26,7 +29,7 @@ class Sco_Ticker_Iterator_Timer extends Sco_Ticker_Iterator
 	 * @return double  $time_elapsed time elapsed between $start and $end
 	 * @access public
 	 */
-	public function timeElapsed($start = 'Start', $end = 'Stop')
+	public function timeElapsed($start = self::NS_START, $end = self::NS_STOP)
 	{
 		return $this[$end]->getTicker() - $this[$start]->getTicker();
 	}
@@ -45,6 +48,11 @@ class Sco_Ticker_Iterator_Timer extends Sco_Ticker_Iterator
 		$this[$name]->resetTicker($timestamp);
 
 		return $this;
+	}
+
+	public function getMarker($name)
+	{
+		return $this[$name];
 	}
 
 	public function toArrayValues($args = array())
@@ -66,7 +74,7 @@ class Sco_Ticker_Iterator_Timer extends Sco_Ticker_Iterator
 	 */
 	function start()
 	{
-		$this->setMarker('Start');
+		$this->setMarker(self::NS_START);
 	}
 
 	/**
@@ -78,7 +86,7 @@ class Sco_Ticker_Iterator_Timer extends Sco_Ticker_Iterator
 	 */
 	function stop()
 	{
-		$this->setMarker('Stop');
+		$this->setMarker(self::NS_STOP);
 	}
 
 	public function _getMicrotime()
