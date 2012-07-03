@@ -159,4 +159,14 @@ class Sco_Date_Helper
 		return $DateTimeZoneGMT;
 	}
 
+	/**
+     * Wrapper for microtime().
+     *
+     * @return float
+     */
+	public static function getMicrotime()
+    {
+        return microtime(true);
+    }
+
 }
