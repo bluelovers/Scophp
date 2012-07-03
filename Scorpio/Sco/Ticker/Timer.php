@@ -81,9 +81,9 @@ class Sco_Ticker_Timer implements Sco_Ticker_Interface
 		return $this;
 	}
 
-    public static function _getMicrotime()
-    {
-        return microtime(true);
-    }
+	public static function _getMicrotime()
+	{
+		return microtime(true);
+	}
 
 }
