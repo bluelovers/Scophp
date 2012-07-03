@@ -30,7 +30,7 @@ class Sco_Ticker_Timer implements Sco_Ticker_Interface
 	 */
 	public function currentTicker($args = array())
 	{
-		$now = $this->_timestamp_stop !== null ? $this->_timestamp_stop : (($args['now']) ? $args['now'] : microtime(true));
+		$now = $this->_timestamp_stop !== null ? $this->_timestamp_stop : (($args['now']) ? $args['now'] : self::_getMicrotime());
 
 		return $now - $this->_timestamp;
 	}
@@ -42,12 +42,14 @@ class Sco_Ticker_Timer implements Sco_Ticker_Interface
 	{
 		if ($timestamp === null || $timestamp === 'now')
 		{
-			$this->_timestamp = microtime(true);
+			$this->_timestamp = self::_getMicrotime();
 		}
 		else
 		{
 			$this->_timestamp = $timestamp;
 		}
+
+		$this->_timestamp_stop = null;
 	}
 
 	/**
@@ -58,11 +60,18 @@ class Sco_Ticker_Timer implements Sco_Ticker_Interface
 		return $this->_timestamp;
 	}
 
-	public function stopTicker($flag = true)
+	public function stop($flag = true, $timestamp = null)
 	{
 		if ($flag)
 		{
-			$this->_timestamp_stop = microtime(true);
+			if ($timestamp === null || $timestamp === 'now')
+			{
+				$this->_timestamp_stop = self::_getMicrotime();
+			}
+			else
+			{
+				$this->_timestamp_stop = $timestamp;
+			}
 		}
 		else
 		{
@@ -71,5 +80,10 @@ class Sco_Ticker_Timer implements Sco_Ticker_Interface
 
 		return $this;
 	}
+
+    public static function _getMicrotime()
+    {
+        return microtime(true);
+    }
 
 }
