@@ -285,6 +285,30 @@ class _Env
 		return true;
 	}
 
+	public static function exec()
+	{
+		$chk_set = array(
+			'exec',
+			'shell_exec',
+			);
+
+		$ret = null;
+
+		foreach ($chk_set as $v)
+		{
+			$result = is_callable($v);
+
+			if ($ret === null || $ret)
+			{
+				$ret = $result;
+			}
+
+			printnl(sprintf('[%s][%d] %s : %s', __FUNCTION__, ++$i, $v, self::_var_string($result)));
+		}
+
+		return $ret;
+	}
+
 }
 
 
