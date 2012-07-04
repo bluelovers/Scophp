@@ -21,7 +21,6 @@ $timers->setMarker('a2');
 
 sleep(1.5);
 
-$timers->setMarker('a1');
 
 var_dump($timers->toArrayValues());
 
