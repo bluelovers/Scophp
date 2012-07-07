@@ -95,7 +95,7 @@ class Sco_Api_Avatar_Gravatar implements Sco_Api_Avatar_Interface
 
 	public function getAvatar()
 	{
-		return sprintf(($this->m_secure_requests ? self::SITE_SECURE : self::SITE) . self::SITE_URL, $this->m_szEmail, $this->m_iSize, $this->m_szImage, $this->m_szRating, $this->m_force_default);
+		return sprintf($this->getSite() . self::SITE_URL, $this->m_szEmail, $this->m_iSize, $this->m_szImage, $this->m_szRating, $this->m_force_default);
 	}
 
 	public function setSecureRequests($flag = true)
@@ -211,5 +211,10 @@ class Sco_Api_Avatar_Gravatar implements Sco_Api_Avatar_Interface
 	{
 		$this->m_szRating = self::RATING_X;
 		return $this;
+	}
+
+	public function getSite()
+	{
+		return ($this->m_secure_requests ? self::SITE_SECURE : self::SITE);
 	}
 }
