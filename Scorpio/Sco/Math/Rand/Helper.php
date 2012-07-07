@@ -101,4 +101,54 @@ class Sco_Math_Rand_Helper
 		return $ret;
 	}
 
+	public static function rand($min = 0, $max = 100, $ra = 0, $rb = 0)
+	{
+		if ($min > $max)
+		{
+			list($min, $max) = array($max, $min);
+		}
+		elseif ($min == $max)
+		{
+			return $min;
+		}
+
+		do
+		{
+			$p = rand($min, $max);
+		}
+		while(!$p);
+
+		$a = rand($min, $p);
+		$b = rand($p, $max);
+
+		$r = rand(0 - $ra, 1 + $rb);
+
+		return $r > 0 ? $b : $a;
+	}
+
+	public static function mt_rand($min = 0, $max = 100, $ra = 0, $rb = 0)
+	{
+		if ($min > $max)
+		{
+			list($min, $max) = array($max, $min);
+		}
+		elseif ($min == $max)
+		{
+			return $min;
+		}
+
+		do
+		{
+			$p = mt_rand($min, $max);
+		}
+		while(!$p);
+
+		$a = mt_rand($min, $p);
+		$b = mt_rand($p, $max);
+
+		$r = mt_rand(0 - $ra, 1 + $rb);
+
+		return $r > 0 ? $b : $a;
+	}
+
 }
