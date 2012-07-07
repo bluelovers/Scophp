@@ -76,7 +76,7 @@ class Sco_Api_Avatar_Gravatar implements Sco_Api_Avatar_Interface
 
 	public function setDefaultImageForce($flag = true)
 	{
-		$this->m_force_default = $flag ? self::YES : self::NO;
+		$this->m_force_default = (bool)$flag ? self::YES : self::NO;
 		return $this;
 	}
 
