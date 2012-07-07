@@ -88,6 +88,14 @@ class Sco_Api_Avatar_Gravatar implements Sco_Api_Avatar_Interface
 		$f !== null && $this->setDefaultImageForce($f);
 	}
 
+	/**
+	 * @return Sco_Api_Avatar_Gravatar
+	 */
+	public static function newInstance($email, $s = null, $d = null, $r = null, $f = null)
+	{
+		return new self($email, $s, $d, $r, $f);
+	}
+
 	public function __toString()
 	{
 		return (string )$this->getAvatar();
