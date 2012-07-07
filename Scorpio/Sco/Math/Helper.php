@@ -17,8 +17,18 @@ class Sco_Math_Helper
 
 	public static function rand_seed()
 	{
-		srand((microtime(true) - time()) * 10000000);
-		mt_srand((microtime(true) - time()) * 10000000);
+		static $salt;
+
+		if (!isset($salt))
+		{
+			$salt[0] = mt_rand();
+			$salt[1] = mt_rand();
+		}
+
+		mt_srand($salt[1] = abs(mt_rand(-50, 150) / 100 * ($salt[0] + (microtime(true) - time()) * 10000000)) % 100000000);
+		srand($salt[0] = abs(mt_rand(-50, 150) / 100 * ($salt[0] + (microtime(true) - time()) * 10000000)) % 100000000);
+
+		var_dump($salt);
 	}
 
 	protected static function _srand()
@@ -38,32 +48,40 @@ class Sco_Math_Helper
 		$r['n3'] = $r['a'][$r['n1']];
 		$r['n4'] = $r['a'][$r['n2']];
 
-		if ($retval) return $r['c'] ? $r['n3'] : $r['n4'];
+		//var_dump($r);
 
-		if ($r['n4'] == $r['n3'] || $ra == $r['n3'])
+		if ($retval)
 		{
-			$r['r'] = 2;
+			$r['r'] = $r['c'] ? $r['n3'] : $r['n4'];
 		}
 		else
 		{
-			$r['n4'] = $ra ? $ra : $r['a'][$r['n2']];
+			if ($r['n4'] == $r['n3'] || $ra == $r['n3'])
+			{
+				$r['r'] = 2;
+			}
+			else
+			{
+				$r['n4'] = $ra ? $ra : $r['a'][$r['n2']];
 
-			$r['r'] = $r['c'] ? (($r['n4'] >= $r['n3']) ? 1 : 0) : (($r['n4'] <= $r['n3']) ? 1 : 0);
+				$r['r'] = $r['c'] ? (($r['n4'] >= $r['n3']) ? 1 : 0) : (($r['n4'] <= $r['n3']) ? 1 : 0);
+			}
 		}
+		return $r['r'];
 	}
 
 	public static function rand($ra = 0, $rb = 0, $low = 1, $high = 100, $step = 1, $retval = true)
 	{
-		srand((float)microtime(true) * rand(-100, 200) / 100 * self::_srand());
+		srand((float)microtime(true) * rand(-100, 200) / 100 * self::_srand() + ((float)microtime(true) - time()));
 
 		$r = array();
 
 		$r['a'] = range($low, $high, ($step ? $step : 1));
-		$r['n1'] = rand($low - 1, $high);
-		$r['n2'] = rand($low - 1, $high);
+		$r['n1'] = array_rand($r['a']);
+		$r['n2'] = array_rand($r['a']);
 		$r['c'] = rand(0, 1 + $rb);
 
-		self::_rand($r['a'], $retval);
+		self::_rand($r, $retval);
 
 		return $r['r'];
 	}
@@ -75,11 +93,11 @@ class Sco_Math_Helper
 		$r = array();
 
 		$r['a'] = range($low, $high, ($step ? $step : 1));
-		$r['n1'] = mt_rand($low - 1, $high);
-		$r['n2'] = mt_rand($low - 1, $high);
+		$r['n1'] = array_rand($r['a']);
+		$r['n2'] = array_rand($r['a']);
 		$r['c'] = mt_rand(0, 1 + $rb);
 
-		self::_rand($r['a'], $retval);
+		self::_rand($r, $retval);
 
 		return $r['r'];
 	}
