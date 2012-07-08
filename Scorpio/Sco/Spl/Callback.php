@@ -52,7 +52,7 @@ class Sco_Spl_Callback implements Sco_Spl_Callback_Interface
 
 	public function exec()
 	{
-		$argv = func_num_args() > 0 ? func_get_args() : (array)$this->argv;
+		$argv = func_num_args() > 0 ? Sco_PHP_Helper::func_get_args() : (array)$this->argv;
 
 		return $this->exec_array($argv);
 	}
