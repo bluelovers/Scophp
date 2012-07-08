@@ -26,11 +26,11 @@ class Sco_Spl_Callback_Eval extends Sco_Spl_Callback
 			$this->_tmp = create_function(implode(',', $this->argv), $this->func);
 		}
 
-		$argv = func_get_args();
+		$argv = Sco_PHP_Helper::func_get_args();
 
 		return call_user_func_array($this->_tmp, $argv);
 
-		return $this->exec_array(func_get_args());
+		return $this->exec_array(Sco_PHP_Helper::func_get_args());
 	}
 
 	public function exec_array($argv)
