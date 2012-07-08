@@ -71,10 +71,15 @@ class Sco_Ticker implements Sco_Ticker_Interface
 	/**
 	 * @return Sco_Ticker
 	 */
-	public function setTimeout($timeout)
+	public function setTimeout($timeout, $offset = true)
 	{
 		if (isset($timeout))
 		{
+			if ($timeout > 0 && $offset)
+			{
+				$timeout = $this->_value + $timeout;
+			}
+
 			$this->_timeout = isset($this->_range[1]) ? min($timeout, $this->_range[1]) : $timeout;
 		}
 		else
