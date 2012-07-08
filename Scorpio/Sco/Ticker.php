@@ -27,8 +27,10 @@ class Sco_Ticker implements Sco_Ticker_Interface
 		self::RANGE_MAX,
 		);
 
+	protected $_timeout;
+
 	/**
-	 * @return Sco_Timer_Counter
+	 * @return Sco_Ticker
 	 */
 	public function __construct($initial_value = self::VALUE_DEF, $name = null)
 	{
@@ -49,7 +51,7 @@ class Sco_Ticker implements Sco_Ticker_Interface
 	}
 
 	/**
-	 * @return Sco_Timer_Counter
+	 * @return Sco_Ticker
 	 */
 	public function setName($name)
 	{
@@ -64,6 +66,58 @@ class Sco_Ticker implements Sco_Ticker_Interface
 	public function getName()
 	{
 		return $this->_name;
+	}
+
+	/**
+	 * @return Sco_Ticker
+	 */
+	public function setTimeout($timeout)
+	{
+		if (isset($timeout))
+		{
+			$this->_timeout = isset($this->_range[1]) ? min($timeout, $this->_range[1]) : $timeout;
+		}
+		else
+		{
+			$this->_timeout = null;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTimeout()
+	{
+		return $this->_timeout;
+	}
+
+	public function isTimeout($max = 0, $sub = false, $reset = true)
+	{
+		if (!isset($this->_timeout))
+		{
+			return false;
+		}
+
+		$count = floor($this->_value / $this->_timeout);
+
+		if ($max > 0)
+		{
+			$count = min($count, $max);
+		}
+
+		if ($sub)
+		{
+			$this->subTicker($count * $this->_timeout);
+		}
+
+		if ($reset)
+		{
+			$this->_timeout = null;
+		}
+
+		return $count;
 	}
 
 	public function setTicker($offset)
