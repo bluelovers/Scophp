@@ -8,10 +8,11 @@
 require_once ('../bootstrap.php');
 
 $a = 1;
+$b = 2;
 
-_d(&$a, 2, 3);
+_d(&$a, $b, 3);
 
-var_dump($a);
+var_dump($a, $b);
 
 exit;
 
@@ -27,14 +28,15 @@ var_dump(Sco_PHP_Helper::get_runtime_defined_vars(get_defined_vars()));
 
 function _d()
 {
-	$args = Sco_PHP::func_get_args();
+	$args = Sco_PHP_Helper::func_get_args();
 
 	$args[0] = 99;
+	$args[1] = 10;
 
 	var_dump(get_defined_vars());
 
 	var_dump(func_get_arg(3));
-	var_dump(Sco_PHP::func_get_arg(3));
+	var_dump(Sco_PHP_Helper::func_get_arg(3));
 }
 
 function _a()
