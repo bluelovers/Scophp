@@ -112,6 +112,8 @@ class Sco_PHP_Helper
 				'_POST',
 				'_GET',
 				'_SERVER',
+				'_ENV',
+				'_REQUEST',
 				));
 			$varList = array_diff_key((array )$varList, array_flip($excludeList));
 		}
