@@ -105,39 +105,4 @@ class Sco_PHP
 		return set_include_path(get_include_path() . PATH_SEPARATOR . $path);
 	}
 
-	/**
-	 * func_get_arg — Return an item from the argument list with reference
-	 *
-	 * @param int $arg_num
-	 * @return mixed Returns the specified argument, or FALSE on error.
-	 *
-	 * @see http://cstruter.com/blog/144
-	 */
-	public static function &func_get_arg($arg_num)
-	{
-		$stack = debug_backtrace();
-
-		if (@!isset($stack[1]['args'][$arg_num]))
-		{
-			trigger_error(sprintf('%s:  Argument %d not passed to function', __METHOD__, $arg_num), E_USER_WARNING);
-
-			return false;
-		}
-
-		return $stack[1]["args"][$arg_num];
-	}
-
-	/**
-	 * func_get_args — Returns an array comprising a function's argument list with reference
-	 *
-	 * @return array Returns an array in which each element is a copy of the corresponding member of the current user-defined function's argument list.
-	 *
-	 * @see http://cstruter.com/blog/144
-	 */
-	public static function func_get_args()
-	{
-		$stack = debug_backtrace();
-		return (array)$stack[1]["args"];
-	}
-
 }
