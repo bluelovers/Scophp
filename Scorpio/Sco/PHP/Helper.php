@@ -8,6 +8,17 @@
 class Sco_PHP_Helper
 {
 
+	/**
+	 * @assert (true) === true
+	 * @assert ('on') === true
+	 * @assert ('true') === true
+	 * @assert ('yes') === true
+	 *
+	 * @assert (false) === false
+	 * @assert ('off') === false
+	 * @assert ('false') === false
+	 * @assert ('no') === false
+	 */
 	public static function var_ini_bool($val)
 	{
 		if (is_bool($val) === true)
@@ -277,6 +288,41 @@ class Sco_PHP_Helper
 	public static function define($name, $value)
 	{
 		return define(strtoupper($name), $value);
+	}
+
+	/**
+	 * func_get_arg — Return an item from the argument list with reference
+	 *
+	 * @param int $arg_num
+	 * @return mixed Returns the specified argument, or FALSE on error.
+	 *
+	 * @see http://cstruter.com/blog/144
+	 */
+	public static function &func_get_arg($arg_num)
+	{
+		$stack = debug_backtrace();
+
+		if (@!isset($stack[1]['args'][$arg_num]))
+		{
+			trigger_error(sprintf('%s:  Argument %d not passed to function', __METHOD__, $arg_num), E_USER_WARNING);
+
+			return false;
+		}
+
+		return $stack[1]['args'][$arg_num];
+	}
+
+	/**
+	 * func_get_args — Returns an array comprising a function's argument list with reference
+	 *
+	 * @return array Returns an array in which each element is a copy of the corresponding member of the current user-defined function's argument list.
+	 *
+	 * @see http://cstruter.com/blog/144
+	 */
+	public static function func_get_args()
+	{
+		$stack = debug_backtrace();
+		return (array )$stack[1]['args'];
 	}
 
 }
