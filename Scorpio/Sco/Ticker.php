@@ -100,21 +100,39 @@ class Sco_Ticker implements Sco_Ticker_Interface
 			return false;
 		}
 
-		$count = floor($this->_value / $this->_timeout);
-
-		if ($max > 0)
+		if ($this->_value >= $this->_timeout || $this->_timeout <= 0)
 		{
-			$count = min($count, $max);
+			if ($this->_timeout > 0)
+			{
+				$count = floor($this->_value / $this->_timeout);
+
+				if ($count && $max > 0)
+				{
+					$count = max(0, min($max, $count));
+				}
+			}
+			else
+			{
+				$count = true;
+			}
+
+			if ($count)
+			{
+				if ($reset || $count === true)
+				{
+					$this->resetTicker();
+				}
+				elseif ($sub)
+				{
+					$this->subTicker($count * $this->_timeout);
+				}
+
+				$this->_timeout = null;
+			}
 		}
-
-		if ($sub)
+		else
 		{
-			$this->subTicker($count * $this->_timeout);
-		}
-
-		if ($reset)
-		{
-			$this->_timeout = null;
+			$count = 0;
 		}
 
 		return $count;
