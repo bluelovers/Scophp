@@ -26,7 +26,7 @@ var_dump($a);
 
 var_dump(Sco_PHP_Helper::get_runtime_defined_vars(get_defined_vars()));
 
-function _d()
+function _d($c)
 {
 	$args = Sco_PHP_Helper::func_get_args();
 
