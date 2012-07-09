@@ -17,7 +17,8 @@ $chk_list = array(
 	'json_encode',
 	'json_decode',
 	'lcfirst',
-	'spl_object_hash',);
+	'spl_object_hash',
+	);
 
 _Env::run($chk_list);
 
@@ -310,5 +311,3 @@ class _Env
 	}
 
 }
-
-
