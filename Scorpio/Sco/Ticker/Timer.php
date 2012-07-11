@@ -83,7 +83,67 @@ class Sco_Ticker_Timer implements Sco_Ticker_Interface
 
 	public static function _getMicrotime()
 	{
-		return microtime(true);
+		return Sco_Ticker_TimerTicker::getInstance()->getMicrotime();
+	}
+
+	/**
+	 * @return Sco_Ticker
+	 */
+	public function setTimeout($timeout, $offset = true)
+	{
+		if (isset($timeout))
+		{
+			if ($timeout > 0 && $offset)
+			{
+				$timeout = $this->_value + $timeout;
+			}
+
+			$this->_timeout = isset($this->_range[1]) ? min($timeout, $this->_range[1]) : $timeout;
+		}
+		else
+		{
+			$this->_timeout = null;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTimeout()
+	{
+		return $this->_timeout;
+	}
+
+	public function isTimeout($now = null, $stop = false, $reset = true)
+	{
+		if (!isset($this->_timeout))
+		{
+			return false;
+		}
+
+		if ($now === null || $now === 'now')
+		{
+			$now = self::_getMicrotime();
+		}
+
+		if ($now >= $this->_timeout || $this->_timeout <= 0)
+		{
+			if ($stop)
+			{
+				$this->stop(true, $now);
+			}
+
+			if ($reset)
+			{
+				$this->resetTicker($now);
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 }
